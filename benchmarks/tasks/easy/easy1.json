@@ -1,0 +1,37 @@
+{
+  "task_id": "task_001",
+  "difficulty": "easy",
+  "title": "Weekend trip from Detroit to Chicago",
+  "scenario": {
+    "description": "Weekend trip from Detroit to Chicago",
+    "origin_city": "Detroit",
+    "destination_cities": ["Chicago"],
+    "trip_duration_days": 2
+  },
+  "user_profile": {
+    "party_size": 1,
+    "traveler_types": ["student"],
+    "special_needs": []
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 300,
+      "departure_date": "2026-02-27",
+      "departure_time_earliest": "",
+      "return_date": "2026-03-01",
+      "return_time_latest": ""
+    },
+    "soft": {
+      "interests": ["live music", "local food scene"],
+      "preferences": ["walk, food, art"]
+    }
+  },
+  "dynamic_events": [],
+  "required_components": [
+    "hotel_2_nights"
+  ],
+  "success_criteria": {
+    "total_cost_max": 300,
+    "timing_feasible": true
+  }
+}
