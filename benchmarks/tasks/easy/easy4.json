@@ -1,0 +1,49 @@
+{
+    "task_id": "task_004",
+    "difficulty": "easy",
+    "title": "Museum and Culture Weekend in New York",
+    "scenario": {
+      "description": "Art enthusiast planning a museum-focused weekend in NYC",
+      "origin_city": "Philadelphia",
+      "destination_cities": ["New York"],
+      "trip_duration_days": 2
+    },
+    "user_profile": {
+      "party_size": 1,
+      "traveler_types": ["cultural_traveler"],
+      "special_needs": []
+    },
+    "initial_constraints": {
+      "hard": {
+        "budget_max": 600,
+        "departure_date": "2026-05-02",
+        "departure_time_earliest": "08:00",
+        "return_date": "2026-05-04",
+        "return_time_latest": "20:00"
+      },
+      "soft": {
+        "interests": ["art museums", "modern art", "photography exhibitions"],
+        "preferences": ["hotel near museums", "quiet cafe recommendations", "walkable"]
+      }
+    },
+    "dynamic_events": [],
+    "required_components": [
+      "outbound_train_or_flight",
+      "return_train_or_flight",
+      "hotel_2_nights",
+      "museum_visits_min_3",
+      "restaurants_min_4"
+    ],
+    "success_criteria": {
+      "total_cost_max": 600,
+      "timing_feasible": true,
+      "museums_included_min": 3,
+      "hotel_proximity_to_museums": "within_30min"
+    },
+    "expected_challenges": [
+      "NYC accommodation costs are high, limiting budget for activities",
+      "Must ensure museum visiting hours align with travel schedule",
+      "Clustering activities geographically to minimize transit time"
+    ],
+    "notes": "Tests activity-focused planning with geographic clustering and timing constraints."
+  }

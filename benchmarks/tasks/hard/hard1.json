@@ -1,0 +1,73 @@
+{
+    "task_id": "task_016",
+    "difficulty": "hard",
+    "title": "Business Trip with Flight Cancellation",
+    "scenario": {
+      "description": "Business trip from Chicago to Denver for presentation, then Seattle for workshop. Flight cancellation forces replanning.",
+      "origin_city": "Chicago",
+      "destination_cities": ["Denver", "Seattle"],
+      "trip_duration_days": 4
+    },
+    "user_profile": {
+      "party_size": 1,
+      "traveler_types": ["business"],
+      "special_needs": []
+    },
+    "initial_constraints": {
+      "hard": {
+        "budget_max": 1500,
+        "departure_date": "2026-07-09",
+        "denver_presentation_time": "2026-07-10T14:00",
+        "seattle_workshop_time": "2026-07-12T09:00",
+        "return_date": "2026-07-13",
+        "return_time_latest": ""
+      },
+      "soft": {
+        "interests": ["efficient_travel"],
+        "preferences": ["direct flights preferred"]
+      }
+    },
+    "dynamic_events": [
+      {
+        "event_id": "event_1",
+        "trigger_turn": 7,
+        "event_type": "flight_cancelled",
+        "description": "Your Denver → Seattle flight on July 11 at 4PM is cancelled due to weather. Alternative options: (1) Denver → Seattle via Phoenix (departs July 11 at 8PM, arrives Seattle July 12 at 2AM), or (2) Direct Denver → Seattle on July 12 at 6AM arriving 9:30AM.",
+        "affected_components": [
+          "flight_denver_to_seattle",
+          "denver_hotel",
+          "seattle_hotel",
+          "seattle_workshop_arrival"
+        ],
+        "resolution_requirements": [
+          "Choose between overnight connection vs early morning direct",
+          "If overnight: arrive Seattle 2AM, late hotel check-in",
+          "If morning: arrive 9:30AM, only 30min before workshop starts",
+          "Adjust Denver hotel checkout based on flight choice",
+          "Adjust Seattle hotel check-in based on arrival time",
+          "Cannot miss 10AM workshop start"
+        ]
+      }
+    ],
+    "required_components": [
+      "flight_chicago_to_denver",
+      "hotel_denver",
+      "flight_denver_to_seattle",
+      "hotel_seattle",
+      "flight_seattle_to_chicago"
+    ],
+    "success_criteria": {
+      "total_cost_max": 1500,
+      "timing_feasible": true,
+      "all_meetings_attended_on_time": true,
+      "replanning_successful": true,
+      "dependent_bookings_updated": true
+    },
+    "expected_challenges": [
+      "Single disruption affects multiple components (flight, 2 hotels, workshop)",
+      "Must choose between two imperfect options (risk vs comfort)",
+      "Timing dependencies: flight → hotel checkout → hotel checkin → workshop"
+    ],
+    "notes": "HARD task because: (1) Two cities with dependencies, (2) One disruption cascades to 4 components, (3) Critical timing constraint (workshop at 10AM), (4) Must make risk vs cost tradeoff."
+  }
+  

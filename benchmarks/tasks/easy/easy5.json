@@ -1,0 +1,50 @@
+{
+    "task_id": "task_006",
+    "difficulty": "easy",
+    "title": "One-Day Business Trip to San Francisco",
+    "scenario": {
+      "description": "Professional needs to attend a morning meeting in SF and return same day",
+      "origin_city": "Los Angeles",
+      "destination_cities": ["San Francisco"],
+      "trip_duration_days": 1
+    },
+    "user_profile": {
+      "party_size": 1,
+      "traveler_types": ["business"],
+      "special_needs": []
+    },
+    "initial_constraints": {
+      "hard": {
+        "budget_max": 400,
+        "departure_date": "2026-07-15",
+        "departure_time_earliest": "06:00",
+        "meeting_time": "2026-07-15T10:00",
+        "meeting_location": "Financial District, San Francisco",
+        "return_date": "2026-07-15",
+        "return_time_earliest": "17:00"
+      },
+      "soft": {
+        "interests": ["efficient_travel", "minimal_transit_time"],
+        "preferences": ["arrive 30min before meeting", "hotel near meeting if staying"]
+      }
+    },
+    "dynamic_events": [],
+    "required_components": [
+      "outbound_flight_arriving_before_meeting",
+      "return_flight_after_17:00"
+    ],
+    "success_criteria": {
+      "total_cost_max": 400,
+      "timing_feasible": true,
+      "arrival_before_meeting_with_buffer": "30_minutes",
+      "return_after_business_hours": true
+    },
+    "expected_challenges": [
+      "Tight timing constraint: must arrive before 10 AM meeting",
+      "Same-day return requires careful flight scheduling",
+      "Budget constraint with time-sensitive flights (usually more expensive)",
+      "Must account for transit time from airport to Financial District"
+    ],
+    "notes": "Tests time-critical planning with specific arrival requirements and same-day logistics."
+  }
+  

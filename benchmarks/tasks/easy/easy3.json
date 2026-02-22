@@ -1,0 +1,49 @@
+{
+    "task_id": "task_003",
+    "difficulty": "easy",
+    "title": "Budget City Exploration in Austin",
+    "scenario": {
+      "description": "Young professional exploring Austin's food and music scene on a tight budget",
+      "origin_city": "Denver",
+      "destination_cities": ["Austin"],
+      "trip_duration_days": 2
+    },
+    "user_profile": {
+      "party_size": 1,
+      "traveler_types": ["young_professional"],
+      "special_needs": []
+    },
+    "initial_constraints": {
+      "hard": {
+        "budget_max": 450,
+        "departure_date": "2026-04-10",
+        "departure_time_earliest": "06:00",
+        "return_date": "2026-04-12",
+        "return_time_latest": "22:00"
+      },
+      "soft": {
+        "interests": ["BBQ", "live music", "local breweries"],
+        "preferences": ["budget-friendly", "authentic local experiences", "walkable"]
+      }
+    },
+    "dynamic_events": [],
+    "required_components": [
+      "outbound_flight",
+      "return_flight",
+      "hotel_2_nights",
+      "bbq_restaurants_min_2",
+      "music_venues_min_1"
+    ],
+    "success_criteria": {
+      "total_cost_max": 450,
+      "timing_feasible": true,
+      "bbq_restaurant_included": true,
+      "live_music_venue_included": true
+    },
+    "expected_challenges": [
+      "Very tight budget requires finding deals on all components",
+      "Must prioritize between accommodation quality and activity budget",
+      "Ensuring authentic BBQ restaurants are included"
+    ],
+    "notes": "Tests strict budget constraint satisfaction with multiple required activity types."
+  }

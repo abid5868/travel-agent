@@ -1,0 +1,45 @@
+{
+    "task_id": "task_002",
+    "difficulty": "easy",
+    "title": "Solo Beach Getaway from Boston to Miami",
+    "scenario": {
+      "description": "Solo traveler seeking a relaxing beach weekend in Miami",
+      "origin_city": "Boston",
+      "destination_cities": ["Miami"],
+      "trip_duration_days": 3
+    },
+    "user_profile": {
+      "party_size": 1,
+      "traveler_types": ["leisure"],
+      "special_needs": []
+    },
+    "initial_constraints": {
+      "hard": {
+        "budget_max": 800,
+        "departure_date": "2026-03-13",
+        "departure_time_earliest": "",
+        "return_date": "2026-03-16",
+        "return_time_latest": ""
+      },
+      "soft": {
+        "interests": ["beach", "swimming", "relaxation"],
+        "preferences": ["beachfront hotel", "seafood restaurants", "outdoor activities"]
+      }
+    },
+    "dynamic_events": [],
+    "required_components": [
+      "outbound_flight",
+      "return_flight",
+      "hotel_3_nights"
+    ],
+    "success_criteria": {
+      "total_cost_max": 800,
+      "timing_feasible": true,
+      "beach_activities_min": 2
+    },
+    "expected_challenges": [
+      "Finding beachfront hotel within budget",
+      "Balancing flight costs with accommodation quality"
+    ],
+    "notes": "Tests basic multi-component planning (flights + hotel) with soft preference satisfaction."
+  }

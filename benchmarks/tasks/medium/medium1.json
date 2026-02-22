@@ -1,0 +1,70 @@
+{
+  "task_id": "task_006",
+  "difficulty": "medium",
+  "title": "Accessible Family Beach Vacation with Hotel Issue",
+  "scenario": {
+    "description": "Family of 4 with wheelchair user planning beach vacation, hotel becomes unavailable mid-planning",
+    "origin_city": "Denver",
+    "destination_cities": ["San Diego"],
+    "trip_duration_days": 5
+  },
+  "user_profile": {
+    "party_size": 4,
+    "traveler_types": ["adult", "adult", "teen", "child"],
+    "special_needs": ["wheelchair_accessible"]
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 3000,
+      "departure_date": "2026-07-15",
+      "departure_time_earliest": "",
+      "return_date": "2026-07-20",
+      "return_time_latest": "",
+      "accessibility_required": true,
+      "wheelchair_accessible": true
+    },
+    "soft": {
+      "interests": ["beach", "family_activities", "aquarium", "zoo"],
+      "preferences": ["beachfront or beach-adjacent", "mix_relaxation_activities", "teen_friendly", "accessible_restaurants"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 6,
+      "event_type": "accommodation_unavailable",
+      "description": "The wheelchair-accessible hotel you selected just notified that their accessible rooms are fully booked for July 15-17 due to a convention. They can only accommodate you starting July 18. You need to find an alternative.",
+      "affected_components": ["hotel"],
+      "resolution_requirements": [
+        "Find alternative wheelchair-accessible hotel for full stay (July 15-20)",
+        "Verify new hotel is still within budget",
+        "Check if restaurant reservations near old hotel need updating based on new location",
+        "Ensure beach access is still convenient from new hotel"
+      ]
+    }
+  ],
+  "required_components": [
+    "outbound_flight",
+    "return_flight",
+    "hotel_5_nights_wheelchair_accessible",
+    "beach_activities_min_2",
+    "family_activities_min_3",
+    "accessible_restaurants_min_5"
+  ],
+  "success_criteria": {
+    "total_cost_max": 3000,
+    "timing_feasible": true,
+    "all_venues_wheelchair_accessible": true,
+    "replanning_successful": true,
+    "unaffected_bookings_preserved": true,
+    "dependent_bookings_updated": true
+  },
+  "expected_challenges": [
+    "Limited wheelchair-accessible hotel inventory",
+    "Must re-validate accessibility across all venues",
+    "Restaurant locations may need adjustment based on new hotel",
+    "Budget must still be satisfied after hotel change",
+    "Must preserve flight bookings (unaffected by hotel change)"
+  ],
+  "notes": "Tests single-step replanning with accessibility constraint propagation. Agent must recognize which components are affected by hotel location change (restaurants nearby) vs unaffected (flights, beach activities)."
+}
