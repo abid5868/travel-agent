@@ -1,0 +1,71 @@
+{
+  "task_id": "task_008",
+  "difficulty": "medium",
+  "title": "Anniversary Weekend in Chicago with Restaurant Cancellation",
+  "scenario": {
+    "description": "A couple celebrating their anniversary in Chicago, focusing on architecture and fine dining. Their main anniversary dinner reservation on Saturday evening gets unexpectedly cancelled.",
+    "origin_city": "New York",
+    "destination_cities": ["Chicago"],
+    "trip_duration_days": 3
+  },
+  "user_profile": {
+    "party_size": 2,
+    "traveler_types": ["adult", "adult"],
+    "special_needs": ["gluten_free"]
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 1500,
+      "departure_date": "2026-09-04",
+      "departure_time_earliest": "08:00",
+      "return_date": "2026-09-06",
+      "return_time_latest": "19:00",
+      "gluten_free_required": true,
+      "mandatory_schedule": {
+        "anniversary_dinner": "saturday_evening"
+      }
+    },
+    "soft": {
+      "interests": ["architecture", "fine_dining", "jazz"],
+      "preferences": ["lake_view_hotel", "romantic_atmosphere"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 6,
+      "event_type": "reservation_cancelled_by_venue",
+      "description": "The Michelin-starred restaurant booked for the Saturday anniversary dinner just called to cancel because the venue was bought out for a private event. You must find an alternative fine-dining restaurant.",
+      "affected_components": ["anniversary_dinner"],
+      "resolution_requirements": [
+        "Find an alternative fine-dining restaurant for Saturday evening",
+        "Ensure the new restaurant can accommodate a strict gluten_free diet",
+        "Verify the new restaurant cost does not break the $1500 total trip budget",
+        "Ensure the dinner time does not conflict with any existing afternoon activities you have already scheduled for Saturday"
+      ]
+    }
+  ],
+  "required_components": [
+    "outbound_flight",
+    "return_flight",
+    "hotel_2_nights",
+    "fine_dining_min_1",
+    "gluten_free_restaurants_min_4",
+    "architecture_tour_min_1"
+  ],
+  "success_criteria": {
+    "total_cost_max": 1500,
+    "timing_feasible": true,
+    "all_restaurants_gluten_free": true,
+    "replanning_successful": true,
+    "unaffected_bookings_preserved": true,
+    "dependent_bookings_updated": true
+  },
+  "expected_challenges": [
+    "Finding a high-quality alternative restaurant on short notice",
+    "Verifying gluten-free options at the new fine-dining venue",
+    "Ensuring the replacement dinner fits into the remaining budget after flights and hotel are paid",
+    "Avoiding time conflicts with existing afternoon activities"
+  ],
+  "notes": "Tests single-step replanning with strict dietary constraints. Agent must substitute a high-cost component (fine dining) without triggering a budget overrun or timeline conflict."
+}

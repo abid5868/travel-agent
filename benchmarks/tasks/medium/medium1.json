@@ -15,7 +15,7 @@
   },
   "initial_constraints": {
     "hard": {
-      "budget_max": 3000,
+      "budget_max": 4500,
       "departure_date": "2026-07-15",
       "departure_time_earliest": "",
       "return_date": "2026-07-20",
@@ -25,7 +25,7 @@
     },
     "soft": {
       "interests": ["beach", "family_activities", "aquarium", "zoo"],
-      "preferences": ["beachfront or beach-adjacent", "mix_relaxation_activities", "teen_friendly", "accessible_restaurants"]
+      "preferences": ["beach_adjacent", "mix_relaxation_activities", "teen_friendly", "accessible_restaurants"]
     }
   },
   "dynamic_events": [
@@ -52,7 +52,7 @@
     "accessible_restaurants_min_5"
   ],
   "success_criteria": {
-    "total_cost_max": 3000,
+    "total_cost_max": 4500,
     "timing_feasible": true,
     "all_venues_wheelchair_accessible": true,
     "replanning_successful": true,

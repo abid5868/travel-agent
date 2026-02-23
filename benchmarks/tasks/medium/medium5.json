@@ -1,0 +1,64 @@
+{
+  "task_id": "task_010",
+  "difficulty": "medium",
+  "title": "Orlando Theme Park Weekend with Outbound Flight Cancellation",
+  "scenario": {
+    "description": "A family weekend trip to Orlando focusing on theme parks. A sudden cancellation of the outbound flight requires finding a replacement and dynamically adjusting the Day 1 itinerary based on the new arrival time.",
+    "origin_city": "New York",
+    "destination_cities": ["Orlando"],
+    "trip_duration_days": 3
+  },
+  "user_profile": {
+    "party_size": 3,
+    "traveler_types": ["adult", "adult", "child"],
+    "special_needs": []
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 2500,
+      "departure_date": "2026-10-09",
+      "departure_time_earliest": "06:00",
+      "return_date": "2026-10-11",
+      "return_time_latest": "20:00"
+    },
+    "soft": {
+      "interests": ["theme_parks", "character_dining"],
+      "preferences": ["kid_friendly_hotel"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 6,
+      "event_type": "flight_cancelled",
+      "description": "The outbound flight you just booked to Orlando has been cancelled by the airline. You must search for and book an alternative flight for today. Depending on your new arrival time, you may need to cancel or reschedule your Friday activities.",
+      "affected_components": ["outbound_flight", "friday_activities"],
+      "resolution_requirements": [
+        "Use the flight search tool to find and book a replacement outbound flight for today",
+        "Check the arrival time of the new flight. If it conflicts with Friday afternoon plans, remove or reschedule those activities",
+        "Verify that the new flight cost keeps the total trip under the $2500 budget",
+        "Ensure the Saturday and Sunday theme park plans remain completely unaffected"
+      ]
+    }
+  ],
+  "required_components": [
+    "outbound_flight",
+    "return_flight",
+    "hotel_2_nights",
+    "theme_park_visits_min_2",
+    "family_restaurants_min_3"
+  ],
+  "success_criteria": {
+    "total_cost_max": 2500,
+    "timing_feasible": true,
+    "replanning_successful": true,
+    "unaffected_bookings_preserved": true,
+    "dependent_bookings_updated": true
+  },
+  "expected_challenges": [
+    "Handling a major logistical disruption right at the start of the itinerary",
+    "Adjusting the schedule to reflect a later arrival without breaking the rest of the trip",
+    "Ensuring the budget constraints hold despite potentially higher last-minute flight costs"
+  ],
+  "notes": "Tests cascading delays and tool usage. The agent must independently search for flights and logically deduce the temporal impact of the new arrival time on existing plans."
+}

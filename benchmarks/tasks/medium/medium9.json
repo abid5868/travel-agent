@@ -1,0 +1,65 @@
+{
+  "task_id": "task_014",
+  "difficulty": "medium",
+  "title": "San Francisco Weekend with Unexpected Plus-One",
+  "scenario": {
+    "description": "A solo weekend getaway to San Francisco. Mid-planning, the traveler's partner decides to join the trip, requiring additional flight tickets, a hotel room capacity check, and dining reservation updates.",
+    "origin_city": "Seattle",
+    "destination_cities": ["San Francisco"],
+    "trip_duration_days": 3
+  },
+  "user_profile": {
+    "party_size": 1,
+    "traveler_types": ["adult"],
+    "special_needs": []
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 1200,
+      "departure_date": "2026-08-14",
+      "departure_time_earliest": "15:00",
+      "return_date": "2026-08-16",
+      "return_time_latest": "20:00"
+    },
+    "soft": {
+      "interests": ["tech_museums", "seafood"],
+      "preferences": ["boutique_hotel"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 6,
+      "event_type": "party_size_increase",
+      "description": "Your partner just cleared their schedule and will join you on this trip. Your total party size is now 2 adults. Your new combined budget is $2200. You must book an additional ticket on the exact same flights, ensure your hotel room can accommodate two people, and update all restaurant reservations to a table for two.",
+      "affected_components": ["outbound_flight", "return_flight", "hotel", "restaurants"],
+      "resolution_requirements": [
+        "Add a second passenger to the existing outbound and return flights",
+        "Verify or upgrade the hotel booking to ensure the room capacity is at least 2",
+        "Modify all existing restaurant reservations from 1 person to 2 people",
+        "Ensure the new total cost for two people stays under the new $2200 budget"
+      ]
+    }
+  ],
+  "required_components": [
+    "outbound_flight",
+    "return_flight",
+    "hotel_2_nights",
+    "seafood_restaurants_min_2",
+    "museum_visits_min_1"
+  ],
+  "success_criteria": {
+    "total_cost_max": 2200,
+    "final_party_size": 2,
+    "timing_feasible": true,
+    "replanning_successful": true,
+    "unaffected_bookings_preserved": true,
+    "dependent_bookings_updated": true
+  },
+  "expected_challenges": [
+    "Agent must handle an entity count mutation (from 1 to 2) across multiple independent bookings.",
+    "Checking if the selected flights still have a second seat available, and if the hotel room type allows 2 guests.",
+    "Managing a dynamic budget increase alongside the entity increase."
+  ],
+  "notes": "Tests quantity mutation. The agent must update the parameters of already-booked API calls without arbitrarily changing the venues or flight times unless necessary."
+}

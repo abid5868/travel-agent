@@ -1,0 +1,64 @@
+{
+  "task_id": "task_011",
+  "difficulty": "medium",
+  "title": "New Orleans Jazz Weekend with Sudden Budget Reduction",
+  "scenario": {
+    "description": "A couple traveling to New Orleans for a weekend of jazz. Mid-planning, their travel budget is unexpectedly reduced, requiring a downgrade of accommodation or dining to save costs.",
+    "origin_city": "Atlanta",
+    "destination_cities": ["New Orleans"],
+    "trip_duration_days": 3
+  },
+  "user_profile": {
+    "party_size": 2,
+    "traveler_types": ["adult", "adult"],
+    "special_needs": []
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 2200,
+      "departure_date": "2026-11-06",
+      "departure_time_earliest": "16:00",
+      "return_date": "2026-11-08",
+      "return_time_latest": "21:00"
+    },
+    "soft": {
+      "interests": ["live_jazz", "french_quarter"],
+      "preferences": ["luxury_hotel", "fine_dining"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 6,
+      "event_type": "budget_reduced",
+      "description": "You decide to set aside $500 from your trip budget to purchase a piece of local art you just saw online. Your new maximum budget for the trip booking is now $1700 instead of $2200. You must adjust your existing plans to meet this new stricter constraint.",
+      "affected_components": ["hotel", "restaurants"],
+      "resolution_requirements": [
+        "Downgrade the previously selected luxury hotel or fine-dining restaurants to cheaper alternatives",
+        "Ensure the new total cost of flights, hotel, activities, and dining is strictly under the new $1700 limit",
+        "Preserve the original outbound and return flights",
+        "Ensure the planned live jazz activities remain unaffected"
+      ]
+    }
+  ],
+  "required_components": [
+    "outbound_flight",
+    "return_flight",
+    "hotel_2_nights",
+    "live_jazz_min_2",
+    "restaurants_min_4"
+  ],
+  "success_criteria": {
+    "total_cost_max": 1700,
+    "timing_feasible": true,
+    "replanning_successful": true,
+    "unaffected_bookings_preserved": true,
+    "dependent_bookings_updated": true
+  },
+  "expected_challenges": [
+    "Agent must perform a cost-benefit analysis to decide whether to downgrade the hotel, the restaurants, or both.",
+    "Handling a numeric hard-constraint change dynamically (budget drops from 2200 to 1700).",
+    "Maintaining the logistical integrity (timing and flights) while swapping out a major component like the hotel."
+  ],
+  "notes": "Tests dynamic budget reallocation within a US domestic context. The agent must release expensive components and query for budget-friendly alternatives without breaking the temporal constraints of the remaining itinerary."
+}
