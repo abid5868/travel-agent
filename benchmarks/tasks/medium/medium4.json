@@ -1,0 +1,67 @@
+{
+  "task_id": "task_009",
+  "difficulty": "medium",
+  "title": "Historical Weekend in D.C. with Weather Disruption",
+  "scenario": {
+    "description": "Two history buffs taking a weekend trip to Washington D.C. A sudden severe rainstorm forces their main outdoor activity on Saturday to be cancelled and replaced with indoor activities.",
+    "origin_city": "Boston",
+    "destination_cities": ["Washington D.C."],
+    "trip_duration_days": 3
+  },
+  "user_profile": {
+    "party_size": 2,
+    "traveler_types": ["adult", "adult"],
+    "special_needs": []
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 1000,
+      "departure_date": "2026-04-17",
+      "departure_time_earliest": "07:00",
+      "return_date": "2026-04-19",
+      "return_time_latest": "21:00",
+      "mandatory_schedule": {
+        "outdoor_activity": "saturday"
+      }
+    },
+    "soft": {
+      "interests": ["American_history", "monument_photography", "museums"],
+      "preferences": ["public_transit_friendly", "budget_friendly_dining"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 6,
+      "event_type": "weather_disruption",
+      "description": "A severe thunderstorm warning is issued for Saturday. Your outdoor activity has been cancelled by the operator. You need to find indoor historical activities to replace it.",
+      "affected_components": ["outdoor_activity"],
+      "resolution_requirements": [
+        "Find indoor history or art museums to replace outdoor activity on Saturday",
+        "Ensure the replacement activities keep the total trip under the $1000 budget",
+        "Verify that transit time between the hotel, the new indoor activities, and existing meals is still feasible"
+      ]
+    }
+  ],
+  "required_components": [
+    "outbound_flight",
+    "return_flight",
+    "hotel_2_nights",
+    "restaurants_min_4",
+    "indoor_museums_min_2"
+  ],
+  "success_criteria": {
+    "total_cost_max": 1000,
+    "timing_feasible": true,
+    "no_outdoor_activities_on_saturday": true,
+    "replanning_successful": true,
+    "unaffected_bookings_preserved": true,
+    "dependent_bookings_updated": true
+  },
+  "expected_challenges": [
+    "Handling weather-related constraints that completely invalidate outdoor plans for a specific day",
+    "Replanning a appropriate indoor alternatives without exceeding the budget",
+    "Re-validating the transit times and geographic feasibility of the new indoor locations"
+  ],
+  "notes": "Tests replanning driven by environmental factors (weather). The agent must understand the semantic difference between 'indoor' and 'outdoor' venues and adjust the schedule accordingly."
+}

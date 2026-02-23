@@ -1,0 +1,68 @@
+{
+  "task_id": "task_015",
+  "difficulty": "medium",
+  "title": "San Diego Family Trip with Major Attraction Closure",
+  "scenario": {
+    "description": "A family trip to San Diego centered around a full-day visit to a major animal park. A sudden weekend closure of the park forces the family to find alternative full-day entertainment without exceeding the budget.",
+    "origin_city": "Denver",
+    "destination_cities": ["San Diego"],
+    "trip_duration_days": 4
+  },
+  "user_profile": {
+    "party_size": 4,
+    "traveler_types": ["adult", "adult", "child", "child"],
+    "special_needs": []
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 3500,
+      "departure_date": "2026-06-11",
+      "departure_time_earliest": "08:00",
+      "return_date": "2026-06-14",
+      "return_time_latest": "19:00",
+      "mandatory_schedule": {
+        "major_animal_park_visit": "saturday_full_day"
+      }
+    },
+    "soft": {
+      "interests": ["wildlife", "beaches", "family_friendly_dining"],
+      "preferences": ["pool_hotel", "direct_flights"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 6,
+      "event_type": "venue_closed",
+      "description": "The major animal park you scheduled for Saturday just announced a total closure for the entire weekend due to a power facility failure. You must cancel these tickets and find alternative family-friendly attractions (like aquariums or interactive museums) to fill the Saturday schedule.",
+      "affected_components": ["major_animal_park_visit"],
+      "resolution_requirements": [
+        "Remove the cancelled major animal park from the itinerary",
+        "Book alternative family-friendly attractions to cover the empty Saturday schedule",
+        "Ensure the replacement activities are suitable for a family with children",
+        "Verify that the overall trip remains under the $3500 budget"
+      ]
+    }
+  ],
+  "required_components": [
+    "outbound_flight",
+    "return_flight",
+    "hotel_3_nights",
+    "family_attractions_min_2",
+    "restaurants_min_6"
+  ],
+  "success_criteria": {
+    "total_cost_max": 3500,
+    "timing_feasible": true,
+    "animal_park_removed": true,
+    "replanning_successful": true,
+    "unaffected_bookings_preserved": true,
+    "dependent_bookings_updated": true
+  },
+  "expected_challenges": [
+    "Agent must completely replace a massive chunk of the schedule (a full-day activity) with a combination of smaller alternative activities.",
+    "Maintaining the semantic requirement of 'family-friendly' for the replacement activities.",
+    "Rebalancing the budget after refunding a likely expensive theme park ticket and buying new attraction tickets."
+  ],
+  "notes": "Tests large-block schedule replacement. The agent must fill a newly created void in the itinerary with semantically appropriate alternatives."
+}

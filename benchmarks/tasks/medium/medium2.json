@@ -1,0 +1,70 @@
+{
+  "task_id": "task_007",
+  "difficulty": "medium",
+  "title": "Vegan Culinary & Arts Weekend in Seattle with Show Cancellation",
+  "scenario": {
+    "description": "Couple seeking a weekend getaway focused on arts and strict vegan dining. Their main evening entertainment gets cancelled.",
+    "origin_city": "Portland",
+    "destination_cities": ["Seattle"],
+    "trip_duration_days": 3
+  },
+  "user_profile": {
+    "party_size": 2,
+    "traveler_types": ["adult", "adult"],
+    "special_needs": ["strict_vegan"]
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 1200,
+      "departure_date": "2026-08-14",
+      "departure_time_earliest": "17:00",
+      "return_date": "2026-08-16",
+      "return_time_latest": "20:00",
+      "strict_vegan_only": true,
+      "mandatory_schedule": {
+        "evening_entertainment": "saturday_evening"
+      }
+    },
+    "soft": {
+      "interests": ["live_theater", "modern_art", "indie_music"],
+      "preferences": ["walkable_neighborhoods", "boutique_hotel"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 6,
+      "event_type": "activity_cancelled",
+      "description": "The Saturday evening entertainment has just been cancelled due to a power outage at the venue. You need to find alternative evening entertainment.",
+      "affected_components": ["saturday_evening_activity"],
+      "resolution_requirements": [
+        "Find alternative arts/music entertainment for Saturday evening",
+        "Verify new activity ticket costs keep total trip within the $1200 budget",
+        "If the new activity is in a different neighborhood, ensure pre-show Vegan dinner reservation is still logistically feasible (or update the restaurant)"
+      ]
+    }
+  ],
+  "required_components": [
+    "outbound_flight",
+    "return_flight",
+    "hotel_2_nights",
+    "vegan_restaurants_min_6",
+    "arts_activities_min_2",
+    "evening_entertainment_min_1"
+  ],
+  "success_criteria": {
+    "total_cost_max": 1200,
+    "timing_feasible": true,
+    "all_restaurants_strict_vegan": true,
+    "replanning_successful": true,
+    "unaffected_bookings_preserved": true,
+    "dependent_bookings_updated": true
+  },
+  "expected_challenges": [
+    "Strict vegan constraint limits dining options significantly",
+    "Finding same-day alternative entertainment that matches user interests",
+    "Checking spatial dependency: new activity location might conflict with existing dinner plans",
+    "Must preserve the flight tickets and hotel booking (unaffected by the entertainment cancellation)"
+  ],
+  "notes": "Tests single-step replanning with strict dietary constraints. Agent must reason about spatial and temporal dependencies between the new activity and existing dinner reservations."
+}
