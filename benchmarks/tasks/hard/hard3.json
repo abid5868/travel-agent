@@ -1,0 +1,89 @@
+{
+  "task_id": "task_018",
+  "difficulty": "hard",
+  "title": "Accessible Group Wedding Weekend with Hotel Double-Booking Cascade",
+  "scenario": {
+    "description": "A family of 6 (including one wheelchair-dependent elderly member) is traveling to Portland for a wedding event. The wedding ceremony is on Saturday, rehearsal dinner Friday evening, and family gathering Sunday morning. After booking, the hotel confirms they made a double-booking error and must relocate the group.",
+    "origin_city": "Seattle",
+    "destination_cities": ["Portland"],
+    "trip_duration_days": 3
+  },
+  "user_profile": {
+    "party_size": 6,
+    "traveler_types": ["adult", "adult", "adult", "adult", "teen", "elderly"],
+    "special_needs": ["wheelchair_accessible", "mobility_assistance"]
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 3500,
+      "departure_date": "2026-09-10",
+      "departure_time_earliest": "",
+      "return_date": "2026-09-13",
+      "return_time_latest": "",
+      "accessibility_required": true,
+      "wheelchair_accessible_mandatory": true,
+      "mandatory_events": {
+        "rehearsal_dinner": "friday_evening_6pm",
+        "ceremony": "saturday_2pm",
+        "family_brunch": "sunday_9am"
+      }
+    },
+    "soft": {
+      "interests": ["family_togetherness", "accessible_venues"],
+      "preferences": ["all_accessible_features", "universal_design", "nearby_restaurants"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 5,
+      "event_type": "accommodation_overbooked",
+      "description": "The hotel contacts you urgently: they double-booked your accessible room and must relocate your entire group. New hotel has ONE accessible room (fits 3 people) but you need 6 people accommodated total. Option 1: Book new hotel accessible room + non-accessible rooms elsewhere in wedding block (may be across town). Option 2: Split the group across two nearby hotels (one accessible, one standard). Option 3: Use available Airbnb's and hotels (may not all be wheelchair accessible for pickup/dropoff). You have 2 hours to decide.",
+      "affected_components": [
+        "hotel_rooms_friday_saturday_sunday",
+        "ground_transportation_between_hotels",
+        "accessibility_verification_all_venues",
+        "restaurant_reservations_near_hotels",
+        "elderly_family_member_mobility_plans"
+      ],
+      "resolution_requirements": [
+        "Find alternative accommodation for all 6 people that maintains wheelchair accessibility",
+        "If splitting across hotels: arrange ground transportation between them for Friday dinner, Saturday ceremony, Sunday brunch",
+        "Verify all mandatory event venues are accessible from new hotel(s)",
+        "Verify all restaurant reservations near new hotel location(s) or adjust if locations change significantly",
+        "Ensure elderly family member accessibility accommodations are preserved (bathroom accessibility, room location, etc.)",
+        "Keep total accommodation cost increase within budget (max 3500 total for trip)",
+        "Preserve rental car or rideshare arrangements"
+      ]
+    }
+  ],
+  "required_components": [
+    "transportation_to_portland",
+    "accommodation_friday_night",
+    "accommodation_saturday_night",
+    "accommodation_sunday_night",
+    "rehearsal_dinner_venue_accessible",
+    "wedding_ceremony_venue_accessible",
+    "family_brunch_venue_accessible",
+    "ground_transportation_all_accessible",
+    "accessible_restaurants_min_3"
+  ],
+  "success_criteria": {
+    "total_cost_max": 3500,
+    "timing_feasible": true,
+    "all_mandatory_events_accessible": true,
+    "all_accommodation_wheelchair_accessible": true,
+    "elderly_mobility_needs_met": true,
+    "replanning_successful": true,
+    "group_coherence_maintained": true
+  },
+  "expected_challenges": [
+    "Accessibility constraint must be verified not just for primary accommodation but for ground transportation between multiple hotels if split",
+    "Cascading effect: hotel relocation → ground transport replanning → restaurant location verification → accessibility of all venues",
+    "Group dynamics: must keep 6 people reasonably coordinated across multiple accommodations",
+    "Wheelchair accessibility + elderly needs create compound constraint",
+    "Late-notice replanning (2-hour deadline) simulates real-world travel stress",
+    "Multiple mandatory events with specific times and accessibility requirements"
+  ],
+  "notes": "HARD task because: (1) Group travel with accessibility constraints, (2) Single disruption (overbooking) cascades to 5+ components, (3) Agent must reason about spatial/temporal dependencies between hotels, events, and transportation, (4) Multiple family member needs to coordinate, (5) Accessibility verification must be applied across entire itinerary, not just accommodation."
+}

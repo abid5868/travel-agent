@@ -1,0 +1,97 @@
+{
+  "task_id": "task_020",
+  "difficulty": "hard",
+  "title": "Wedding Weekend Mini-Series with Venue Cancellation and Multi-Event Cascade",
+  "scenario": {
+    "description": "A wedding party of 8 guests is traveling to Napa Valley for a multi-day wedding celebration: Bachelor party Thursday, rehearsal Friday, wedding ceremony & reception Saturday, post-wedding brunch Sunday. All events are heavily scheduled with specific timing and venue requirements. The primary wedding venue suddenly cancels due to staffing, forcing complete event restructuring.",
+    "origin_city": "San Francisco",
+    "destination_cities": ["Napa Valley"],
+    "trip_duration_days": 4
+  },
+  "user_profile": {
+    "party_size": 8,
+    "traveler_types": ["adult", "adult", "adult", "adult", "adult", "adult", "adult", "adult"],
+    "special_needs": []
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 6000,
+      "departure_date": "2026-07-08",
+      "return_date": "2026-07-12",
+      "mandatory_schedule": {
+        "bachelor_party": "thursday_evening_6pm",
+        "rehearsal": "friday_12pm",
+        "rehearsal_dinner": "friday_7pm",
+        "wedding_ceremony": "saturday_5pm",
+        "reception": "saturday_6pm_to_midnight",
+        "post_wedding_brunch": "sunday_10am"
+      },
+      "maximum_guest_party_size": 8,
+      "all_events_required": true
+    },
+    "soft": {
+      "interests": ["wine_tasting", "upscale_dining", "celebration", "scenic_venues"],
+      "preferences": ["wine_country_ambiance", "farm_to_table", "outdoor_garden_settings"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 7,
+      "event_type": "primary_venue_cancelled",
+      "description": "The wedding venue notifies you Saturday morning 6 hours before the 5 PM ceremony: they are closing temporarily due to staffing emergency (multiple staff members called in sick during peak season). You must find BOTH a ceremony venue AND an alternative reception venue with 4 hours before the scheduled 5 PM start. The original restaurant had reserved tables for rehearsal dinner Friday (still available at their backup satellite location). Available options: (1) Split ceremony/reception across two separate venues (ceremony at winery tasting room, reception at restaurant private dining), (2) Move reception to Saturday evening catering event at hotel ballroom and do ceremony at outdoor garden (may require permit rush), (3) Postpone entire wedding to next Saturday (may break guest commitments).",
+      "affected_components": [
+        "wedding_ceremony_venue",
+        "wedding_reception_venue",
+        "rehearsal_dinner_location_verification",
+        "guest_accommodation_if_postponed",
+        "transportation_between_new_venues",
+        "catering_and_decoration_relocation",
+        "total_event_budget"
+      ],
+      "resolution_requirements": [
+        "Choose between three major scenarios (split venues / emergency Saturday alternate / postpone)",
+        "If split venues: book ceremony venue + reception venue within 4 hours; arrange guest transportation between locations",
+        "If Saturday alternate: verify venue availability, capacity for 8 guests, catering arrangements; handle permit rush if needed",
+        "If postpone: verify all 8 guests can return next weekend; handle rebooking logistics and budget impact",
+        "Verify rehearsal dinner Friday location is confirmed (already committed)",
+        "Confirm bachelor party Thursday is unaffected",
+        "Preserve Sunday brunch venue or rebook if dependent on ceremony location",
+        "Ensure total additional costs stay within $6000 overall budget",
+        "Communicate quickly with all 8 guests about changes and new logistics"
+      ]
+    }
+  ],
+  "required_components": [
+    "transportation_to_napa",
+    "guest_hotel_thursday_friday_saturday_nights",
+    "bachelor_party_thursday",
+    "rehearsal_friday_venue",
+    "rehearsal_dinner_friday",
+    "wedding_ceremony_saturday",
+    "wedding_reception_saturday",
+    "post_wedding_brunch_sunday",
+    "group_activities_min_2"
+  ],
+  "success_criteria": {
+    "total_cost_max": 6000,
+    "timing_feasible": true,
+    "all_mandatory_events_held": true,
+    "ceremony_held_saturday": true,
+    "all_8_guests_accommodated": true,
+    "replanning_successful": true,
+    "group_coordination_maintained": true,
+    "celebration_quality_preserved": true
+  },
+  "expected_challenges": [
+    "Extreme time pressure: 4-hour notice before 5 PM ceremony requires rapid decision-making",
+    "Three major scenarios with very different implications (split venues vs emergency same-day vs postpone)",
+    "Cascading effects: venue change → transportation → catering → guest logistics →Sunday brunch adjustment",
+    "Group dynamics: must coordinate decision with bride, groom, and 8 guests quickly",
+    "Budget fixed: any additional emergency venue costs may require cutting other elements",
+    "Spatial reasoning: if split venues, must optimize routes and timing for 8 guests",
+    "Temporary venue may have different aesthetic/vibe than original, requiring expectation management",
+    "Rehearsal dinner location verification to ensure congruence with new ceremony plans"
+  ],
+  "notes": "HARD task because: (1) Single venue failure cascades to 4 separate events (ceremony, reception, rehearsal, brunch), (2) Extreme time pressure (4-hour window), (3) Three major mutually-exclusive solutions with major tradeoffs, (4) Group coordination across 8 people, (5) Budget is fixed but may need reallocation, (6) Must preserve event spirit despite disruption, (7) Tests event-dependency reasoning and comprehensive replanning across a structured itinerary, (8) Makes simple binary decisions (reschedule vs not) into complex multi-stakeholder scenarios."
+}

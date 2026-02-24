@@ -1,0 +1,83 @@
+{
+  "task_id": "task_017",
+  "difficulty": "hard",
+  "title": "International Honeymoon Itinerary with Flight Cancellation Cascade",
+  "scenario": {
+    "description": "Newlyweds planned a 10-day romantic honeymoon across three European cities: Paris, Venice, and Barcelona. A flight cancellation in the middle of the trip forces complete itinerary restructuring.",
+    "origin_city": "New York",
+    "destination_cities": ["Paris", "Venice", "Barcelona"],
+    "trip_duration_days": 10
+  },
+  "user_profile": {
+    "party_size": 2,
+    "traveler_types": ["adult", "adult"],
+    "special_needs": []
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 5000,
+      "departure_date": "2026-06-15",
+      "return_date": "2026-06-25",
+      "return_time_latest": "",
+      "must_visit_all_three_cities": true
+    },
+    "soft": {
+      "interests": ["romantic_experiences", "fine_dining", "museums", "historical_sites"],
+      "preferences": ["luxury_hotels", "private_gondola_tours", "sunset_viewpoints", "guided_wine_tastings"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 8,
+      "event_type": "flight_cancelled",
+      "description": "Your Paris → Venice connecting flight on June 18 has been cancelled due to mechanical issues. The airline offers two options: (1) Rebook you on a flight departing June 19 at 7 AM (losing one full day in Venice), or (2) Route you through Rome on June 18 evening, arriving Venice June 19 at 11 PM (exhausting arrival). Any rebooking costs an additional $400 per ticket (total $800). You must also decide whether to keep or cancel your current Venice hotel checkout on June 19.",
+      "affected_components": [
+        "flight_paris_to_venice",
+        "venice_hotel_checkout",
+        "venice_hotel_checkin_dates",
+        "barcelona_hotel_checkin_dates",
+        "total_budget"
+      ],
+      "resolution_requirements": [
+        "Choose between two flight options (losing a day vs exhausting evening arrival)",
+        "Adjust Venice hotel stay: extend by 1 night OR keep same dates with late arrival",
+        "Adjust Barcelona hotel checkin to align with new Venice checkout",
+        "If extending Venice hotel, verify new total cost stays within $5000 budget",
+        "If choosing Rome routing (option 2), verify $800 surcharge fits budget",
+        "Preserve Paris hotel and outbound/return international flights",
+        "Ensure all three cities are still visited (required)"
+      ]
+    }
+  ],
+  "required_components": [
+    "flight_nyc_to_paris",
+    "flight_paris_to_venice",
+    "flight_venice_to_barcelona",
+    "flight_barcelona_to_nyc",
+    "hotel_paris_3_nights",
+    "hotel_venice_3_nights",
+    "hotel_barcelona_4_nights",
+    "romantic_experiences_min_3",
+    "fine_dining_min_4",
+    "guided_tours_min_3"
+  ],
+  "success_criteria": {
+    "total_cost_max": 5000,
+    "timing_feasible": true,
+    "all_three_cities_visited": true,
+    "replanning_successful": true,
+    "unaffected_bookings_preserved": true,
+    "dependent_bookings_updated": true,
+    "romantic_nature_preserved": true
+  },
+  "expected_challenges": [
+    "Cascading impact: single flight cancellation affects 4 components (two hotel checkout/checkins, connecting flight timing, budget)",
+    "Must choose between sub-optimal solutions (lose vacation day vs exhausting arrival)",
+    "International travel and timezone considerations",
+    "Budget pressure: surcharge may force downgrades elsewhere",
+    "Must preserve intericity flight connections while adjusting hotel dates",
+    "Honeymoon experience quality should be maintained despite the disruption"
+  ],
+  "notes": "HARD task because: (1) Three destination cities with linear dependencies, (2) Single disruption cascades to 4 components, (3) International logistics with no direct solutions, (4) Budget pressure creates secondary constraints, (5) Quality/experience considerations beyond just logistics."
+}
