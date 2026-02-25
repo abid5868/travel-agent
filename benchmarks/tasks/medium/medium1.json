@@ -31,7 +31,7 @@
   "dynamic_events": [
     {
       "event_id": "event_1",
-      "trigger_turn": 6,
+      "trigger_turn": 5,
       "event_type": "accommodation_unavailable",
       "description": "The wheelchair-accessible hotel you selected just notified that their accessible rooms are fully booked for July 15-17 due to a convention. They can only accommodate you starting July 18. You need to find an alternative.",
       "affected_components": ["hotel"],

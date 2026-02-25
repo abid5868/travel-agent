@@ -1,73 +1,91 @@
 {
-    "task_id": "task_016",
-    "difficulty": "hard",
-    "title": "Business Trip with Flight Cancellation",
-    "scenario": {
-      "description": "Business trip from Chicago to Denver for presentation, then Seattle for workshop. Flight cancellation forces replanning.",
-      "origin_city": "Chicago",
-      "destination_cities": ["Denver", "Seattle"],
-      "trip_duration_days": 4
+  "task_id": "task_016",
+  "difficulty": "hard",
+  "title": "Alaska Glacier and Northern Lights Adventure",
+  "scenario": {
+    "description": "Solo adventure traveler planning 8-day Alaska trip from New York to see glaciers, northern lights, and wildlife. Must coordinate multiple activities with weather dependencies, seasonal timing, and remote location logistics. A key glacier tour gets cancelled due to weather, forcing replanning of multi-day itinerary.",
+    "origin_city": "New York",
+    "destination_cities": ["Anchorage", "Fairbanks"],
+    "trip_duration_days": 8
+  },
+  "user_profile": {
+    "party_size": 1,
+    "traveler_types": ["adventure"],
+    "special_needs": []
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 3500,
+      "departure_date": "2026-09-15",
+      "return_date": "2026-09-23",
+      "return_time_latest": "",
+      "must_see_northern_lights": true,
+      "must_see_glaciers": true,
+      "must_see_wildlife": true,
+      "weather_dependent_activities": true,
+      "requires_rental_car_anchorage": true
     },
-    "user_profile": {
-      "party_size": 1,
-      "traveler_types": ["business"],
-      "special_needs": []
-    },
-    "initial_constraints": {
-      "hard": {
-        "budget_max": 1500,
-        "departure_date": "2026-07-09",
-        "denver_presentation_time": "2026-07-10T14:00",
-        "seattle_workshop_time": "2026-07-12T09:00",
-        "return_date": "2026-07-13",
-        "return_time_latest": ""
-      },
-      "soft": {
-        "interests": ["efficient_travel"],
-        "preferences": ["direct flights preferred"]
-      }
-    },
-    "dynamic_events": [
-      {
-        "event_id": "event_1",
-        "trigger_turn": 7,
-        "event_type": "flight_cancelled",
-        "description": "Your Denver → Seattle flight on July 11 at 4PM is cancelled due to weather. Alternative options: (1) Denver → Seattle via Phoenix (departs July 11 at 8PM, arrives Seattle July 12 at 2AM), or (2) Direct Denver → Seattle on July 12 at 6AM arriving 9:30AM.",
-        "affected_components": [
-          "flight_denver_to_seattle",
-          "denver_hotel",
-          "seattle_hotel",
-          "seattle_workshop_arrival"
-        ],
-        "resolution_requirements": [
-          "Choose between overnight connection vs early morning direct",
-          "If overnight: arrive Seattle 2AM, late hotel check-in",
-          "If morning: arrive 9:30AM, only 30min before workshop starts",
-          "Adjust Denver hotel checkout based on flight choice",
-          "Adjust Seattle hotel check-in based on arrival time",
-          "Cannot miss 10AM workshop start"
-        ]
-      }
-    ],
-    "required_components": [
-      "flight_chicago_to_denver",
-      "hotel_denver",
-      "flight_denver_to_seattle",
-      "hotel_seattle",
-      "flight_seattle_to_chicago"
-    ],
-    "success_criteria": {
-      "total_cost_max": 1500,
-      "timing_feasible": true,
-      "all_meetings_attended_on_time": true,
-      "replanning_successful": true,
-      "dependent_bookings_updated": true
-    },
-    "expected_challenges": [
-      "Single disruption affects multiple components (flight, 2 hotels, workshop)",
-      "Must choose between two imperfect options (risk vs comfort)",
-      "Timing dependencies: flight → hotel checkout → hotel checkin → workshop"
-    ],
-    "notes": "HARD task because: (1) Two cities with dependencies, (2) One disruption cascades to 4 components, (3) Critical timing constraint (workshop at 10AM), (4) Must make risk vs cost tradeoff."
-  }
-  
+    "soft": {
+      "interests": ["photography", "hiking", "nature", "adventure", "wildlife"],
+      "preferences": ["authentic_wilderness", "guided_tours_preferred", "flexible_weather_backup", "outdoor_camping_acceptable"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 8,
+      "event_type": "weather_cancellation_glacier_tour",
+      "description": "Your Day 4 glacier kayaking tour at Prince William Sound (departing from Anchorage) has been cancelled due to severe weather conditions and rough seas. This was a full-day activity (8 AM - 6 PM) including transportation. Your options: (1) Rebook the glacier tour for Day 5 morning (conflicts with your planned drive to Fairbanks for northern lights viewing), OR (2) Substitute with Matanuska Glacier hiking tour (2-hour drive from Anchorage, shorter activity, arrives back by 4 PM allowing evening Fairbanks drive), OR (3) Skip glacier tour entirely and add extra day in Fairbanks for better northern lights chances. Each option has different implications for your Anchorage rental car return, Fairbanks hotel booking, and northern lights viewing schedule.",
+      "affected_components": [
+        "day_4_glacier_kayaking_tour",
+        "day_5_anchorage_to_fairbanks_drive",
+        "rental_car_return_location_and_timing",
+        "fairbanks_hotel_checkin_date",
+        "northern_lights_viewing_nights_available",
+        "backup_activities_anchorage"
+      ],
+      "resolution_requirements": [
+        "Choose between 3 options with different trade-offs",
+        "Option 1 (Rebook Day 5): Delays Fairbanks arrival, loses one northern lights viewing night, must extend Anchorage rental car",
+        "Option 2 (Substitute tour): Different glacier experience (hiking vs kayaking), shorter activity, keeps Fairbanks schedule intact",
+        "Option 3 (Skip glacier): Violates 'must see glaciers' hard constraint unless alternative glacier viewing arranged (e.g., flight tour, different ground tour)",
+        "Adjust rental car return timing based on new Anchorage departure",
+        "Update Fairbanks hotel check-in date if choosing Option 1",
+        "Ensure 'must see glaciers' constraint still met with any option",
+        "Verify total cost stays within $3500 budget (tour substitutions may have different prices)"
+      ]
+    }
+  ],
+  "required_components": [
+    "flight_nyc_to_anchorage",
+    "flight_fairbanks_to_nyc",
+    "rental_car_anchorage",
+    "hotel_anchorage_3_nights",
+    "hotel_fairbanks_4_nights",
+    "glacier_tour_or_viewing",
+    "northern_lights_tour_or_viewing_min_2_nights",
+    "wildlife_viewing_activity",
+    "denali_national_park_visit",
+    "outdoor_activities_min_4"
+  ],
+  "success_criteria": {
+    "total_cost_max": 3500,
+    "timing_feasible": true,
+    "must_see_glaciers_satisfied": true,
+    "must_see_northern_lights_satisfied": true,
+    "must_see_wildlife_satisfied": true,
+    "rental_car_logistics_resolved": true,
+    "replanning_successful": true,
+    "adventure_quality_maintained": true
+  },
+  "expected_challenges": [
+    "Two-city Alaska itinerary with long drive (Anchorage to Fairbanks = 6 hours) creates scheduling dependencies",
+    "Weather-dependent activities common in Alaska require backup planning",
+    "Must balance three 'must-see' requirements (glaciers, lights, wildlife) with weather constraints",
+    "Rental car return location and timing depends on which glacier option chosen",
+    "Northern lights viewing is seasonal and weather-dependent (Sept is shoulder season)",
+    "Activity costs in Alaska are high (tours $150-400), budget pressure is real",
+    "Remote locations mean limited backup options if primary activities cancelled"
+  ],
+  "notes": "HARD task because: (1) Two remote Alaska cities with long inter-city drive, (2) Three mandatory hard constraints (glaciers/lights/wildlife) creating tight scheduling, (3) Weather cancellation forces choice between three imperfect options with cascading effects, (4) Rental car logistics depend on chosen option, (5) Northern lights viewing is time-sensitive (limited nights available), (6) Nature/adventure focus makes this realistic and exciting, (7) Tests ability to re-optimize multi-day itinerary while preserving hard constraints. This is 'hard' due to remote location complexity and multiple interdependent activities, not artificial complexity."
+}
