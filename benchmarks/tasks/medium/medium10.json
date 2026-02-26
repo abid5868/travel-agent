@@ -32,7 +32,7 @@
   "dynamic_events": [
     {
       "event_id": "event_1",
-      "trigger_turn": 6,
+      "trigger_turn": 5,
       "event_type": "venue_closed",
       "description": "The major animal park you scheduled for Saturday just announced a total closure for the entire weekend due to a power facility failure. You must cancel these tickets and find alternative family-friendly attractions (like aquariums or interactive museums) to fill the Saturday schedule.",
       "affected_components": ["major_animal_park_visit"],
