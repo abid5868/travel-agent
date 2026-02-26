@@ -29,7 +29,7 @@
   "dynamic_events": [
     {
       "event_id": "event_1",
-      "trigger_turn": 6,
+      "trigger_turn": 5,
       "event_type": "flight_cancelled",
       "description": "The outbound flight you just booked to Orlando has been cancelled by the airline. You must search for and book an alternative flight for today. Depending on your new arrival time, you may need to cancel or reschedule your Friday activities.",
       "affected_components": ["outbound_flight", "friday_activities"],

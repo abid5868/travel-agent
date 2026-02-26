@@ -33,7 +33,7 @@
   "dynamic_events": [
     {
       "event_id": "event_1",
-      "trigger_turn": 6,
+      "trigger_turn": 5,
       "event_type": "reservation_cancelled_by_venue",
       "description": "The Michelin-starred restaurant booked for the Saturday anniversary dinner just called to cancel because the venue was bought out for a private event. You must find an alternative fine-dining restaurant.",
       "affected_components": ["anniversary_dinner"],

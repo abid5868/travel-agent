@@ -1,0 +1,72 @@
+{
+  "task_id": "task_021",
+  "difficulty": "hard",
+  "title": "Grand Circle Road Trip: The Great West National Parks",
+  "scenario": {
+    "description": "A solo adventure traveler planning a 10-day road trip from New York to the Southwest (Las Vegas, Zion, Bryce, Moab). A major road closure on Day 3 forces a critical choice between three imperfect options, each affecting budget, safety, and mandatory park visits.",
+    "origin_city": "New York",
+    "destination_cities": ["Las Vegas", "Zion NP", "Bryce Canyon NP", "Moab"],
+    "trip_duration_days": 10
+  },
+  "user_profile": {
+    "party_size": 2,
+    "traveler_types": ["adult", "adult"],
+    "special_needs": []
+  },
+  "initial_constraints": {
+    "hard": {
+      "budget_max": 4800,
+      "departure_date": "2026-10-01",
+      "return_date": "2026-10-10",
+      "must_see_parks": ["Zion", "Bryce", "Arches"],
+      "must_attend_arches_permit": "2026-10-06T08:00"
+    },
+    "soft": {
+      "interests": ["photography", "hiking", "nature"],
+      "preferences": ["in_park_lodging", "no_night_driving", "local_cuisine"]
+    }
+  },
+  "dynamic_events": [
+    {
+      "event_id": "event_1",
+      "trigger_turn": 8,
+      "event_type": "road_closure_with_options",
+      "description": "Your Day 3 route from Zion to Bryce Canyon (UT-9/UT-12) has been closed indefinitely due to a severe mudslide. You are currently in Zion. Your options: (1) Take a 5-hour detour via I-15 North to reach Bryce Canyon (arrives at 10 PM, violates 'no night driving' preference, adds $100 in fuel costs), OR (2) Skip Bryce Canyon entirely and drive 6 hours directly to Moab via I-15 (violates 'must see Bryce' hard constraint, but saves budget and keeps Arches schedule intact), OR (3) Book a last-minute flight or private shuttle to Moab (costs $800, skips Bryce, but ensures early arrival and safety). Each option has different implications for your Bryce Lodge booking, Arches entry timing, and total budget.",
+      "affected_components": [
+        "zion_to_bryce_route",
+        "bryce_lodge_reservation",
+        "arches_timed_entry_permit",
+        "night_driving_safety_constraint",
+        "fuel_and_transport_budget",
+        "must_see_parks_compliance"
+      ],
+      "resolution_requirements": [
+        "Choose between 3 options with different trade-offs",
+        "Option 1 (Detour): Maintains 'must-see' parks but violates 'no night driving' and adds $100 fuel cost",
+        "Option 2 (Skip Bryce): Violates hard constraint 'must see Bryce' but ensures schedule for Arches and saves money",
+        "Option 3 (Premium Shuttle): Significant budget impact ($800 surcharge), requires potential downgrades in Moab",
+        "Re-calculate all arrival times accounting for the 1-hour time loss (PST to MST) when entering Utah",
+        "Update hotel check-in dates and cancel/modify restaurant reservations for affected days",
+        "Ensure the Arches Timed-Entry Permit on Oct 6 at 08:00 is preserved",
+        "Verify total cost remains strictly within the $4800 budget"
+      ]
+    }
+  ],
+  "required_components": [
+    "flight_nyc_to_lv",
+    "rental_car",
+    "zion_lodge_2_nights",
+    "bryce_lodge_2_nights",
+    "moab_hotel_4_nights",
+    "arches_timed_entry_permit",
+    "restaurants_min_8"
+  ],
+  "success_criteria": {
+    "total_cost_max": 4800,
+    "timing_feasible": true,
+    "must_see_parks_satisfied": true,
+    "time_zone_awareness_correct": true,
+    "replanning_successful": true
+  },
+  "notes": "HARD task because: (1) Remote geography with limited road networks forcing high-stakes rerouting, (2) Three specific options with conflicting constraints (safety vs. budget vs. park access), (3) Time zone changes (PST to MST) impacting travel logic, (4) Cascading effect on fixed timed-entry permits, (5) Tests ability to prioritize milestones over secondary preferences."
+}

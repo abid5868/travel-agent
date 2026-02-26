@@ -32,7 +32,7 @@
   "dynamic_events": [
     {
       "event_id": "event_1",
-      "trigger_turn": 6,
+      "trigger_turn": 4,
       "event_type": "weather_disruption",
       "description": "A severe thunderstorm warning is issued for Saturday. Your outdoor activity has been cancelled by the operator. You need to find indoor historical activities to replace it.",
       "affected_components": ["outdoor_activity"],

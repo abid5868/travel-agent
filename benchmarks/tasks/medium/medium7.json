@@ -29,7 +29,7 @@
   "dynamic_events": [
     {
       "event_id": "event_1",
-      "trigger_turn": 6,
+      "trigger_turn": 5,
       "event_type": "trip_cut_short",
       "description": "A critical system outage at work requires you to be back in California by Saturday afternoon. You must change your return flight to depart Las Vegas no later than Saturday (2026-03-07) at 1:00 PM. You also need to cancel your Saturday night hotel stay and any weekend entertainment you had planned.",
       "affected_components": ["return_flight", "saturday_hotel", "saturday_activities", "sunday_activities"],

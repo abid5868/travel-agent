@@ -33,7 +33,7 @@
   "dynamic_events": [
     {
       "event_id": "event_1",
-      "trigger_turn": 6,
+      "trigger_turn": 5,
       "event_type": "schedule_swap_required",
       "description": "The operator for your planned Saturday morning guided boat tour just called. Their boats need emergency maintenance, so Saturday operations are cancelled. However, they can fit you in on Sunday morning. You must move the boat tour to Sunday morning, and shift your Sunday morning beach activities to Saturday.",
       "affected_components": ["guided_boat_tour", "sunday_activity"],

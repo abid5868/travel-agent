@@ -29,7 +29,7 @@
   "dynamic_events": [
     {
       "event_id": "event_1",
-      "trigger_turn": 6,
+      "trigger_turn": 5,
       "event_type": "budget_reduced",
       "description": "You decide to set aside $500 from your trip budget to purchase a piece of local art you just saw online. Your new maximum budget for the trip booking is now $1700 instead of $2200. You must adjust your existing plans to meet this new stricter constraint.",
       "affected_components": ["hotel", "restaurants"],
