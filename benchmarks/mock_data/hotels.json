@@ -1,0 +1,1979 @@
+{
+  "hotels": [
+    {
+      "hotel_id": "hotel_CHI_001",
+      "name": "The Riverwalk Grand Hotel",
+      "city": "Chicago",
+      "state": "IL",
+      "country": "USA",
+      "address": "225 N Michigan Ave, Chicago, IL 60601",
+      "stars": 4,
+      "price_per_night": 229,
+      "amenities": ["wifi", "gym", "restaurant", "bar", "concierge", "business_center"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 229},
+        {"type": "lake_view_queen", "capacity": 2, "price_per_night": 279},
+        {"type": "family_suite", "capacity": 4, "price_per_night": 429}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Millennium Park / Loop",
+      "tags": ["lake_view", "business_friendly", "walkable", "near_museums"],
+      "proximity_to_attractions": {
+        "millennium_park": "0.2 miles",
+        "art_institute": "0.3 miles",
+        "navy_pier": "0.8 miles",
+        "lake_michigan": "0.4 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_CHI_002",
+      "name": "Logan Square Boutique Inn",
+      "city": "Chicago",
+      "state": "IL",
+      "country": "USA",
+      "address": "2458 N Milwaukee Ave, Chicago, IL 60647",
+      "stars": 3,
+      "price_per_night": 129,
+      "amenities": ["wifi", "breakfast_included", "bike_rental", "garden"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 129},
+        {"type": "deluxe_double", "capacity": 2, "price_per_night": 159}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Logan Square",
+      "tags": ["budget_friendly", "walkable", "local_vibe", "near_live_music"],
+      "proximity_to_attractions": {
+        "logan_square_restaurants": "0.1 miles",
+        "live_music_venues": "0.2 miles",
+        "downtown": "5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_CHI_003",
+      "name": "Chicago Lakefront Luxury Suites",
+      "city": "Chicago",
+      "state": "IL",
+      "country": "USA",
+      "address": "160 E Pearson St, Chicago, IL 60611",
+      "stars": 5,
+      "price_per_night": 489,
+      "amenities": ["wifi", "pool", "spa", "gym", "fine_dining", "bar", "concierge", "valet_parking", "room_service"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "deluxe_lake_view", "capacity": 2, "price_per_night": 489},
+        {"type": "junior_suite", "capacity": 2, "price_per_night": 649},
+        {"type": "penthouse_suite", "capacity": 4, "price_per_night": 1200}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Streeterville / Gold Coast",
+      "tags": ["luxury", "lake_view", "romantic", "anniversary"],
+      "proximity_to_attractions": {
+        "magnificent_mile": "0.1 miles",
+        "navy_pier": "0.5 miles",
+        "lake_michigan": "0.2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_CHI_004",
+      "name": "Wicker Park Budget Stay",
+      "city": "Chicago",
+      "state": "IL",
+      "country": "USA",
+      "address": "1647 N Damen Ave, Chicago, IL 60647",
+      "stars": 2,
+      "price_per_night": 79,
+      "amenities": ["wifi", "shared_kitchen", "laundry"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "private_room", "capacity": 1, "price_per_night": 79},
+        {"type": "double_room", "capacity": 2, "price_per_night": 99}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Wicker Park",
+      "tags": ["budget_friendly", "near_live_music", "local_vibe"],
+      "proximity_to_attractions": {
+        "wicker_park_music_venues": "0.2 miles",
+        "blue_line_subway": "0.1 miles",
+        "downtown": "4 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MIA_001",
+      "name": "Oceanfront Paradise Resort",
+      "city": "Miami",
+      "state": "FL",
+      "country": "USA",
+      "address": "1601 Collins Ave, Miami Beach, FL 33139",
+      "stars": 4,
+      "price_per_night": 289,
+      "amenities": ["wifi", "pool", "beach_access", "spa", "restaurant", "bar", "watersports"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "ocean_view_king", "capacity": 2, "price_per_night": 289},
+        {"type": "beachfront_suite", "capacity": 2, "price_per_night": 459},
+        {"type": "family_ocean_suite", "capacity": 4, "price_per_night": 579}
+      ],
+      "max_guests": 4,
+      "neighborhood": "South Beach",
+      "tags": ["beachfront", "oceanfront", "family_friendly", "romantic", "watersports"],
+      "proximity_to_attractions": {
+        "south_beach": "steps",
+        "art_deco_district": "0.3 miles",
+        "lincoln_road": "0.5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MIA_002",
+      "name": "Miami Beach Boutique",
+      "city": "Miami",
+      "state": "FL",
+      "country": "USA",
+      "address": "740 Ocean Dr, Miami Beach, FL 33139",
+      "stars": 3,
+      "price_per_night": 179,
+      "amenities": ["wifi", "pool", "bar", "beach_chairs_included"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 179},
+        {"type": "balcony_ocean_view", "capacity": 2, "price_per_night": 229}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Ocean Drive / South Beach",
+      "tags": ["beach_adjacent", "walkable", "art_deco", "budget_friendly"],
+      "proximity_to_attractions": {
+        "south_beach": "0.1 miles",
+        "ocean_drive": "on_site",
+        "lummus_park": "0.1 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MIA_003",
+      "name": "Brickell Bay Marriott",
+      "city": "Miami",
+      "state": "FL",
+      "country": "USA",
+      "address": "1633 N Bayshore Dr, Miami, FL 33132",
+      "stars": 4,
+      "price_per_night": 219,
+      "amenities": ["wifi", "pool", "gym", "restaurant", "bar", "business_center", "valet"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "bay_view_king", "capacity": 2, "price_per_night": 219},
+        {"type": "city_view_double", "capacity": 2, "price_per_night": 199},
+        {"type": "corner_suite", "capacity": 4, "price_per_night": 399}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Brickell / Downtown Miami",
+      "tags": ["business_friendly", "bay_view", "walkable"],
+      "proximity_to_attractions": {
+        "brickell_city_centre": "0.3 miles",
+        "bayside_marketplace": "0.8 miles",
+        "south_beach": "3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MIA_004",
+      "name": "Cubanito Hostel & Inn",
+      "city": "Miami",
+      "state": "FL",
+      "country": "USA",
+      "address": "1234 SW 8th St, Miami, FL 33135",
+      "stars": 2,
+      "price_per_night": 89,
+      "amenities": ["wifi", "shared_lounge", "local_breakfast"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "private_double", "capacity": 2, "price_per_night": 89},
+        {"type": "private_queen", "capacity": 2, "price_per_night": 109}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Little Havana",
+      "tags": ["budget_friendly", "local_vibe", "cuban_culture"],
+      "proximity_to_attractions": {
+        "calle_ocho": "0.1 miles",
+        "cuban_restaurants": "steps",
+        "south_beach": "5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_AUS_001",
+      "name": "Austin Downtown Driskill",
+      "city": "Austin",
+      "state": "TX",
+      "country": "USA",
+      "address": "604 Brazos St, Austin, TX 78701",
+      "stars": 4,
+      "price_per_night": 219,
+      "amenities": ["wifi", "bar", "restaurant", "gym", "concierge"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 219},
+        {"type": "deluxe_queen", "capacity": 2, "price_per_night": 259},
+        {"type": "suite", "capacity": 4, "price_per_night": 449}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Downtown / 6th Street",
+      "tags": ["walkable", "near_live_music", "historic", "near_restaurants"],
+      "proximity_to_attractions": {
+        "sixth_street": "0.2 miles",
+        "rainey_street": "0.4 miles",
+        "congress_ave": "0.1 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_AUS_002",
+      "name": "South Congress Budget Motel",
+      "city": "Austin",
+      "state": "TX",
+      "country": "USA",
+      "address": "1603 S Congress Ave, Austin, TX 78704",
+      "stars": 2,
+      "price_per_night": 89,
+      "amenities": ["wifi", "free_parking", "outdoor_pool"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 89},
+        {"type": "double_beds", "capacity": 3, "price_per_night": 109}
+      ],
+      "max_guests": 3,
+      "neighborhood": "South Congress (SoCo)",
+      "tags": ["budget_friendly", "free_parking", "near_bbq", "local_vibe"],
+      "proximity_to_attractions": {
+        "south_congress_shops": "0.1 miles",
+        "franklin_bbq": "1.2 miles",
+        "live_music_venues": "2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_AUS_003",
+      "name": "East Austin Hip Hotel",
+      "city": "Austin",
+      "state": "TX",
+      "country": "USA",
+      "address": "979 Springdale Rd, Austin, TX 78702",
+      "stars": 3,
+      "price_per_night": 139,
+      "amenities": ["wifi", "pool", "bar", "bike_rental", "on_site_bbq_restaurant"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 139},
+        {"type": "poolside_room", "capacity": 2, "price_per_night": 169}
+      ],
+      "max_guests": 2,
+      "neighborhood": "East Austin",
+      "tags": ["local_vibe", "near_breweries", "walkable", "bbq_on_site"],
+      "proximity_to_attractions": {
+        "east_6th_street": "0.3 miles",
+        "local_breweries": "0.4 miles",
+        "bbq_restaurants": "0.2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_NYC_001",
+      "name": "Midtown Manhattan Hotel & Suites",
+      "city": "New York",
+      "state": "NY",
+      "country": "USA",
+      "address": "152 W 51st St, New York, NY 10019",
+      "stars": 4,
+      "price_per_night": 319,
+      "amenities": ["wifi", "gym", "restaurant", "bar", "concierge", "room_service"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 319},
+        {"type": "king_city_view", "capacity": 2, "price_per_night": 389},
+        {"type": "family_double_queen", "capacity": 4, "price_per_night": 459}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Midtown",
+      "tags": ["business_friendly", "near_museums", "walkable", "times_square_area"],
+      "proximity_to_attractions": {
+        "museum_of_modern_art": "0.3 miles",
+        "times_square": "0.4 miles",
+        "central_park": "0.6 miles",
+        "fifth_avenue": "0.2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_NYC_002",
+      "name": "Upper West Side Inn",
+      "city": "New York",
+      "state": "NY",
+      "country": "USA",
+      "address": "317 W 85th St, New York, NY 10024",
+      "stars": 3,
+      "price_per_night": 199,
+      "amenities": ["wifi", "breakfast_included", "laundry"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 199},
+        {"type": "superior_queen", "capacity": 2, "price_per_night": 239}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Upper West Side",
+      "tags": ["near_museums", "walkable", "central_park_proximity", "quiet"],
+      "proximity_to_attractions": {
+        "natural_history_museum": "0.4 miles",
+        "central_park": "0.2 miles",
+        "met_museum": "1.5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_NYC_003",
+      "name": "The Standard High Line",
+      "city": "New York",
+      "state": "NY",
+      "country": "USA",
+      "address": "848 Washington St, New York, NY 10014",
+      "stars": 4,
+      "price_per_night": 349,
+      "amenities": ["wifi", "rooftop_bar", "gym", "restaurant", "spa"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 349},
+        {"type": "river_view_king", "capacity": 2, "price_per_night": 449}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Meatpacking District / Chelsea",
+      "tags": ["trendy", "art_scene", "near_high_line", "walkable"],
+      "proximity_to_attractions": {
+        "high_line_park": "steps",
+        "chelsea_galleries": "0.2 miles",
+        "whitney_museum": "0.4 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_NYC_004",
+      "name": "Brooklyn Budget Hostel",
+      "city": "New York",
+      "state": "NY",
+      "country": "USA",
+      "address": "134 N 7th St, Brooklyn, NY 11249",
+      "stars": 2,
+      "price_per_night": 129,
+      "amenities": ["wifi", "shared_kitchen", "rooftop_terrace"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "private_queen", "capacity": 2, "price_per_night": 129},
+        {"type": "private_double", "capacity": 2, "price_per_night": 149}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Williamsburg, Brooklyn",
+      "tags": ["budget_friendly", "trendy", "near_restaurants", "brooklyn_vibe"],
+      "proximity_to_attractions": {
+        "brooklyn_bridge": "3 miles",
+        "williamsburg_restaurants": "steps",
+        "subway_to_manhattan": "0.2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SFO_001",
+      "name": "Union Square Grand Hotel",
+      "city": "San Francisco",
+      "state": "CA",
+      "country": "USA",
+      "address": "345 Stockton St, San Francisco, CA 94108",
+      "stars": 4,
+      "price_per_night": 289,
+      "amenities": ["wifi", "gym", "restaurant", "bar", "concierge", "valet"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 289},
+        {"type": "deluxe_city_view", "capacity": 2, "price_per_night": 349},
+        {"type": "executive_suite", "capacity": 2, "price_per_night": 549}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Union Square / Downtown",
+      "tags": ["business_friendly", "walkable", "shopping", "near_museums", "near_financial_district"],
+      "proximity_to_attractions": {
+        "sfmoma": "0.3 miles",
+        "union_square": "steps",
+        "financial_district": "0.5 miles",
+        "fishermans_wharf": "1.2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SFO_002",
+      "name": "Fisherman's Wharf Boutique Inn",
+      "city": "San Francisco",
+      "state": "CA",
+      "country": "USA",
+      "address": "2550 Van Ness Ave, San Francisco, CA 94109",
+      "stars": 3,
+      "price_per_night": 189,
+      "amenities": ["wifi", "free_parking", "breakfast_included"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 189},
+        {"type": "bay_view_king", "capacity": 2, "price_per_night": 239}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Russian Hill / Fisherman's Wharf",
+      "tags": ["boutique", "near_seafood", "bay_view", "walkable"],
+      "proximity_to_attractions": {
+        "fishermans_wharf": "0.5 miles",
+        "ghirardelli_square": "0.4 miles",
+        "alcatraz_ferry": "0.7 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SFO_003",
+      "name": "Mission District Loft Hotel",
+      "city": "San Francisco",
+      "state": "CA",
+      "country": "USA",
+      "address": "3154 16th St, San Francisco, CA 94103",
+      "stars": 3,
+      "price_per_night": 159,
+      "amenities": ["wifi", "rooftop_deck", "bike_rental", "local_coffee"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "studio_loft", "capacity": 2, "price_per_night": 159},
+        {"type": "deluxe_loft", "capacity": 2, "price_per_night": 199}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Mission District",
+      "tags": ["boutique", "local_vibe", "near_restaurants", "tech_friendly"],
+      "proximity_to_attractions": {
+        "mission_dolores_park": "0.3 miles",
+        "mission_restaurants": "steps",
+        "tech_museums": "2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SFO_004",
+      "name": "The SF Luxury Palace Hotel",
+      "city": "San Francisco",
+      "state": "CA",
+      "country": "USA",
+      "address": "2 New Montgomery St, San Francisco, CA 94105",
+      "stars": 5,
+      "price_per_night": 529,
+      "amenities": ["wifi", "pool", "spa", "gym", "fine_dining", "bar", "concierge", "valet"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "deluxe_king", "capacity": 2, "price_per_night": 529},
+        {"type": "grand_suite", "capacity": 2, "price_per_night": 899},
+        {"type": "garden_court_suite", "capacity": 4, "price_per_night": 1100}
+      ],
+      "max_guests": 4,
+      "neighborhood": "SoMa / Financial District",
+      "tags": ["luxury", "historic", "business_friendly", "romantic"],
+      "proximity_to_attractions": {
+        "sfmoma": "0.2 miles",
+        "financial_district": "0.3 miles",
+        "union_square": "0.4 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SAN_001",
+      "name": "Coronado Beach Resort & Spa",
+      "city": "San Diego",
+      "state": "CA",
+      "country": "USA",
+      "address": "1500 Orange Ave, Coronado, CA 92118",
+      "stars": 4,
+      "price_per_night": 319,
+      "amenities": ["wifi", "pool", "beach_access", "spa", "gym", "restaurant", "bar", "watersports"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "ocean_view_king", "capacity": 2, "price_per_night": 319},
+        {"type": "beachfront_suite", "capacity": 2, "price_per_night": 489},
+        {"type": "accessible_ocean_king", "capacity": 2, "price_per_night": 349},
+        {"type": "family_suite", "capacity": 4, "price_per_night": 579}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Coronado Island",
+      "tags": ["beachfront", "family_friendly", "wheelchair_accessible", "pool", "spa", "romantic"],
+      "proximity_to_attractions": {
+        "coronado_beach": "steps",
+        "san_diego_zoo": "4 miles",
+        "gaslamp_quarter": "3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SAN_002",
+      "name": "Gaslamp Quarter Inn",
+      "city": "San Diego",
+      "state": "CA",
+      "country": "USA",
+      "address": "520 E St, San Diego, CA 92101",
+      "stars": 3,
+      "price_per_night": 169,
+      "amenities": ["wifi", "gym", "bar", "rooftop_pool"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 169},
+        {"type": "accessible_king", "capacity": 2, "price_per_night": 189},
+        {"type": "double_queen", "capacity": 4, "price_per_night": 219}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Gaslamp Quarter / Downtown",
+      "tags": ["walkable", "near_restaurants", "accessible", "near_convention_center"],
+      "proximity_to_attractions": {
+        "gaslamp_quarter": "steps",
+        "san_diego_zoo": "2 miles",
+        "balboa_park": "1.5 miles",
+        "seaworld": "4 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SAN_003",
+      "name": "Mission Bay Family Resort",
+      "city": "San Diego",
+      "state": "CA",
+      "country": "USA",
+      "address": "1775 E Mission Bay Dr, San Diego, CA 92109",
+      "stars": 3,
+      "price_per_night": 199,
+      "amenities": ["wifi", "pool", "kids_pool", "free_parking", "restaurant", "beach_volleyball"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "bay_view_queen", "capacity": 2, "price_per_night": 199},
+        {"type": "family_room_2_queens", "capacity": 4, "price_per_night": 269},
+        {"type": "accessible_family_room", "capacity": 4, "price_per_night": 289}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Mission Bay",
+      "tags": ["family_friendly", "pool", "beach_adjacent", "wheelchair_accessible", "kid_friendly"],
+      "proximity_to_attractions": {
+        "mission_beach": "0.3 miles",
+        "seaworld": "1 mile",
+        "san_diego_zoo": "5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SAN_004",
+      "name": "Old Town San Diego Hacienda",
+      "city": "San Diego",
+      "state": "CA",
+      "country": "USA",
+      "address": "2724 Calhoun St, San Diego, CA 92110",
+      "stars": 3,
+      "price_per_night": 139,
+      "amenities": ["wifi", "pool", "free_parking", "local_breakfast"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 139},
+        {"type": "accessible_queen", "capacity": 2, "price_per_night": 159},
+        {"type": "family_room", "capacity": 4, "price_per_night": 209}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Old Town San Diego",
+      "tags": ["wheelchair_accessible", "family_friendly", "free_parking", "historic"],
+      "proximity_to_attractions": {
+        "old_town_state_park": "0.1 miles",
+        "san_diego_zoo": "3 miles",
+        "seaworld": "5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SEA_001",
+      "name": "Pike Place Market Boutique Hotel",
+      "city": "Seattle",
+      "state": "WA",
+      "country": "USA",
+      "address": "86 Pine St, Seattle, WA 98101",
+      "stars": 4,
+      "price_per_night": 249,
+      "amenities": ["wifi", "restaurant", "bar", "gym", "concierge"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 249},
+        {"type": "puget_sound_view_king", "capacity": 2, "price_per_night": 329},
+        {"type": "suite", "capacity": 2, "price_per_night": 479}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Pike Place / Downtown",
+      "tags": ["boutique", "walkable", "near_vegan_restaurants", "arts_scene", "waterfront_view"],
+      "proximity_to_attractions": {
+        "pike_place_market": "steps",
+        "seattle_art_museum": "0.2 miles",
+        "waterfront": "0.1 miles",
+        "space_needle": "0.8 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SEA_002",
+      "name": "Capitol Hill Arts Hotel",
+      "city": "Seattle",
+      "state": "WA",
+      "country": "USA",
+      "address": "1415 Broadway, Seattle, WA 98122",
+      "stars": 3,
+      "price_per_night": 169,
+      "amenities": ["wifi", "rooftop_bar", "local_coffee", "bike_rental"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 169},
+        {"type": "studio_suite", "capacity": 2, "price_per_night": 219}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Capitol Hill",
+      "tags": ["boutique", "indie_music_scene", "arts", "vegan_restaurants_nearby", "walkable"],
+      "proximity_to_attractions": {
+        "indie_music_venues": "0.1 miles",
+        "vegan_restaurants": "0.2 miles",
+        "modern_art_galleries": "0.5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SEA_003",
+      "name": "Seattle Waterfront Marriott",
+      "city": "Seattle",
+      "state": "WA",
+      "country": "USA",
+      "address": "2100 Alaskan Way, Seattle, WA 98121",
+      "stars": 4,
+      "price_per_night": 279,
+      "amenities": ["wifi", "pool", "spa", "gym", "restaurant", "bar", "concierge"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "bay_view_king", "capacity": 2, "price_per_night": 279},
+        {"type": "harbor_suite", "capacity": 2, "price_per_night": 419},
+        {"type": "family_room", "capacity": 4, "price_per_night": 349}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Waterfront / Belltown",
+      "tags": ["waterfront_view", "business_friendly", "romantic"],
+      "proximity_to_attractions": {
+        "pike_place_market": "0.3 miles",
+        "seattle_aquarium": "steps",
+        "olympic_sculpture_park": "0.5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_SEA_004",
+      "name": "Fremont Budget Inn",
+      "city": "Seattle",
+      "state": "WA",
+      "country": "USA",
+      "address": "3420 Evanston Ave N, Seattle, WA 98103",
+      "stars": 2,
+      "price_per_night": 99,
+      "amenities": ["wifi", "free_parking", "shared_kitchen"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 99},
+        {"type": "double_room", "capacity": 2, "price_per_night": 119}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Fremont",
+      "tags": ["budget_friendly", "local_vibe", "near_vegan_restaurants"],
+      "proximity_to_attractions": {
+        "fremont_restaurants": "0.2 miles",
+        "gas_works_park": "0.5 miles",
+        "downtown": "4 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_DC_001",
+      "name": "Capitol Hill Hilton",
+      "city": "Washington D.C.",
+      "state": "DC",
+      "country": "USA",
+      "address": "520 New Jersey Ave NW, Washington, DC 20001",
+      "stars": 4,
+      "price_per_night": 239,
+      "amenities": ["wifi", "gym", "restaurant", "bar", "business_center", "concierge"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 239},
+        {"type": "deluxe_capitol_view", "capacity": 2, "price_per_night": 309},
+        {"type": "family_double_queen", "capacity": 4, "price_per_night": 349}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Capitol Hill",
+      "tags": ["walkable", "near_museums", "historic", "metro_accessible"],
+      "proximity_to_attractions": {
+        "us_capitol": "0.3 miles",
+        "smithsonian_museums": "0.8 miles",
+        "lincoln_memorial": "2 miles",
+        "national_mall": "0.6 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_DC_002",
+      "name": "National Mall Inn",
+      "city": "Washington D.C.",
+      "state": "DC",
+      "country": "USA",
+      "address": "555 Maryland Ave SW, Washington, DC 20024",
+      "stars": 3,
+      "price_per_night": 159,
+      "amenities": ["wifi", "gym", "free_breakfast", "metro_shuttle"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 159},
+        {"type": "accessible_queen", "capacity": 2, "price_per_night": 179},
+        {"type": "double_queen", "capacity": 4, "price_per_night": 219}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Southwest DC / National Mall Area",
+      "tags": ["budget_friendly", "walkable_to_monuments", "metro_accessible"],
+      "proximity_to_attractions": {
+        "national_mall": "0.3 miles",
+        "smithsonian_air_space": "0.5 miles",
+        "washington_monument": "0.7 miles",
+        "lincoln_memorial": "1 mile"
+      }
+    },
+    {
+      "hotel_id": "hotel_DC_003",
+      "name": "Georgetown Boutique Hotel",
+      "city": "Washington D.C.",
+      "state": "DC",
+      "country": "USA",
+      "address": "1310 Wisconsin Ave NW, Washington, DC 20007",
+      "stars": 4,
+      "price_per_night": 289,
+      "amenities": ["wifi", "restaurant", "bar", "concierge", "fitness_center"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "classic_queen", "capacity": 2, "price_per_night": 289},
+        {"type": "superior_king", "capacity": 2, "price_per_night": 339}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Georgetown",
+      "tags": ["boutique", "historic", "walkable", "upscale_dining_nearby"],
+      "proximity_to_attractions": {
+        "georgetown_waterfront": "0.3 miles",
+        "national_cathedral": "1.5 miles",
+        "national_mall": "2.5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MCO_001",
+      "name": "Walt Disney World Area Family Resort",
+      "city": "Orlando",
+      "state": "FL",
+      "country": "USA",
+      "address": "1805 Hotel Plaza Blvd, Lake Buena Vista, FL 32830",
+      "stars": 4,
+      "price_per_night": 259,
+      "amenities": ["wifi", "pool", "kids_pool", "water_slide", "restaurant", "arcade", "shuttle_to_theme_parks"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_2_queens", "capacity": 4, "price_per_night": 259},
+        {"type": "family_suite", "capacity": 6, "price_per_night": 429},
+        {"type": "accessible_family_room", "capacity": 4, "price_per_night": 279}
+      ],
+      "max_guests": 6,
+      "neighborhood": "Disney Springs / Lake Buena Vista",
+      "tags": ["family_friendly", "kid_friendly", "theme_park_shuttle", "pool", "character_dining"],
+      "proximity_to_attractions": {
+        "magic_kingdom": "1.5 miles",
+        "universal_studios": "7 miles",
+        "seaworld_orlando": "10 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MCO_002",
+      "name": "Universal Studios Cabana Bay Resort",
+      "city": "Orlando",
+      "state": "FL",
+      "country": "USA",
+      "address": "6550 Adventure Way, Orlando, FL 32819",
+      "stars": 3,
+      "price_per_night": 189,
+      "amenities": ["wifi", "pool", "lazy_river", "restaurant", "food_trucks", "free_theme_park_shuttle"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_2_queens", "capacity": 4, "price_per_night": 189},
+        {"type": "family_suite", "capacity": 6, "price_per_night": 329}
+      ],
+      "max_guests": 6,
+      "neighborhood": "Universal Studios Area",
+      "tags": ["family_friendly", "kid_friendly", "theme_park_proximity", "pool"],
+      "proximity_to_attractions": {
+        "universal_studios": "0.3 miles",
+        "islands_of_adventure": "0.3 miles",
+        "magic_kingdom": "8 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MCO_003",
+      "name": "Orlando International Drive Budget Hotel",
+      "city": "Orlando",
+      "state": "FL",
+      "country": "USA",
+      "address": "8100 International Dr, Orlando, FL 32819",
+      "stars": 2,
+      "price_per_night": 109,
+      "amenities": ["wifi", "outdoor_pool", "free_parking", "shuttle_to_parks"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_2_queens", "capacity": 4, "price_per_night": 109},
+        {"type": "accessible_room", "capacity": 2, "price_per_night": 119}
+      ],
+      "max_guests": 4,
+      "neighborhood": "International Drive",
+      "tags": ["budget_friendly", "family_friendly", "free_parking", "near_theme_parks"],
+      "proximity_to_attractions": {
+        "universal_studios": "2 miles",
+        "seaworld": "3 miles",
+        "magic_kingdom": "10 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MSY_001",
+      "name": "French Quarter Grand Hotel",
+      "city": "New Orleans",
+      "state": "LA",
+      "country": "USA",
+      "address": "300 Bourbon St, New Orleans, LA 70130",
+      "stars": 4,
+      "price_per_night": 269,
+      "amenities": ["wifi", "pool", "bar", "restaurant", "jazz_lounge", "concierge"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 269},
+        {"type": "balcony_room", "capacity": 2, "price_per_night": 329},
+        {"type": "courtyard_suite", "capacity": 4, "price_per_night": 499}
+      ],
+      "max_guests": 4,
+      "neighborhood": "French Quarter",
+      "tags": ["walkable", "near_live_jazz", "historic", "balcony_views", "romantic"],
+      "proximity_to_attractions": {
+        "bourbon_street": "steps",
+        "jackson_square": "0.2 miles",
+        "frenchmen_street_jazz": "0.8 miles",
+        "cafe_du_monde": "0.3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MSY_002",
+      "name": "Frenchmen Street Inn",
+      "city": "New Orleans",
+      "state": "LA",
+      "country": "USA",
+      "address": "2025 Esplanade Ave, New Orleans, LA 70116",
+      "stars": 3,
+      "price_per_night": 159,
+      "amenities": ["wifi", "courtyard", "local_breakfast", "jazz_venue_nearby"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 159},
+        {"type": "king_with_balcony", "capacity": 2, "price_per_night": 199}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Marigny / Frenchmen Street",
+      "tags": ["boutique", "live_jazz_nearby", "local_vibe", "walkable"],
+      "proximity_to_attractions": {
+        "frenchmen_street_jazz": "0.1 miles",
+        "french_quarter": "0.5 miles",
+        "local_restaurants": "steps"
+      }
+    },
+    {
+      "hotel_id": "hotel_MSY_003",
+      "name": "Warehouse District Loft Hotel",
+      "city": "New Orleans",
+      "state": "LA",
+      "country": "USA",
+      "address": "700 Tchoupitoulas St, New Orleans, LA 70130",
+      "stars": 3,
+      "price_per_night": 139,
+      "amenities": ["wifi", "rooftop_pool", "bar", "bike_rental"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "studio_loft", "capacity": 2, "price_per_night": 139},
+        {"type": "deluxe_loft", "capacity": 2, "price_per_night": 179}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Warehouse Arts District",
+      "tags": ["budget_friendly", "arts_district", "live_jazz_nearby", "walkable"],
+      "proximity_to_attractions": {
+        "national_wwii_museum": "0.2 miles",
+        "contemporary_arts_center": "0.3 miles",
+        "frenchmen_street": "1.5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MSY_004",
+      "name": "New Orleans Luxury Ritz",
+      "city": "New Orleans",
+      "state": "LA",
+      "country": "USA",
+      "address": "921 Canal St, New Orleans, LA 70112",
+      "stars": 5,
+      "price_per_night": 449,
+      "amenities": ["wifi", "pool", "spa", "gym", "fine_dining", "jazz_bar", "concierge", "valet"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "deluxe_king", "capacity": 2, "price_per_night": 449},
+        {"type": "junior_suite", "capacity": 2, "price_per_night": 649},
+        {"type": "penthouse_suite", "capacity": 4, "price_per_night": 1100}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Canal Street / French Quarter",
+      "tags": ["luxury", "fine_dining", "spa", "near_live_jazz"],
+      "proximity_to_attractions": {
+        "french_quarter": "0.1 miles",
+        "bourbon_street": "0.2 miles",
+        "frenchmen_street": "1 mile"
+      }
+    },
+    {
+      "hotel_id": "hotel_LAS_001",
+      "name": "The Bellagio Las Vegas",
+      "city": "Las Vegas",
+      "state": "NV",
+      "country": "USA",
+      "address": "3600 S Las Vegas Blvd, Las Vegas, NV 89109",
+      "stars": 5,
+      "price_per_night": 349,
+      "amenities": ["wifi", "pool", "spa", "gym", "casino", "fine_dining", "shows", "concierge"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "deluxe_king", "capacity": 2, "price_per_night": 349},
+        {"type": "fountain_view_king", "capacity": 2, "price_per_night": 499},
+        {"type": "suite", "capacity": 4, "price_per_night": 899}
+      ],
+      "max_guests": 4,
+      "neighborhood": "The Strip",
+      "tags": ["luxury", "casino", "strip_location", "magic_shows_nearby", "fine_dining"],
+      "proximity_to_attractions": {
+        "las_vegas_strip": "steps",
+        "caesars_palace": "0.2 miles",
+        "shows_venues": "steps",
+        "restaurants": "steps"
+      }
+    },
+    {
+      "hotel_id": "hotel_LAS_002",
+      "name": "Vegas Convention Center Hotel",
+      "city": "Las Vegas",
+      "state": "NV",
+      "country": "USA",
+      "address": "3000 Paradise Rd, Las Vegas, NV 89109",
+      "stars": 3,
+      "price_per_night": 129,
+      "amenities": ["wifi", "pool", "gym", "business_center", "restaurant", "free_airport_shuttle"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 129},
+        {"type": "double_queen", "capacity": 4, "price_per_night": 159}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Convention Center / Paradise",
+      "tags": ["business_friendly", "convention_center_adjacent", "tech_conference"],
+      "proximity_to_attractions": {
+        "las_vegas_convention_center": "0.2 miles",
+        "las_vegas_strip": "0.8 miles",
+        "steakhouse_restaurants": "0.3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_LAS_003",
+      "name": "Fremont Street Budget Hotel",
+      "city": "Las Vegas",
+      "state": "NV",
+      "country": "USA",
+      "address": "200 N 3rd St, Las Vegas, NV 89101",
+      "stars": 2,
+      "price_per_night": 79,
+      "amenities": ["wifi", "casino", "restaurant", "free_parking"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 79},
+        {"type": "double_queen", "capacity": 4, "price_per_night": 99}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Downtown / Fremont Street",
+      "tags": ["budget_friendly", "casino", "fremont_street_experience"],
+      "proximity_to_attractions": {
+        "fremont_street": "steps",
+        "las_vegas_strip": "2 miles",
+        "steakhouse_restaurants": "0.2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_LAS_004",
+      "name": "Las Vegas Strip Westin",
+      "city": "Las Vegas",
+      "state": "NV",
+      "country": "USA",
+      "address": "160 E Flamingo Rd, Las Vegas, NV 89169",
+      "stars": 4,
+      "price_per_night": 219,
+      "amenities": ["wifi", "pool", "spa", "gym", "restaurant", "bar"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 219},
+        {"type": "strip_view_king", "capacity": 2, "price_per_night": 279},
+        {"type": "executive_suite", "capacity": 2, "price_per_night": 449}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Mid-Strip",
+      "tags": ["business_friendly", "strip_view", "no_casino_noise", "spa"],
+      "proximity_to_attractions": {
+        "las_vegas_strip": "steps",
+        "magic_shows": "0.3 miles",
+        "steakhouse_restaurants": "0.2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_PDX_001",
+      "name": "Pearl District Accessible Boutique Hotel",
+      "city": "Portland",
+      "state": "OR",
+      "country": "USA",
+      "address": "1455 NW Irving St, Portland, OR 97209",
+      "stars": 4,
+      "price_per_night": 219,
+      "amenities": ["wifi", "gym", "restaurant", "bar", "concierge", "accessible_shuttle"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 219},
+        {"type": "accessible_king", "capacity": 2, "price_per_night": 239},
+        {"type": "accessible_suite", "capacity": 4, "price_per_night": 399},
+        {"type": "family_double_queen", "capacity": 4, "price_per_night": 299}
+      ],
+      "max_guests": 6,
+      "neighborhood": "Pearl District",
+      "tags": ["wheelchair_accessible", "boutique", "walkable", "arts_district", "mobility_assistance"],
+      "accessibility_features": ["roll_in_shower", "grab_bars", "lowered_counters", "accessible_pool_lift", "braille_signage", "visual_alarms"],
+      "proximity_to_attractions": {
+        "powell_books": "0.5 miles",
+        "portland_art_museum": "0.7 miles",
+        "downtown_portland": "0.3 miles",
+        "food_cart_pods": "0.4 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_PDX_002",
+      "name": "Oregon Convention Center Hotel",
+      "city": "Portland",
+      "state": "OR",
+      "country": "USA",
+      "address": "1000 NE Multnomah St, Portland, OR 97232",
+      "stars": 4,
+      "price_per_night": 179,
+      "amenities": ["wifi", "pool", "gym", "restaurant", "business_center"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 179},
+        {"type": "accessible_king", "capacity": 2, "price_per_night": 199},
+        {"type": "suite_with_roll_in_shower", "capacity": 2, "price_per_night": 289},
+        {"type": "family_suite", "capacity": 6, "price_per_night": 359}
+      ],
+      "max_guests": 6,
+      "neighborhood": "Lloyd District",
+      "tags": ["wheelchair_accessible", "group_travel", "light_rail_access", "mobility_assistance"],
+      "accessibility_features": ["roll_in_shower", "grab_bars", "elevator", "accessible_parking", "TTY_phones"],
+      "proximity_to_attractions": {
+        "oregon_convention_center": "steps",
+        "lloyd_center_mall": "0.2 miles",
+        "portland_memorial_coliseum": "0.3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_PDX_003",
+      "name": "Hawthorne Budget Inn",
+      "city": "Portland",
+      "state": "OR",
+      "country": "USA",
+      "address": "3333 SE Hawthorne Blvd, Portland, OR 97214",
+      "stars": 2,
+      "price_per_night": 99,
+      "amenities": ["wifi", "free_parking", "local_breakfast"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 99},
+        {"type": "double_room", "capacity": 2, "price_per_night": 119}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Hawthorne / SE Portland",
+      "tags": ["budget_friendly", "local_vibe", "walkable", "near_restaurants"],
+      "proximity_to_attractions": {
+        "hawthorne_restaurants": "steps",
+        "powell_books": "1.5 miles",
+        "downtown": "3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_ANC_001",
+      "name": "Anchorage Glacier View Hotel",
+      "city": "Anchorage",
+      "state": "AK",
+      "country": "USA",
+      "address": "125 W 5th Ave, Anchorage, AK 99501",
+      "stars": 4,
+      "price_per_night": 229,
+      "amenities": ["wifi", "gym", "restaurant", "bar", "concierge", "guided_tour_desk"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 229},
+        {"type": "mountain_view_king", "capacity": 2, "price_per_night": 279},
+        {"type": "suite", "capacity": 2, "price_per_night": 429}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Downtown Anchorage",
+      "tags": ["adventure_friendly", "near_tour_operators", "business_friendly"],
+      "proximity_to_attractions": {
+        "anchorage_museum": "0.3 miles",
+        "alaska_wildlife_conservation": "30 miles",
+        "airport": "6 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_ANC_002",
+      "name": "Midtown Anchorage Inn",
+      "city": "Anchorage",
+      "state": "AK",
+      "country": "USA",
+      "address": "4800 Spenard Rd, Anchorage, AK 99517",
+      "stars": 3,
+      "price_per_night": 149,
+      "amenities": ["wifi", "free_parking", "complimentary_breakfast", "gear_storage"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 149},
+        {"type": "double_queen", "capacity": 4, "price_per_night": 189}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Midtown Anchorage",
+      "tags": ["adventure_friendly", "gear_storage", "free_parking", "budget_friendly"],
+      "proximity_to_attractions": {
+        "airport": "2 miles",
+        "downtown": "4 miles",
+        "chugach_state_park": "5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_ANC_003",
+      "name": "Anchorage Budget Suites",
+      "city": "Anchorage",
+      "state": "AK",
+      "country": "USA",
+      "address": "3000 Minnesota Dr, Anchorage, AK 99503",
+      "stars": 2,
+      "price_per_night": 99,
+      "amenities": ["wifi", "kitchenette", "free_parking", "laundry"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "studio_suite", "capacity": 2, "price_per_night": 99},
+        {"type": "1br_suite", "capacity": 4, "price_per_night": 139}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Midtown Anchorage",
+      "tags": ["budget_friendly", "extended_stay", "kitchenette", "free_parking"],
+      "proximity_to_attractions": {
+        "airport": "3 miles",
+        "downtown": "5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_FAI_001",
+      "name": "Fairbanks Aurora Lodge",
+      "city": "Fairbanks",
+      "state": "AK",
+      "country": "USA",
+      "address": "1650 Airport Way, Fairbanks, AK 99701",
+      "stars": 3,
+      "price_per_night": 179,
+      "amenities": ["wifi", "restaurant", "bar", "aurora_alert_service", "guided_tour_desk", "gear_storage"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 179},
+        {"type": "aurora_view_suite", "capacity": 2, "price_per_night": 249},
+        {"type": "family_double", "capacity": 4, "price_per_night": 229}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Fairbanks",
+      "tags": ["northern_lights", "aurora_viewing", "adventure_friendly", "near_tours"],
+      "proximity_to_attractions": {
+        "chena_hot_springs": "50 miles",
+        "northern_lights_viewing_areas": "accessible",
+        "university_of_alaska_museum": "2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_FAI_002",
+      "name": "Chena River Lodge",
+      "city": "Fairbanks",
+      "state": "AK",
+      "country": "USA",
+      "address": "1401 Chena Landings Loop, Fairbanks, AK 99701",
+      "stars": 4,
+      "price_per_night": 229,
+      "amenities": ["wifi", "restaurant", "outdoor_jacuzzi", "aurora_alert_service", "snowshoe_rental", "guided_aurora_tours"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "river_view_king", "capacity": 2, "price_per_night": 229},
+        {"type": "aurora_cabin_suite", "capacity": 2, "price_per_night": 349}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Chena River",
+      "tags": ["northern_lights", "nature", "adventure", "romantic"],
+      "proximity_to_attractions": {
+        "chena_hot_springs": "45 miles",
+        "northern_lights_viewing": "dark_sky_access",
+        "denali_national_park": "125 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_FAI_003",
+      "name": "Fairbanks Budget Motel",
+      "city": "Fairbanks",
+      "state": "AK",
+      "country": "USA",
+      "address": "751 Gaffney Rd, Fairbanks, AK 99701",
+      "stars": 2,
+      "price_per_night": 89,
+      "amenities": ["wifi", "free_parking", "complimentary_breakfast"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 89},
+        {"type": "double_room", "capacity": 2, "price_per_night": 109}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Fairbanks",
+      "tags": ["budget_friendly", "free_parking", "near_downtown"],
+      "proximity_to_attractions": {
+        "downtown_fairbanks": "1 mile",
+        "aurora_borealis_viewing": "accessible"
+      }
+    },
+    {
+      "hotel_id": "hotel_NAP_001",
+      "name": "Napa Valley Wine Country Inn",
+      "city": "Napa Valley",
+      "state": "CA",
+      "country": "USA",
+      "address": "1998 Trower Ave, Napa, CA 94558",
+      "stars": 4,
+      "price_per_night": 329,
+      "amenities": ["wifi", "pool", "spa", "wine_tasting", "restaurant", "bicycle_rental"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "vineyard_view_king", "capacity": 2, "price_per_night": 329},
+        {"type": "wine_country_suite", "capacity": 2, "price_per_night": 489},
+        {"type": "cottage_suite", "capacity": 4, "price_per_night": 629}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Napa",
+      "tags": ["wine_tasting", "romantic", "spa", "upscale", "celebration"],
+      "proximity_to_attractions": {
+        "napa_valley_wine_tours": "accessible",
+        "downtown_napa": "2 miles",
+        "oxbow_public_market": "2.5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_NAP_002",
+      "name": "Yountville Boutique B&B",
+      "city": "Napa Valley",
+      "state": "CA",
+      "country": "USA",
+      "address": "6540 Washington St, Yountville, CA 94599",
+      "stars": 3,
+      "price_per_night": 229,
+      "amenities": ["wifi", "wine_hour", "breakfast_included", "garden"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "garden_room", "capacity": 2, "price_per_night": 229},
+        {"type": "vineyard_view_room", "capacity": 2, "price_per_night": 279}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Yountville",
+      "tags": ["boutique", "romantic", "wine_tasting", "fine_dining_nearby", "celebration"],
+      "proximity_to_attractions": {
+        "french_laundry_restaurant": "0.1 miles",
+        "domaine_chandon": "0.5 miles",
+        "napa_valley_wine_tours": "accessible"
+      }
+    },
+    {
+      "hotel_id": "hotel_NAP_003",
+      "name": "Napa Budget Suites",
+      "city": "Napa Valley",
+      "state": "CA",
+      "country": "USA",
+      "address": "3425 Solano Ave, Napa, CA 94558",
+      "stars": 2,
+      "price_per_night": 129,
+      "amenities": ["wifi", "free_parking", "complimentary_breakfast"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 129},
+        {"type": "double_queen", "capacity": 4, "price_per_night": 169}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Napa",
+      "tags": ["budget_friendly", "free_parking", "wine_country"],
+      "proximity_to_attractions": {
+        "downtown_napa": "1 mile",
+        "napa_valley_wine_tours": "accessible"
+      }
+    },
+    {
+      "hotel_id": "hotel_TAH_001",
+      "name": "Lake Tahoe Lakeside Lodge",
+      "city": "Lake Tahoe",
+      "state": "NV",
+      "country": "USA",
+      "address": "168 Hwy 50, Stateline, NV 89449",
+      "stars": 4,
+      "price_per_night": 289,
+      "amenities": ["wifi", "pool", "hot_tub", "lake_access", "ski_shuttle", "restaurant", "bar"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "lake_view_king", "capacity": 2, "price_per_night": 289},
+        {"type": "lakeside_suite", "capacity": 2, "price_per_night": 429},
+        {"type": "family_lake_view", "capacity": 4, "price_per_night": 389},
+        {"type": "group_suite", "capacity": 8, "price_per_night": 799}
+      ],
+      "max_guests": 8,
+      "neighborhood": "South Lake Tahoe / Stateline",
+      "tags": ["lakeside", "ski_resort", "wedding_friendly", "scenic_views", "group_travel"],
+      "proximity_to_attractions": {
+        "lake_tahoe_beach": "steps",
+        "heavenly_ski_resort": "1 mile",
+        "casinos": "0.1 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_TAH_002",
+      "name": "Tahoe City Mountain Resort",
+      "city": "Lake Tahoe",
+      "state": "CA",
+      "country": "USA",
+      "address": "400 N Lake Blvd, Tahoe City, CA 96145",
+      "stars": 3,
+      "price_per_night": 199,
+      "amenities": ["wifi", "outdoor_hot_tub", "restaurant", "bar", "ski_storage", "lake_access"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "mountain_view_queen", "capacity": 2, "price_per_night": 199},
+        {"type": "family_suite", "capacity": 4, "price_per_night": 299},
+        {"type": "cabin_suite", "capacity": 6, "price_per_night": 449}
+      ],
+      "max_guests": 6,
+      "neighborhood": "Tahoe City / North Shore",
+      "tags": ["mountain", "lake_view", "ski_friendly", "family_friendly", "group_travel"],
+      "proximity_to_attractions": {
+        "lake_tahoe": "steps",
+        "alpine_meadows_ski": "8 miles",
+        "hiking_trails": "steps"
+      }
+    },
+    {
+      "hotel_id": "hotel_TAH_003",
+      "name": "South Tahoe Budget Inn",
+      "city": "Lake Tahoe",
+      "state": "CA",
+      "country": "USA",
+      "address": "1901 Lake Tahoe Blvd, South Lake Tahoe, CA 96150",
+      "stars": 2,
+      "price_per_night": 129,
+      "amenities": ["wifi", "outdoor_pool", "free_parking", "kitchenette"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 129},
+        {"type": "double_queen", "capacity": 4, "price_per_night": 159}
+      ],
+      "max_guests": 4,
+      "neighborhood": "South Lake Tahoe",
+      "tags": ["budget_friendly", "free_parking", "near_lake"],
+      "proximity_to_attractions": {
+        "lake_tahoe_beach": "0.5 miles",
+        "heavenly_ski": "3 miles",
+        "casinos": "2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_ZNP_001",
+      "name": "Zion Lodge (In-Park)",
+      "city": "Zion National Park",
+      "state": "UT",
+      "country": "USA",
+      "address": "Zion Canyon Scenic Dr, Springdale, UT 84767",
+      "stars": 3,
+      "price_per_night": 219,
+      "amenities": ["wifi", "restaurant", "bar", "guided_tours", "shuttle_access"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "western_cabin", "capacity": 2, "price_per_night": 219},
+        {"type": "motel_suite", "capacity": 4, "price_per_night": 269}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Zion Canyon (In-Park)",
+      "tags": ["in_park_lodging", "nature", "photography", "hiking", "must_book_early"],
+      "proximity_to_attractions": {
+        "angels_landing": "steps",
+        "zion_narrows": "0.5 miles",
+        "emerald_pools": "0.3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_ZNP_002",
+      "name": "Springdale Canyon Inn",
+      "city": "Zion National Park",
+      "state": "UT",
+      "country": "USA",
+      "address": "668 Zion Park Blvd, Springdale, UT 84767",
+      "stars": 3,
+      "price_per_night": 169,
+      "amenities": ["wifi", "pool", "restaurant", "free_shuttle_to_park"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 169},
+        {"type": "canyon_view_king", "capacity": 2, "price_per_night": 209},
+        {"type": "family_suite", "capacity": 4, "price_per_night": 289}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Springdale (Park Gateway)",
+      "tags": ["near_park_entrance", "shuttle_access", "hiking", "photography"],
+      "proximity_to_attractions": {
+        "zion_national_park_entrance": "0.3 miles",
+        "zion_human_history_museum": "0.5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_ZNP_003",
+      "name": "Zion Budget Motel",
+      "city": "Zion National Park",
+      "state": "UT",
+      "country": "USA",
+      "address": "80 W Center St, Hurricane, UT 84737",
+      "stars": 2,
+      "price_per_night": 89,
+      "amenities": ["wifi", "free_parking", "outdoor_pool"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 89},
+        {"type": "double_room", "capacity": 4, "price_per_night": 119}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Hurricane, UT (20 min from park)",
+      "tags": ["budget_friendly", "free_parking", "near_zion"],
+      "proximity_to_attractions": {
+        "zion_national_park": "22 miles",
+        "bryce_canyon": "65 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_BRY_001",
+      "name": "Bryce Canyon Lodge",
+      "city": "Bryce Canyon National Park",
+      "state": "UT",
+      "country": "USA",
+      "address": "Bryce Canyon National Park, UT 84717",
+      "stars": 3,
+      "price_per_night": 199,
+      "amenities": ["wifi", "restaurant", "guided_tours", "dark_sky_access", "in_park_shuttle"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "lodge_room", "capacity": 2, "price_per_night": 199},
+        {"type": "western_cabin", "capacity": 4, "price_per_night": 269}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Bryce Canyon (In-Park)",
+      "tags": ["in_park_lodging", "astronomy", "dark_sky", "hiking", "photography"],
+      "proximity_to_attractions": {
+        "bryce_amphitheater": "steps",
+        "sunrise_point": "0.2 miles",
+        "queens_garden_trail": "0.3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_BRY_002",
+      "name": "Ruby's Inn at Bryce Canyon",
+      "city": "Bryce Canyon National Park",
+      "state": "UT",
+      "country": "USA",
+      "address": "26 S Main St, Bryce Canyon City, UT 84764",
+      "stars": 3,
+      "price_per_night": 149,
+      "amenities": ["wifi", "pool", "restaurant", "general_store", "horseback_riding"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 149},
+        {"type": "family_room", "capacity": 4, "price_per_night": 199}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Bryce Canyon City (Just outside park)",
+      "tags": ["near_park", "family_friendly", "horseback_riding", "photography"],
+      "proximity_to_attractions": {
+        "bryce_canyon_entrance": "0.5 miles",
+        "zion_national_park": "80 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MOA_001",
+      "name": "Moab Desert Inn",
+      "city": "Moab",
+      "state": "UT",
+      "country": "USA",
+      "address": "168 N Main St, Moab, UT 84532",
+      "stars": 3,
+      "price_per_night": 169,
+      "amenities": ["wifi", "pool", "restaurant", "gear_storage", "tour_desk"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_king", "capacity": 2, "price_per_night": 169},
+        {"type": "canyon_view_king", "capacity": 2, "price_per_night": 209},
+        {"type": "family_suite", "capacity": 4, "price_per_night": 289}
+      ],
+      "max_guests": 4,
+      "neighborhood": "Downtown Moab",
+      "tags": ["adventure_friendly", "hiking", "photography", "near_arches", "near_restaurants"],
+      "proximity_to_attractions": {
+        "arches_national_park_entrance": "4 miles",
+        "canyonlands_national_park": "30 miles",
+        "dead_horse_point": "25 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MOA_002",
+      "name": "Moab Adventure Lodge",
+      "city": "Moab",
+      "state": "UT",
+      "country": "USA",
+      "address": "1551 N Hwy 191, Moab, UT 84532",
+      "stars": 3,
+      "price_per_night": 149,
+      "amenities": ["wifi", "pool", "hot_tub", "gear_storage", "bike_wash", "free_parking"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 149},
+        {"type": "double_queen", "capacity": 4, "price_per_night": 189}
+      ],
+      "max_guests": 4,
+      "neighborhood": "North Moab",
+      "tags": ["adventure_friendly", "photography", "hiking", "mountain_biking", "near_arches"],
+      "proximity_to_attractions": {
+        "arches_national_park_entrance": "1.5 miles",
+        "moab_restaurants": "2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_MOA_003",
+      "name": "Red Rock Motel Moab",
+      "city": "Moab",
+      "state": "UT",
+      "country": "USA",
+      "address": "51 N 100 West, Moab, UT 84532",
+      "stars": 2,
+      "price_per_night": 89,
+      "amenities": ["wifi", "outdoor_pool", "free_parking"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_queen", "capacity": 2, "price_per_night": 89},
+        {"type": "double_beds", "capacity": 3, "price_per_night": 109}
+      ],
+      "max_guests": 3,
+      "neighborhood": "Downtown Moab",
+      "tags": ["budget_friendly", "near_arches", "free_parking"],
+      "proximity_to_attractions": {
+        "arches_national_park": "5 miles",
+        "local_restaurants": "steps"
+      }
+    },
+    {
+      "hotel_id": "hotel_PAR_001",
+      "name": "Hotel Le Marais Paris",
+      "city": "Paris",
+      "state": null,
+      "country": "France",
+      "address": "19 Rue de Bretagne, 75003 Paris, France",
+      "stars": 4,
+      "price_per_night": 299,
+      "amenities": ["wifi", "restaurant", "bar", "concierge", "room_service"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "classic_double", "capacity": 2, "price_per_night": 299},
+        {"type": "superior_king", "capacity": 2, "price_per_night": 379},
+        {"type": "junior_suite", "capacity": 2, "price_per_night": 549}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Le Marais",
+      "tags": ["romantic", "walkable", "historic", "near_museums", "fine_dining"],
+      "proximity_to_attractions": {
+        "centre_pompidou": "0.3 miles",
+        "musee_picasso": "0.2 miles",
+        "notre_dame": "1 mile",
+        "louvre": "1.5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_PAR_002",
+      "name": "Paris Saint-Germain Boutique Hotel",
+      "city": "Paris",
+      "state": null,
+      "country": "France",
+      "address": "12 Rue de Buci, 75006 Paris, France",
+      "stars": 4,
+      "price_per_night": 349,
+      "amenities": ["wifi", "bar", "concierge", "breakfast_available"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "classic_double", "capacity": 2, "price_per_night": 349},
+        {"type": "superior_double", "capacity": 2, "price_per_night": 419},
+        {"type": "suite_with_terrace", "capacity": 2, "price_per_night": 699}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Saint-Germain-des-Prés",
+      "tags": ["boutique", "romantic", "historic", "fine_dining_nearby", "walkable"],
+      "proximity_to_attractions": {
+        "musee_dorsay": "0.5 miles",
+        "louvre": "1.2 miles",
+        "eiffel_tower": "1.5 miles",
+        "luxembourg_gardens": "0.3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_PAR_003",
+      "name": "Paris Eiffel View Luxury Hotel",
+      "city": "Paris",
+      "state": null,
+      "country": "France",
+      "address": "2 Rue Arsène Houssaye, 75008 Paris, France",
+      "stars": 5,
+      "price_per_night": 699,
+      "amenities": ["wifi", "spa", "pool", "gym", "michelin_star_restaurant", "bar", "concierge", "butler_service"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "deluxe_eiffel_view", "capacity": 2, "price_per_night": 699},
+        {"type": "grand_suite", "capacity": 2, "price_per_night": 1199},
+        {"type": "honeymoon_suite", "capacity": 2, "price_per_night": 1499}
+      ],
+      "max_guests": 2,
+      "neighborhood": "8th Arrondissement / Champs-Élysées",
+      "tags": ["luxury", "romantic", "eiffel_view", "honeymoon", "fine_dining", "spa"],
+      "proximity_to_attractions": {
+        "eiffel_tower": "0.5 miles",
+        "champs_elysees": "steps",
+        "arc_de_triomphe": "0.2 miles",
+        "louvre": "1.8 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_VCE_001",
+      "name": "Hotel Danieli Venezia",
+      "city": "Venice",
+      "state": null,
+      "country": "Italy",
+      "address": "Riva degli Schiavoni, 4196, 30122 Venice VE, Italy",
+      "stars": 5,
+      "price_per_night": 649,
+      "amenities": ["wifi", "rooftop_restaurant", "bar", "concierge", "gondola_service", "spa"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "classic_lagoon_view", "capacity": 2, "price_per_night": 649},
+        {"type": "superior_canal_view", "capacity": 2, "price_per_night": 899},
+        {"type": "honeymoon_suite", "capacity": 2, "price_per_night": 1599}
+      ],
+      "max_guests": 2,
+      "neighborhood": "San Marco / Castello",
+      "tags": ["luxury", "romantic", "canal_view", "honeymoon", "gondola_access", "historic"],
+      "proximity_to_attractions": {
+        "piazza_san_marco": "0.1 miles",
+        "doges_palace": "0.1 miles",
+        "rialto_bridge": "0.8 miles",
+        "gondola_stations": "steps"
+      }
+    },
+    {
+      "hotel_id": "hotel_VCE_002",
+      "name": "Ca' Sagredo Hotel Venice",
+      "city": "Venice",
+      "state": null,
+      "country": "Italy",
+      "address": "Campo Santa Sofia, 4198, 30121 Venice VE, Italy",
+      "stars": 4,
+      "price_per_night": 389,
+      "amenities": ["wifi", "restaurant", "bar", "concierge", "canal_view_terrace"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "canal_view_double", "capacity": 2, "price_per_night": 389},
+        {"type": "grand_canal_suite", "capacity": 2, "price_per_night": 699}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Cannaregio",
+      "tags": ["romantic", "canal_view", "historic_palace", "fine_dining_nearby"],
+      "proximity_to_attractions": {
+        "rialto_bridge": "0.4 miles",
+        "piazza_san_marco": "1 mile",
+        "venice_ghetto": "0.3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_VCE_003",
+      "name": "Venice Cannaregio Guesthouse",
+      "city": "Venice",
+      "state": null,
+      "country": "Italy",
+      "address": "Sestiere Cannaregio 2300, 30121 Venice VE, Italy",
+      "stars": 3,
+      "price_per_night": 199,
+      "amenities": ["wifi", "breakfast_included", "canal_view_balcony"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "standard_double", "capacity": 2, "price_per_night": 199},
+        {"type": "canal_view_double", "capacity": 2, "price_per_night": 249}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Cannaregio",
+      "tags": ["budget_friendly", "local_vibe", "romantic", "near_gondola"],
+      "proximity_to_attractions": {
+        "rialto_market": "0.3 miles",
+        "piazza_san_marco": "1.2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_BCN_001",
+      "name": "Hotel Arts Barcelona",
+      "city": "Barcelona",
+      "state": null,
+      "country": "Spain",
+      "address": "Carrer de la Marina, 19-21, 08005 Barcelona, Spain",
+      "stars": 5,
+      "price_per_night": 549,
+      "amenities": ["wifi", "pool", "spa", "gym", "michelin_star_restaurant", "bar", "beach_access", "concierge"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "sea_view_king", "capacity": 2, "price_per_night": 549},
+        {"type": "city_view_suite", "capacity": 2, "price_per_night": 799},
+        {"type": "honeymoon_suite", "capacity": 2, "price_per_night": 1299}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Barceloneta / Port Olímpic",
+      "tags": ["luxury", "beachfront", "romantic", "honeymoon", "fine_dining", "spa"],
+      "proximity_to_attractions": {
+        "barceloneta_beach": "steps",
+        "sagrada_familia": "2.5 miles",
+        "gothic_quarter": "1.5 miles",
+        "park_guell": "3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_BCN_002",
+      "name": "Hotel NN Gran Via Barcelona",
+      "city": "Barcelona",
+      "state": null,
+      "country": "Spain",
+      "address": "Gran Via de les Corts Catalanes, 647, 08010 Barcelona, Spain",
+      "stars": 4,
+      "price_per_night": 269,
+      "amenities": ["wifi", "rooftop_pool", "gym", "restaurant", "bar", "concierge"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "classic_double", "capacity": 2, "price_per_night": 269},
+        {"type": "superior_king", "capacity": 2, "price_per_night": 329},
+        {"type": "junior_suite", "capacity": 2, "price_per_night": 499}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Eixample",
+      "tags": ["romantic", "walkable", "near_sagrada_familia", "rooftop_pool", "historic"],
+      "proximity_to_attractions": {
+        "sagrada_familia": "0.5 miles",
+        "passeig_de_gracia": "0.2 miles",
+        "gothic_quarter": "1.2 miles",
+        "park_guell": "2.5 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_BCN_003",
+      "name": "Gothic Quarter Hostel & Inn",
+      "city": "Barcelona",
+      "state": null,
+      "country": "Spain",
+      "address": "Carrer dels Escudellers, 13, 08002 Barcelona, Spain",
+      "stars": 2,
+      "price_per_night": 109,
+      "amenities": ["wifi", "rooftop_terrace", "shared_kitchen", "luggage_storage"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "private_double", "capacity": 2, "price_per_night": 109},
+        {"type": "private_twin", "capacity": 2, "price_per_night": 129}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Gothic Quarter",
+      "tags": ["budget_friendly", "local_vibe", "walkable", "historic"],
+      "proximity_to_attractions": {
+        "gothic_quarter": "steps",
+        "barcelona_cathedral": "0.1 miles",
+        "la_rambla": "0.2 miles",
+        "barceloneta_beach": "0.8 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_TYO_001",
+      "name": "Tokyo Shinjuku Business Hotel",
+      "city": "Tokyo",
+      "state": null,
+      "country": "Japan",
+      "address": "2-2-1 Nishi-Shinjuku, Shinjuku-ku, Tokyo 163-0825, Japan",
+      "stars": 4,
+      "price_per_night": 299,
+      "amenities": ["wifi", "gym", "restaurant", "bar", "concierge", "business_center"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_twin", "capacity": 2, "price_per_night": 299},
+        {"type": "deluxe_king", "capacity": 2, "price_per_night": 369},
+        {"type": "business_suite", "capacity": 2, "price_per_night": 549}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Shinjuku",
+      "tags": ["business_friendly", "near_conference", "tech_hub", "transit_accessible"],
+      "proximity_to_attractions": {
+        "shinjuku_station": "0.2 miles",
+        "tokyo_metropolitan_government": "0.1 miles",
+        "conference_venues": "accessible",
+        "shibuya": "2 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_TYO_002",
+      "name": "Park Hyatt Tokyo",
+      "city": "Tokyo",
+      "state": null,
+      "country": "Japan",
+      "address": "3-7-1-2 Nishi-Shinjuku, Shinjuku, Tokyo 163-1055, Japan",
+      "stars": 5,
+      "price_per_night": 699,
+      "amenities": ["wifi", "pool", "spa", "gym", "fine_dining", "club_lounge", "bar", "concierge"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "city_view_twin", "capacity": 2, "price_per_night": 699},
+        {"type": "park_king", "capacity": 2, "price_per_night": 899},
+        {"type": "suite", "capacity": 2, "price_per_night": 1499}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Shinjuku",
+      "tags": ["luxury", "business_friendly", "fine_dining", "city_view", "iconic"],
+      "proximity_to_attractions": {
+        "shinjuku_station": "0.3 miles",
+        "shinjuku_gyoen": "0.5 miles",
+        "conference_venues": "accessible"
+      }
+    },
+    {
+      "hotel_id": "hotel_TYO_003",
+      "name": "Akihabara Budget Inn",
+      "city": "Tokyo",
+      "state": null,
+      "country": "Japan",
+      "address": "1-12-2 Sotokanda, Chiyoda-ku, Tokyo 101-0021, Japan",
+      "stars": 2,
+      "price_per_night": 129,
+      "amenities": ["wifi", "24hr_front_desk", "laundry", "capsule_storage"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "single_room", "capacity": 1, "price_per_night": 99},
+        {"type": "standard_twin", "capacity": 2, "price_per_night": 129}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Akihabara",
+      "tags": ["budget_friendly", "tech_friendly", "transit_accessible"],
+      "proximity_to_attractions": {
+        "akihabara_tech_district": "steps",
+        "tokyo_sky_tree": "1.5 miles",
+        "asakusa": "1 mile"
+      }
+    },
+    {
+      "hotel_id": "hotel_KYO_001",
+      "name": "Kyoto Ryokan Tawaraya",
+      "city": "Kyoto",
+      "state": null,
+      "country": "Japan",
+      "address": "FuyaCho Aneyakoji-Agaru, Nakagyo-ku, Kyoto 604-0024, Japan",
+      "stars": 5,
+      "price_per_night": 799,
+      "amenities": ["wifi", "traditional_breakfast", "tea_ceremony", "garden", "in_room_hot_spring", "kaiseki_dinner"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "traditional_tatami_suite", "capacity": 2, "price_per_night": 799},
+        {"type": "garden_view_suite", "capacity": 2, "price_per_night": 1099}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Nakagyo-ku (Central Kyoto)",
+      "tags": ["traditional_ryokan", "luxury", "tea_ceremony", "cultural_experience", "authentic_japan"],
+      "proximity_to_attractions": {
+        "nijo_castle": "0.5 miles",
+        "kyoto_imperial_palace": "0.7 miles",
+        "arashiyama": "5 miles",
+        "fushimi_inari": "4 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_KYO_002",
+      "name": "Kyoto Gion Boutique Hotel",
+      "city": "Kyoto",
+      "state": null,
+      "country": "Japan",
+      "address": "570 Gionmachi Minamigawa, Higashiyama-ku, Kyoto 605-0074, Japan",
+      "stars": 4,
+      "price_per_night": 349,
+      "amenities": ["wifi", "japanese_breakfast", "concierge", "kimono_rental"],
+      "wheelchair_accessible": false,
+      "room_types": [
+        {"type": "western_twin", "capacity": 2, "price_per_night": 349},
+        {"type": "japanese_tatami_room", "capacity": 2, "price_per_night": 429}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Gion",
+      "tags": ["boutique", "traditional", "geisha_district", "walkable", "cultural_experience"],
+      "proximity_to_attractions": {
+        "gion_district": "steps",
+        "kiyomizu_dera_temple": "0.5 miles",
+        "nishiki_market": "0.8 miles",
+        "fushimi_inari": "3 miles"
+      }
+    },
+    {
+      "hotel_id": "hotel_KYO_003",
+      "name": "Kyoto Station Budget Hotel",
+      "city": "Kyoto",
+      "state": null,
+      "country": "Japan",
+      "address": "135 Higashishiokoji-cho, Shimogyo-ku, Kyoto 600-8216, Japan",
+      "stars": 3,
+      "price_per_night": 179,
+      "amenities": ["wifi", "restaurant", "24hr_front_desk", "luggage_storage"],
+      "wheelchair_accessible": true,
+      "room_types": [
+        {"type": "standard_twin", "capacity": 2, "price_per_night": 179},
+        {"type": "standard_double", "capacity": 2, "price_per_night": 199}
+      ],
+      "max_guests": 2,
+      "neighborhood": "Kyoto Station Area",
+      "tags": ["budget_friendly", "transit_hub", "leisure_activities_nearby", "walkable"],
+      "proximity_to_attractions": {
+        "kyoto_station": "steps",
+        "nijo_castle": "2 miles",
+        "fushimi_inari": "3 miles",
+        "arashiyama": "7 miles"
+      }
+    }
+  ],
+  "metadata": {
+    "total_hotels": 75,
+    "cities_covered": [
+      "Chicago", "Miami", "Austin", "New York", "San Francisco",
+      "San Diego", "Seattle", "Washington D.C.", "Orlando",
+      "New Orleans", "Las Vegas", "Portland", "Anchorage", "Fairbanks",
+      "Napa Valley", "Lake Tahoe", "Zion National Park", "Bryce Canyon National Park",
+      "Moab", "Paris", "Venice", "Barcelona", "Tokyo", "Kyoto"
+    ],
+    "price_range_usd": {
+      "budget": "79-149",
+      "mid_range": "149-299",
+      "upscale": "299-499",
+      "luxury": "499+"
+    },
+    "special_tags_available": [
+      "wheelchair_accessible", "family_friendly", "boutique", "luxury",
+      "budget_friendly", "business_friendly", "beachfront", "lake_view",
+      "in_park_lodging", "adventure_friendly", "romantic", "near_live_music",
+      "near_museums", "vegan_restaurants_nearby", "near_theme_parks",
+      "northern_lights", "traditional_ryokan", "wedding_friendly"
+    ]
+  }
+}
