@@ -5668,6 +5668,202 @@
                 "quick_bite",
                 "efficient_service"
             ]
+        },
+        {
+            "restaurant_id": "rest_163",
+            "name": "Ruby's Canyon View Diner",
+            "city": "Bryce Canyon",
+            "state": "UT",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 37.6766,
+                "longitude": -112.1660
+            },
+            "price_level": "$",
+            "average_cost_per_person": 14,
+            "max_group_size": 30,
+            "meal_type": [
+                "breakfast",
+                "lunch",
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "06:00-21:00",
+                "Tuesday": "06:00-21:00",
+                "Wednesday": "06:00-21:00",
+                "Thursday": "06:00-21:00",
+                "Friday": "06:00-21:00",
+                "Saturday": "06:00-21:00",
+                "Sunday": "06:00-21:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "vegetarian",
+                "gluten_free"
+            ],
+            "tags": [
+                "budget_friendly",
+                "local_cuisine",
+                "hiking",
+                "nature",
+                "in_park_lodging"
+            ]
+        },
+        {
+            "restaurant_id": "rest_164",
+            "name": "Hoodoo Sunrise Cafe",
+            "city": "Bryce Canyon",
+            "state": "UT",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 37.6754,
+                "longitude": -112.1648
+            },
+            "price_level": "$$",
+            "average_cost_per_person": 22,
+            "max_group_size": 20,
+            "meal_type": [
+                "breakfast",
+                "lunch"
+            ],
+            "opening_hours": {
+                "Monday": "06:30-14:00",
+                "Tuesday": "06:30-14:00",
+                "Wednesday": "06:30-14:00",
+                "Thursday": "06:30-14:00",
+                "Friday": "06:30-14:00",
+                "Saturday": "06:00-15:00",
+                "Sunday": "06:00-15:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "vegetarian",
+                "vegan_options"
+            ],
+            "tags": [
+                "photography",
+                "local_cuisine",
+                "hiking",
+                "nature",
+                "astronomy"
+            ]
+        },
+        {
+            "restaurant_id": "rest_165",
+            "name": "Bryce Rim Grill & Stargazing Bar",
+            "city": "Bryce Canyon",
+            "state": "UT",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 37.6780,
+                "longitude": -112.1672
+            },
+            "price_level": "$$",
+            "average_cost_per_person": 34,
+            "max_group_size": 25,
+            "meal_type": [
+                "dinner",
+                "late_night"
+            ],
+            "opening_hours": {
+                "Monday": "17:00-22:00",
+                "Tuesday": "17:00-22:00",
+                "Wednesday": "17:00-22:00",
+                "Thursday": "17:00-22:00",
+                "Friday": "16:00-23:00",
+                "Saturday": "16:00-23:00",
+                "Sunday": "16:00-22:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "vegetarian",
+                "gluten_free"
+            ],
+            "tags": [
+                "astronomy",
+                "photography",
+                "local_cuisine",
+                "nature",
+                "scenic_views"
+            ]
+        },
+        {
+            "restaurant_id": "rest_166",
+            "name": "Denali Gateway Cafe",
+            "city": "Healy",
+            "state": "AK",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 63.8598,
+                "longitude": -148.9647
+            },
+            "price_level": "$",
+            "average_cost_per_person": 16,
+            "max_group_size": 20,
+            "meal_type": [
+                "breakfast",
+                "lunch",
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "06:00-21:00",
+                "Tuesday": "06:00-21:00",
+                "Wednesday": "06:00-21:00",
+                "Thursday": "06:00-21:00",
+                "Friday": "06:00-21:00",
+                "Saturday": "06:00-21:00",
+                "Sunday": "06:00-21:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "vegetarian"
+            ],
+            "tags": [
+                "budget_friendly",
+                "authentic_wilderness",
+                "hiking",
+                "wildlife",
+                "local_cuisine"
+            ]
+        },
+        {
+            "restaurant_id": "rest_167",
+            "name": "Talkeetna Brewing Company",
+            "city": "Talkeetna",
+            "state": "AK",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 62.3272,
+                "longitude": -150.1083
+            },
+            "price_level": "$$",
+            "average_cost_per_person": 28,
+            "max_group_size": 30,
+            "meal_type": [
+                "lunch",
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "11:00-22:00",
+                "Tuesday": "11:00-22:00",
+                "Wednesday": "11:00-22:00",
+                "Thursday": "11:00-22:00",
+                "Friday": "11:00-23:00",
+                "Saturday": "11:00-23:00",
+                "Sunday": "11:00-21:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "vegetarian",
+                "gluten_free"
+            ],
+            "tags": [
+                "authentic_wilderness",
+                "local_cuisine",
+                "wildlife",
+                "halfway_stop",
+                "adventure_friendly"
+            ]
         }
     ]
 }
