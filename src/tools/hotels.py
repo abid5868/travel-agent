@@ -1,6 +1,5 @@
 import os
 import json
-import math
 from datetime import datetime
 
 class HotelSearchTool:
@@ -123,7 +122,7 @@ class HotelSearchTool:
             return {"status": "error", "message": f"Hotel with ID '{hotel_id}' not found."}
         
 
-        # validate if the total rooms capcity is enough
+        # validate if the total rooms capacity is enough
         total_capacity = selected_hotel.get('max_guests', 2) * num_rooms
         if party_size > total_capacity:
             return {

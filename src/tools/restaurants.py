@@ -34,21 +34,21 @@ class RestaurantSearchTool:
         wheelchair_accessible: bool = None
     ) -> list:
         """
-        Search for activities matching criteria
+        Search for restaurants matching criteria
         
         Args:
             city: City name (e.g., "Chicago")
             special_needs: User's special needs (optional)
-            interestes: User's interestes keywords (optional)
+            interestes: User's interests keywords (optional)
             preferences: User's preferences
             max_price: Maximum price per person (optional)
-            party_size: Minimum party size (optional)
+            party_size: party size (optional)
             target_date: Activity targets date (optional)
             start_time: Activity starts time (optional)
             wheelchair_accessible: Filter for accessibility (optional)
         
         Returns:
-            List of activities dicts (up to 10 results, sorted by price)
+            List of restaurants dicts (up to 10 results, sorted by price)
             
         Example return:
         [

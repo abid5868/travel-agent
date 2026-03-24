@@ -40,7 +40,7 @@ class FlightSearchTool:
             destination_city: Destination city name (e.g., "New York")
             departure_date: Departure date (format: "YYYY"-"MM"-"DD"),
             return_date: Return date (format: "YYYY"-"MM"-"DD") (optional),
-            departure_time_earliest: Earliest dparture time (e.g., "06:00") (optional),
+            departure_time_earliest: Earliest departure time (e.g., "06:00") (optional),
             return_time_latest: Latest departure time (e.g., "18:00") (optional),
             max_price: int = Maximum price per seat (optional),
             wheelchair_accessible: bool = None (optional),
@@ -174,11 +174,11 @@ class FlightSearchTool:
         if outbound:
             if (origin_city.lower() != selected_flight['from_city'].lower() or 
                 destination_city.lower() != selected_flight['to_city'].lower()):
-                return {"status": "error", "message": f"Outbound flight original city or destination city not match."}
+                return {"status": "error", "message": f"Outbound flight origin city or destination city does not match."}
         else:
             if (origin_city.lower() != selected_flight['to_city'].lower() or 
                 destination_city.lower() != selected_flight['from_city'].lower()):
-                return {"status": "error", "message": f"Return flight original city or destination city not match."}
+                return {"status": "error", "message": f"Return flight origin city or destination city does not match."}
 
         
         # validate date format & availability

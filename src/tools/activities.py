@@ -37,7 +37,7 @@ class ActivitySearchTool:
         
         Args:
             city: City name (e.g., "Chicago")
-            interestes: User's interestes keywords (optional)
+            interestes: User's interests keywords (optional)
             preferences: User's preferences (optional)
             max_price: Maximum price per person (optional)
             party_size: party size (optional)
@@ -184,12 +184,6 @@ class ActivitySearchTool:
 
         if not selected_activity:
             return {"status": "error", "message": f"Activity with ID '{activity_id}' not found."}
-        
-        if not selected_activity['booking_required']:
-            return {
-                "status": "error",
-                "message": f"Booking failed. {selected_activity['name']} does not accept reservations. It is walk-in only."
-            }
         
         # validate date format & availability
         try:
