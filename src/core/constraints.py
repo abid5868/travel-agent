@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional
 from src.utils.types import Constraint, Booking
- 
- 
+
+
 class ConstraintTracker:
     """
     Tracks constraints, bookings, budget, and dependencies

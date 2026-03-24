@@ -1,7 +1,12 @@
 from typing import Tuple, List
 from src.core.constraints import ConstraintTracker
  
- 
+# ============================================================================
+# TODO: Implement the Validator Class + Integreate with ConstraintTracker so
+# that Agent can validate itineraries after planning and replanning steps.
+# ============================================================================
+
+
 class Validator:
     """
     Validates itineraries against constraints
