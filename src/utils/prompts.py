@@ -1,7 +1,12 @@
 """
 src/utils/prompts.py - Prompt Templates for the Agent
 """
- 
+
+# ============================================================================
+# TODO: Optimize prompt templates. Use YAML files. Consider a validation prompt
+# instead of programmatically checking constraints in the agent.
+# ============================================================================
+
  
 SYSTEM_PROMPT = """You are an expert travel planning agent that uses a ReAct (Reasoning + Acting) approach.
  
@@ -155,7 +160,6 @@ Missing information: {missing_info}
  
 Ask the user a clarifying question to get the information you need.
 Be specific about what you need to know."""
- 
  
 def create_planning_prompt(task: dict) -> str:
     """
