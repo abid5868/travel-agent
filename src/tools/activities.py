@@ -37,7 +37,7 @@ class ActivitySearchTool:
         
         Args:
             city: City name (e.g., "Chicago")
-            interestes: User's interests keywords (optional)
+            interests: User's interests keywords (optional)
             preferences: User's preferences (optional)
             max_price: Maximum price per person (optional)
             party_size: party size (optional)

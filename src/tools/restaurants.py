@@ -39,7 +39,7 @@ class RestaurantSearchTool:
         Args:
             city: City name (e.g., "Chicago")
             special_needs: User's special needs (optional)
-            interestes: User's interests keywords (optional)
+            intereste: User's interests keywords (optional)
             preferences: User's preferences
             max_price: Maximum price per person (optional)
             party_size: party size (optional)
