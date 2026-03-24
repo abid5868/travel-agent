@@ -1,7 +1,12 @@
 """
 src/utils/prompts.py - Prompt Templates for the Agent
 """
- 
+
+# ============================================================================
+# TODO: Optimize prompt templates. Use YAML files. Consider a validation prompt
+# instead of programmatically checking constraints in the agent.
+# ============================================================================
+
  
 SYSTEM_PROMPT = """You are an expert travel planning agent that uses a ReAct (Reasoning + Acting) approach.
  
@@ -19,18 +24,41 @@ CRITICAL RULES:
 3. After each tool result, think about what to do next
 4. Keep track of total cost and verify it stays within budget
 5. When replanning, identify affected components and preserve unaffected bookings
+
+Format for tool calls (EXAMPLES):
+
+# 1. Searching Tools (Use EXACT parameter names)
+ACTION: search_flights(original_city="Chicago", destination_city="Denver", departure_date="2026-07-15", max_price=300)
+ACTION: search_hotels(city="Denver", max_price=150, wheelchair_accessible=True)
+ACTION: search_restaurants(city="Denver", interests=["Italian"], party_size=2, target_date="2026-07-15", start_time="19:00")
+ACTION: search_activities(city="Denver", interests=["Museum"], party_size=2, target_date="2026-07-16")
+
+# 2. Booking Tools (Only book AFTER you have searched and found a valid ID)
+ACTION: book_flight(flight_id="flight_CHI_NYC_003", outbound=True, origin_city="Chicago", destination_city="New York", departure_date="2026-07-15", party_size=2)
+ACTION: book_hotel(hotel_id="hotel_CHI_001", check_in="2026-07-15", check_out="2026-07-18", party_size=2, num_rooms=1)
+ACTION: book_restaurant(restaurant_id="rest_001", date="2026-07-15", time="19:00", party_size=2)
+ACTION: book_activity(activity_id="act_CHI_001", date="2026-07-16", time="10:00", party_size=2)
+
+# 3. Canceling Tools (Used when replanning is needed)
+ACTION: cancel_hotel(booking_id="bk_hotel_CHI_001_20260715")
+ACTION: cancel_flight(booking_id="bk_flight_CHI_NYC_003_20260715")
+ACTION: cancel_restaurant(booking_id="bk_rest_001_20260715")
+ACTION: cancel_activity(booking_id="bk_act_CHI_001_20260716")
  
-Format for tool calls:
-ACTION: search_flights(origin="Chicago", destination="Denver", max_price=300)
-ACTION: search_hotels(city="Denver", max_price=150, wheelchair_accessible=true)
-ACTION: search_restaurants(city="Denver", cuisine="Italian", max_price=40)
-ACTION: search_activities(city="Denver", type="Museum")
- 
-Available tools:
-- search_flights: Find flights between cities
-- search_hotels: Find hotels in a city
-- search_restaurants: Find restaurants in a city
-- search_activities: Find tourist attractions
+Available tools (USE EXACT PARAMETER NAMES):
+- search_flights(original_city, destination_city, departure_date, return_date, departure_time_earliest, return_time_latest, max_price, wheelchair_accessible): Find outbound and return flights between cities.
+- book_flight(flight_id, outbound, origin_city, destination_city, departure_date, party_size): Book a specific flight.
+- cancel_flight(booking_id): Cancel a flight booking.
+- search_hotels(city, max_price, wheelchair_accessible): Find hotels in a city.
+- book_hotel(hotel_id, check_in, check_out, party_size, num_rooms): Book a specific hotel.
+- cancel_hotel(booking_id): Cancel a hotel booking.
+- search_restaurants(city, special_needs, interests, preferences, max_price, party_size, target_date, start_time, wheelchair_accessible): Find restaurants in a city.
+- book_restaurant(restaurant_id, date, time, party_size): Book a specific restaurant.
+- cancel_restaurant(booking_id): Cancel a restaurant booking.
+- search_activities(city, interests, preferences, max_price, party_size, target_date, start_time, wheelchair_accessible): Find tourist attractions and activities.
+- book_activity(activity_id, date, time, party_size): Book a specific activity.
+- cancel_activity(booking_id): Cancel an activity booking.
+
 """
  
  
@@ -132,7 +160,6 @@ Missing information: {missing_info}
  
 Ask the user a clarifying question to get the information you need.
 Be specific about what you need to know."""
- 
  
 def create_planning_prompt(task: dict) -> str:
     """
