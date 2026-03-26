@@ -95,3 +95,39 @@ Conceptually, this is the state manager:
 *TBD.*   
 *POST PROCESSING STEP:*   
 *- Natural language interpretation of JSON string outputtted from Abid'ds final step*   
+
+### Agent Output structure:
+{
+    "itinerary": str,        # Final trip plan (text from Claude)
+    "conversation": list,    # Full ReAct conversation history
+    "validation": tuple,     # (is_valid: bool, errors: List[str])
+    "metadata": dict,        # Tokens, API calls, timing
+    "success": bool          # True if validation passed
+}
+*** Sucessful example ***
+{
+    "itinerary": """FINAL ITINERARY
+    
+Day 1: Flight Chicago→Denver $245, Hotel $160
+Day 2: Activities, restaurants
+Day 3: Return flight $280
+
+TOTAL: $1,135 / $1,200 budget
+✓ All constraints satisfied""",
+
+    "validation": (True, []),  # Valid!
+    "metadata": {
+        "total_tokens": 4523,
+        "api_calls": 8,
+        "tool_calls": 6,
+        "time_elapsed": 22.33
+    },
+    "success": True
+}
+*** Failed *** 
+{
+    "itinerary": "...$1,350 total cost...",
+    "validation": (False, ["Budget exceeded by $150.00"]),
+    "metadata": {...},
+    "success": False
+}
