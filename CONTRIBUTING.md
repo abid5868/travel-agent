@@ -45,7 +45,29 @@ Inputs from michelle:
 
 Outputs:  
 - Bool / Description of validated agent plan (type is Bool / String).   
-- List of constraints violated (type is List[Any]).   
+- List of constraints violated (type is List[Any]).
+
+- #### Validator Class:
+1. validate_budget(): Compare to budget_max
+
+2. validate_completeness():
+Count flights: need at least 2 (outbound + return)
+Count hotels: need at least 1
+If missing: add error messages
+
+3. validate_accessibility():
+Get the wheelchair requirement from constraints
+Loop through all bookings
+Check if each hotel/restaurant/activity is accessible
+Collect violations
+
+4.  validate_all():
+  Call all 3 validation methods
+  Combine all the error lists
+  Return True only if ALL passed
+
+
+
 
 ## PHASE 2 BUILD INTERFACING AGREEMENT
 *TBD.*   
