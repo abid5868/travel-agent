@@ -97,6 +97,7 @@ Conceptually, this is the state manager:
 *- Natural language interpretation of JSON string outputtted from Abid'ds final step*   
 
 ### Agent Output structure:
+```
 {
     "itinerary": str,        # Final trip plan (text from Claude)
     "conversation": list,    # Full ReAct conversation history
@@ -104,7 +105,10 @@ Conceptually, this is the state manager:
     "metadata": dict,        # Tokens, API calls, timing
     "success": bool          # True if validation passed
 }
-*** Sucessful example ***
+
+
+
+### Success
 {
     "itinerary": """FINAL ITINERARY
     
@@ -124,10 +128,14 @@ TOTAL: $1,135 / $1,200 budget
     },
     "success": True
 }
-*** Failed *** 
+
+
+
+### Failure 
 {
     "itinerary": "...$1,350 total cost...",
     "validation": (False, ["Budget exceeded by $150.00"]),
     "metadata": {...},
     "success": False
 }
+```
