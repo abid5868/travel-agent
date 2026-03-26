@@ -45,9 +45,97 @@ Inputs from michelle:
 
 Outputs:  
 - Bool / Description of validated agent plan (type is Bool / String).   
-- List of constraints violated (type is List[Any]).   
+- List of constraints violated (type is List[Any]).
+
+- #### Validator Class:
+1. validate_budget(): Compare to budget_max
+
+2. validate_completeness():
+Count flights: need at least 2 (outbound + return)
+Count hotels: need at least 1
+If missing: add error messages
+
+3. validate_accessibility():
+Get the wheelchair requirement from constraints
+Loop through all bookings
+Check if each hotel/restaurant/activity is accessible
+Collect violations
+
+4.  validate_all():
+  Call all 3 validation methods
+  Combine all the error lists
+  Return True only if ALL passed
+
+- #### ConstraintTracker Class:
+
+Conceptually, this is the state manager:
+ 
+
+##### 1. Two lists to maintain:
+- `constraints` — Store all the rules (budget limit, accessibility needs)
+- `bookings` — Store all the planned items (flights, hotels)
+
+ 
+##### 2. Dependency graph — the tricky part:
+- Think: *"If X changes, what else breaks?"*
+- Example: Flight cancels → Hotel check-in impossible → Restaurant reservation wrong time
+- Use a dictionary: `{booking_id: [list of things that depend on it]}`
+- Key method: `find_all_affected_bookings()` — Follow the chain recursively
+ 
+##### 3. Methods:
+- `add_constraint()` — Just append to a list
+- `add_booking()` — Append to list, update budget
+- `get_remaining_budget()` — Simple subtraction
+- `is_within_budget()` — Just compare numbers
+- `find_dependent_bookings()` — Look up in dictionary (one level)
+- `find_all_affected_bookings()` — Use BFS or DFS to traverse the graph
+
 
 ## PHASE 2 BUILD INTERFACING AGREEMENT
 *TBD.*   
 *POST PROCESSING STEP:*   
 *- Natural language interpretation of JSON string outputtted from Abid'ds final step*   
+
+### Agent Output structure:
+```
+{
+    "itinerary": str,        # Final trip plan (text from Claude)
+    "conversation": list,    # Full ReAct conversation history
+    "validation": tuple,     # (is_valid: bool, errors: List[str])
+    "metadata": dict,        # Tokens, API calls, timing
+    "success": bool          # True if validation passed
+}
+
+
+
+### Success
+{
+    "itinerary": """FINAL ITINERARY
+    
+Day 1: Flight Chicago→Denver $245, Hotel $160
+Day 2: Activities, restaurants
+Day 3: Return flight $280
+
+TOTAL: $1,135 / $1,200 budget
+✓ All constraints satisfied""",
+
+    "validation": (True, []),  # Valid!
+    "metadata": {
+        "total_tokens": 4523,
+        "api_calls": 8,
+        "tool_calls": 6,
+        "time_elapsed": 22.33
+    },
+    "success": True
+}
+
+
+
+### Failure 
+{
+    "itinerary": "...$1,350 total cost...",
+    "validation": (False, ["Budget exceeded by $150.00"]),
+    "metadata": {...},
+    "success": False
+}
+```
