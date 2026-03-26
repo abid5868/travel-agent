@@ -66,7 +66,29 @@ Collect violations
   Combine all the error lists
   Return True only if ALL passed
 
+- #### ConstraintTracker Class:
 
+Conceptually, this is the state manager:
+ 
+
+##### 1. Two lists to maintain:
+- `constraints` — Store all the rules (budget limit, accessibility needs)
+- `bookings` — Store all the planned items (flights, hotels)
+
+ 
+##### 2. Dependency graph — the tricky part:
+- Think: *"If X changes, what else breaks?"*
+- Example: Flight cancels → Hotel check-in impossible → Restaurant reservation wrong time
+- Use a dictionary: `{booking_id: [list of things that depend on it]}`
+- Key method: `find_all_affected_bookings()` — Follow the chain recursively
+ 
+##### 3. Methods:
+- `add_constraint()` — Just append to a list
+- `add_booking()` — Append to list, update budget
+- `get_remaining_budget()` — Simple subtraction
+- `is_within_budget()` — Just compare numbers
+- `find_dependent_bookings()` — Look up in dictionary (one level)
+- `find_all_affected_bookings()` — Use BFS or DFS to traverse the graph
 
 
 ## PHASE 2 BUILD INTERFACING AGREEMENT
