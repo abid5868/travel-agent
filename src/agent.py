@@ -21,7 +21,7 @@ class TravelAgent:
     
     def __init__(self, api_key: str):
         self.client = Anthropic(api_key=api_key)
-        self.model = "claude-sonnet-4-5-20250514"
+        self.model = "claude-sonnet-4-6"
         
         self._initialize_tools()
         self.tracker = ConstraintTracker() if ConstraintTracker else None
@@ -96,16 +96,122 @@ class TravelAgent:
 
     def _create_planning_prompt(self, task: Dict[str, Any]) -> str:
         """Create planning prompt."""
-        return create_planning_prompt(task)
-    
+        if create_planning_prompt:
+            return create_planning_prompt(task)
+        
+        scenario = task.get("scenario", {})
+        constraints = task.get("initial_constraints", {})
+        
+        prompt = f"""Plan a trip:
+ 
+            Origin: {scenario.get('origin_city')}
+            Destination: {', '.join(scenario.get('destination_cities', []))}
+            Duration: {scenario.get('trip_duration_days')} days
+            Party size: {task.get('user_profile', {}).get('party_size', 1)}
+            
+            HARD CONSTRAINTS:
+            {self._format_constraints(constraints.get('hard', {}))}
+            
+            PREFERENCES:
+            {self._format_constraints(constraints.get('soft', {}))}
+            
+            Use ReAct format:
+            THOUGHT: [reasoning]
+            ACTION: search_flights(origin="City", destination="City", max_price=300)
+            
+            Start planning.
+        """
+        
+        return prompt
+        
     def _react_planning_loop(self, prompt: str, task: Dict[str, Any]) -> str:
         """React planning loop."""
-        return self._react_planning_loop(prompt, task)
-    
+
+
+        self.conversation_history.append({
+            "role": "user",
+            "content": initial_prompt
+        })
+        
+        iteration = 0
+        while iteration < max_iterations:
+            iteration += 1
+            self.turn_count += 1
+            
+            response = self._get_agent_response()
+            action_needed, tool_name, tool_params = self._parse_action(response)
+            
+            if action_needed:
+                tool_result = self._execute_tool(tool_name, tool_params)
+                observation = f"TOOL RESULT from {tool_name}:\n{json.dumps(tool_result, indent=2)}"
+                
+                self.conversation_history.append({
+                    "role": "user",
+                    "content": observation
+                })
+            else:
+                if "FINAL ITINERARY" in response or iteration >= max_iterations - 2:
+                    return response
+        
+        return self.conversation_history[-1]["content"] if self.conversation_history else ""
+
+
     def _handle_dynamic_event(self, event: Dict[str, Any], itinerary: str, task: Dict[str, Any]) -> str:
         """Handle dynamic event."""
-        return self._handle_dynamic_event(event, itinerary, task)
-    
+        if create_replanning_prompt:
+            replanning_prompt = create_replanning_prompt(
+                event,
+                current_itinerary,
+                event.get('affected_components', [])
+            )
+        else:
+            replanning_prompt = f"""DYNAMIC EVENT: {event['description']}
+ 
+                CURRENT ITINERARY:
+                {current_itinerary}
+                
+                AFFECTED: {', '.join(event.get('affected_components', []))}
+                
+                Replan incrementally - preserve unaffected bookings.
+            """
+        
+        self.conversation_history.append({
+            "role": "user",
+            "content": replanning_prompt
+        })
+        
+        updated_itinerary = self._react_planning_loop(
+            replanning_prompt,
+            task,
+            max_iterations=10
+        )
+        
+        return updated_itinerary    
+
+
+    def _parse_action(self, response: str) -> Tuple[bool, str, Dict]:
+        if "ACTION:" not in response:
+            return False, None, None
+        
+        try:
+            action_line = [line for line in response.split('\n') if 'ACTION:' in line][0]
+            action_part = action_line.split('ACTION:')[1].strip()
+            
+            tool_name = action_part.split('(')[0].strip()
+            params_str = action_part.split('(')[1].rsplit(')', 1)[0]
+            
+            params = {}
+            for param in params_str.split(','):
+                if '=' in param:
+                    key, value = param.split('=', 1)
+                    key = key.strip()
+                    value = value.strip().strip('"').strip("'")
+                    params[key] = value
+            
+            return True, tool_name, params
+            
+        except:
+            return False, None, None
 
 
     def _get_agent_response(self) -> str:
