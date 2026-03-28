@@ -86,14 +86,34 @@ class Flight(BaseModel):
     """Flight data structure (matches mock data format)"""
     flight_id: str
     airline: str
-    origin: str
-    destination: str
+    flight_number: str
+    from_city: str
+    from_state: Optional[str] = None
+    from_country: str
+    to_city: str
+    to_state: Optional[str] = None
+    to_country: str
     departure_time: str
     arrival_time: str
     duration_hours: float
-    price: int
+    aircraft_type: str
+    stops: int
+    price_per_seat: int
+    baggage_allowance: int
+    baggage_fee: int
+    preferred_seat_selection_fee: int
+    seats_available: int
+    flight_class: List[str] = Field(alias="class") 
+    amenities: List[str]
+    wheelchair_accessible: bool
+    max_group_size: int
+    days_available: List[str]
+    booking_required: bool
+    advance_booking_days: int
+    arrival_delay_minutes: int
+    was_cancelled: bool
     distance_miles: int
-    available_seats: int
+    tags: List[str]
 
 
 class Hotel(BaseModel):
@@ -101,14 +121,19 @@ class Hotel(BaseModel):
     hotel_id: str
     name: str
     city: str
+    state: Optional[str] = None
+    country: str
+    address: str
+    stars: int
     price_per_night: int
-    wheelchair_accessible: bool
     amenities: List[str]
-    check_in_time: str
-    check_out_time: str
-    rating: float
-    distance_to_downtown: str
-    has_parking: bool
+    wheelchair_accessible: bool
+    room_types: List[Dict[str, Any]]
+    max_guests: int
+    neighborhood: str
+    tags: List[str]
+    proximity_to_attractions: Dict[str, str]
+    accessibility_features: Optional[List[str]] = None
 
 
 class Restaurant(BaseModel):
@@ -116,14 +141,17 @@ class Restaurant(BaseModel):
     restaurant_id: str
     name: str
     city: str
-    cuisine: str
-    avg_meal_cost: int
-    wheelchair_accessible: bool
-    rating: float
-    price_range: str
-    hours: Dict[str, str]
-    reservations_recommended: bool
-    outdoor_seating: bool
+    state: Optional[str] = None
+    country: str
+    coordinates: Dict[str, float]
+    price_level: str
+    average_cost_per_person: int
+    max_group_size: int
+    meal_type: List[str]
+    opening_hours: Dict[str, str]
+    is_wheelchair_accessible: bool
+    dietary_options: List[str]
+    tags: List[str]
 
 
 class Activity(BaseModel):
@@ -131,14 +159,29 @@ class Activity(BaseModel):
     activity_id: str
     name: str
     city: str
+    state: Optional[str] = None
+    country: str
     type: str
-    cost: int
-    duration_hours: int
+    category: List[str]
+    description: str
+    duration_hours: float
+    price_per_person: int
     wheelchair_accessible: bool
-    rating: float
-    hours: str
-    requires_booking: bool
+    family_friendly: bool
     indoor: bool
+    min_group: int
+    max_group: int
+    operating_hours: Dict[str, str]
+    days_available: List[str]
+    booking_required: bool
+    advance_booking_days: int
+    location: Dict[str, str]
+    tags: List[str]
+    # for specific activities
+    weather_dependent: Optional[bool] = None
+    season: Optional[str] = None
+    permit_required: Optional[bool] = None
+    permit_notes: Optional[str] = None
 
 
 # Type aliases for cleaner code
