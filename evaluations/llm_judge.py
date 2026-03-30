@@ -178,7 +178,7 @@ class LLMJudge:
     }
 
     def __init__(self, api_key: Optional[str] = None, pass_threshold: float = 70.0, max_conversation_turns: int = 20):
-        self.client = Anthropic(api_key=api_key or os.environ["ANTHROPIC_API_KEY"])
+        self.client = Anthropic(api_key=api_key)  # reads ANTHROPIC_API_KEY from env automatically
         self.pass_threshold = pass_threshold
         self.max_conversation_turns = max_conversation_turns
 
@@ -232,6 +232,10 @@ class LLMJudge:
 
     def _build_result(self, task: Dict[str, Any], parsed: Dict[str, Any], raw: str) -> JudgeResult:
         has_events = bool(task.get("dynamic_events"))
+        expected_keys = {"hard_constraints", "required_components", "soft_preferences", "replanning_quality", "itinerary_coherence"}
+        missing = expected_keys - set(parsed.keys())
+        if missing:
+            print(f"[LLMJudge WARNING] Judge response missing keys: {missing}. These dimensions will be marked N/A.")
 
         def _dim(key: str, applicable: bool = True) -> DimensionScore:
             data = parsed.get(key, {})
@@ -266,9 +270,9 @@ class LLMJudge:
         weights = dict(self.WEIGHTS)
         if not replan.applicable:
             extra = weights.pop("replanning_quality")
-            total = sum(weights.values())
+            remaining = sum(weights.values())
             for k in list(weights):
-                weights[k] += extra * (weights[k] / total)
+                weights[k] += extra * (weights[k] / remaining)
         score_map = {
             "hard_constraints": hard,
             "required_components": components,
@@ -276,12 +280,12 @@ class LLMJudge:
             "replanning_quality": replan,
             "itinerary_coherence": coherence,
         }
-        total = sum(
+        overall = sum(
             (score_map[k].score / 10.0) * w * 100
             for k, w in weights.items()
             if score_map[k].applicable
         )
-        return round(total, 2)
+        return round(overall, 2)
 
 
 if __name__ == "__main__":
