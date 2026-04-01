@@ -139,6 +139,22 @@ class TravelAgent:
             event.get("affected_components", [])
         )
 
+    def _get_agent_response(self) -> str:
+        try:
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=2000,
+                messages=self.conversation_history,
+                system=SYSTEM_PROMPT,
+            )
+            self.metadata["api_calls"] += 1
+            self.metadata["total_tokens"] += response.usage.input_tokens + response.usage.output_tokens
+            response_text = response.content[0].text
+            self.conversation_history.append({"role": "assistant", "content": response_text})
+            return response_text
+        except Exception as e:
+            return f"Error: {e}"
+
     # ------------------------------------------------------------------
 
     def _parse_action(self, response: str) -> Tuple[bool, str, Dict]:
