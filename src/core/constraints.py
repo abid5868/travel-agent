@@ -106,13 +106,16 @@ class ConstraintTracker:
             )
             tracker.add_booking(flight)
         """
+        if self.get_booking(booking.booking_id) is not None:
+            return  # already exists, skip to avoid double-counting
+
         self.bookings.append(booking)
         self.budget_used += booking.cost
-        
+
         # Initialize dependency graph entry for this booking
         if booking.booking_id not in self.dependency_graph:
             self.dependency_graph[booking.booking_id] = []
-        
+
         # Register dependencies in graph
         for depends_on in booking.dependencies:
             if depends_on not in self.dependency_graph:
@@ -172,13 +175,24 @@ class ConstraintTracker:
         """
         old_booking = self.get_booking(booking_id)
         if old_booking:
-            # Update budget
             self.budget_used -= old_booking.cost
             self.budget_used += new_booking.cost
-            
-            # Replace in list
+
             idx = self.bookings.index(old_booking)
             self.bookings[idx] = new_booking
+
+            # Rebuild dependency graph edges for this booking
+            # Remove old edges where old booking_id was a dependent
+            for depends_on in old_booking.dependencies:
+                if depends_on in self.dependency_graph and booking_id in self.dependency_graph[depends_on]:
+                    self.dependency_graph[depends_on].remove(booking_id)
+
+            # Add new edges from new booking's dependencies
+            for depends_on in new_booking.dependencies:
+                if depends_on not in self.dependency_graph:
+                    self.dependency_graph[depends_on] = []
+                if new_booking.booking_id not in self.dependency_graph[depends_on]:
+                    self.dependency_graph[depends_on].append(new_booking.booking_id)
     
     def get_bookings_by_type(self, booking_type: str) -> List[Booking]:
         """

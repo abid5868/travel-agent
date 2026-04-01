@@ -147,7 +147,7 @@ Return ONLY a valid JSON object with NO markdown fences, NO extra prose outside 
 }
 
 ## SCORING SCALE
-10 = Excellent (exceptional quality, no issues)
+9-10 = Excellent (exceptional quality, no issues)
 7-8 = Good (solid performance, minor issues)
 5-6 = Partial (meets some but not all criteria)
 3-4 = Poor (significant shortcomings)
