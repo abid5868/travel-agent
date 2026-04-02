@@ -2,11 +2,6 @@
 src/utils/prompts.py - Prompt Templates for the Agent
 """
 
-# ============================================================================
-# TODO: Optimize prompt templates. Use YAML files. Consider a validation prompt
-# instead of programmatically checking constraints in the agent.
-# ============================================================================
-
  
 SYSTEM_PROMPT = """You are an expert travel planning agent that uses a ReAct (Reasoning + Acting) approach.
  
