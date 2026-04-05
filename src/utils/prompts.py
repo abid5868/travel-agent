@@ -15,10 +15,22 @@ CRITICAL RULES:
 2. Use the exact ReAct format:
    THOUGHT: [Your reasoning about what to do next]
    ACTION: [Tool call with specific parameters]
-   
+
 3. After each tool result, think about what to do next
 4. Keep track of total cost and verify it stays within budget
 5. When replanning, identify affected components and preserve unaffected bookings
+
+BOOKING ORDER — follow this strictly, do not skip ahead:
+  Step 1: Search then book ALL flights (outbound + return)
+  Step 2: Search then book hotel — use remaining budget ÷ nights as max_price
+  Step 3: Search then book activities (at least the number required)
+  Step 4: Search then book restaurants (at least the number required)
+  Do not move to the next step until the current one has a confirmed booking.
+
+BUDGET DISCIPLINE:
+  Before each search, check "Budget remaining" from the state block.
+  Pass that value (divided by remaining components) as max_price.
+  If no option fits the budget, report it clearly — do not skip booking silently.
 
 Format for tool calls (EXAMPLES):
 
@@ -94,20 +106,16 @@ AFFECTED COMPONENTS:
 {affected_components}
  
 REPLANNING INSTRUCTIONS:
-1. Identify exactly which bookings are affected by this event
-2. Find alternatives ONLY for affected components
-3. PRESERVE all unaffected bookings (do not regenerate the entire trip!)
-4. Update any dependent bookings (e.g., if flight time changes, hotel check-in may need adjustment)
+1. Identify exactly which bookings are affected — cancel them first
+2. Find alternatives ONLY for affected components — search then book
+3. PRESERVE all unaffected bookings (do not cancel or re-search these)
+4. Update dependent bookings if timing changed
 5. Verify all hard constraints are still satisfied
- 
-IMPORTANT: This is incremental replanning, not full regeneration.
- 
-Think about:
-- What specifically needs to change?
-- What can stay the same?
-- What dependencies exist?
- 
-Start with your THOUGHT about what needs to be replanned."""
+
+IMPORTANT: Do NOT write a prose analysis. Take action immediately.
+Your very next response must be:
+THOUGHT: [one sentence — the first affected booking to cancel or first search needed]
+ACTION: [the tool call — cancel_X or search_X]"""
  
  
 CONSTRAINT_REMINDER_PROMPT = """CONSTRAINT CHECK REMINDER:
@@ -137,16 +145,31 @@ What should you do:
 Think about how to proceed given this issue."""
  
  
-FINAL_ITINERARY_PROMPT = """You've completed the planning. Now create a FINAL ITINERARY summary.
- 
-Format it clearly with:
-- All flights (with times and prices)
-- All hotels (with dates and prices)
-- All restaurants and activities
-- Total cost
-- Verification that all constraints are met
- 
-Begin your summary with: FINAL ITINERARY"""
+def create_final_itinerary_prompt(confirmed_bookings_text: str) -> str:
+    """
+    Build the finalization prompt with ground-truth bookings injected.
+    This prevents the model from hallucinating bookings that were never made.
+    """
+    return f"""STOP using tools. Planning is complete.
+
+The following bookings were ACTUALLY confirmed by the system. Use ONLY these — do not invent any others.
+
+{confirmed_bookings_text}
+
+Write a FINAL ITINERARY using the confirmed bookings above.
+- Do NOT call any more tools.
+- Do NOT write THOUGHT or ACTION lines.
+- For any missing components (e.g. no hotel booked), explicitly state "not booked" — do not fabricate a booking.
+
+Format:
+- Flights (booking ID, route, date, cost)
+- Hotel (booking ID, name, dates, cost — or "not booked")
+- Activities (booking ID, name, date, cost — or "none booked")
+- Restaurants (booking ID, name, date, cost — or "none booked")
+- Total confirmed cost
+- Constraint verification
+
+Begin your response with: FINAL ITINERARY"""
  
  
 CLARIFICATION_PROMPT_TEMPLATE = """The user's request is ambiguous or incomplete.

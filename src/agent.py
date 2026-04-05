@@ -17,9 +17,9 @@ from src.utils.types import Booking
 from src.utils.prompts import (
     SYSTEM_PROMPT,
     ERROR_HANDLING_PROMPT,
-    FINAL_ITINERARY_PROMPT,
     create_planning_prompt,
     create_replanning_prompt,
+    create_final_itinerary_prompt,
 )
 
 
@@ -27,7 +27,8 @@ class TravelAgent:
 
     def __init__(self, api_key: str):
         self.client = Anthropic(api_key=api_key)
-        self.model = "claude-sonnet-4-6"
+        self.model = "claude-sonnet-4-6"           # used for planning / replanning / final
+        self._fast_model = "claude-haiku-4-5-20251001"  # used for routine tool-calling turns
         self._initialize_tools()
         # these are reset per-run in _reset()
         self.tracker = None
@@ -46,6 +47,9 @@ class TravelAgent:
         self.tracker = ConstraintTracker()
         self.conversation_history = []
         self.turn_count = 0
+        self._searched = set()            # track completed searches to prevent repetition
+        self._required_components = []    # required_components from task spec
+        self._use_full_model = True       # first turn always uses Sonnet; haiku for the rest
         self.metadata = {
             "total_tokens": 0,
             "api_calls": 0,
@@ -83,6 +87,7 @@ class TravelAgent:
             self.tracker.add_constraint(key, value, is_hard=True)
         for key, value in soft.items():
             self.tracker.add_constraint(key, value, is_hard=False)
+        self._required_components = task.get("required_components", [])
 
     def _create_planning_prompt(self, task: Dict[str, Any]) -> str:
         return create_planning_prompt(task)
@@ -98,36 +103,72 @@ class TravelAgent:
         while iteration < max_iterations:
             iteration += 1
             self.turn_count += 1
+            mode_tag = "sonnet/full" if self._use_full_model else "sonnet/stream"
+            print(f"  [iter {iteration}/{max_iterations}] thinking ({mode_tag})...", flush=True)
 
             response = self._get_agent_response()
+            self._use_full_model = False  # subsequent turns default to haiku
+
             action_needed, tool_name, tool_params = self._parse_action(response)
+            if action_needed:
+                print(f"  [iter {iteration}] ACTION: {tool_name}", flush=True)
+            else:
+                print(f"  [iter {iteration}] no action — checking for final itinerary", flush=True)
+
+            user_message_added = False
 
             if action_needed:
                 tool_result = self._execute_tool(tool_name, tool_params)
 
-                # Fix 5: inject error prompt when tool fails
                 if isinstance(tool_result, dict) and "error" in tool_result:
                     observation = ERROR_HANDLING_PROMPT.format(error_message=tool_result["error"])
                 else:
                     observation = f"TOOL RESULT from {tool_name}:\n{json.dumps(tool_result, indent=2)}"
 
                 self.conversation_history.append({"role": "user", "content": observation})
+                user_message_added = True
 
-            else:
-                # Fire any dynamic events due at this turn
+                # Fire dynamic events at their trigger turn regardless of action state.
                 due = [e for e in pending_events if self.turn_count >= e.get("trigger_turn", 999)]
                 for event in due:
                     pending_events.remove(event)
+                    print(f"  [iter {iteration}] DYNAMIC EVENT: {event.get('event_type')}", flush=True)
                     replanning_prompt = self._handle_dynamic_event(event, response, task)
                     self.conversation_history.append({"role": "user", "content": replanning_prompt})
+                    self._use_full_model = True  # replanning needs Sonnet
                     break  # one event at a time
+
+            else:
+                # Fire events that weren't caught during an action turn
+                due = [e for e in pending_events if self.turn_count >= e.get("trigger_turn", 999)]
+                for event in due:
+                    pending_events.remove(event)
+                    print(f"  [iter {iteration}] DYNAMIC EVENT: {event.get('event_type')}", flush=True)
+                    replanning_prompt = self._handle_dynamic_event(event, response, task)
+                    self.conversation_history.append({"role": "user", "content": replanning_prompt})
+                    self._use_full_model = True  # replanning needs Sonnet
+                    user_message_added = True
+                    break
 
                 if not due:
                     if "FINAL ITINERARY" in response:
                         return response
-                    # Fix 6: nudge agent to wrap up when nearing the iteration limit
-                    if iteration >= max_iterations - 3:
-                        self.conversation_history.append({"role": "user", "content": FINAL_ITINERARY_PROMPT})
+
+            # Nudge to wrap up when nearing the iteration limit.
+            if iteration >= max_iterations - 3:
+                final_prompt = create_final_itinerary_prompt(self._build_confirmed_bookings_text())
+                self.conversation_history.append({"role": "user", "content": final_prompt})
+                self._use_full_model = True  # final summary needs Sonnet
+                user_message_added = True
+
+            if not user_message_added:
+                self.conversation_history.append({"role": "user", "content": "Continue planning."})
+
+        # Final call — always Sonnet, full tokens
+        if self.conversation_history and self.conversation_history[-1]["role"] == "user":
+            print(f"  [final] requesting itinerary (sonnet)...", flush=True)
+            self._use_full_model = True
+            return self._get_agent_response()
 
         return self.conversation_history[-1]["content"] if self.conversation_history else ""
 
@@ -139,21 +180,148 @@ class TravelAgent:
             event.get("affected_components", [])
         )
 
-    def _get_agent_response(self) -> str:
-        try:
-            response = self.client.messages.create(
-                model=self.model,
-                max_tokens=2000,
-                messages=self.conversation_history,
-                system=SYSTEM_PROMPT,
+    def _booking_summary(self) -> str:
+        """State injected each turn: confirmed bookings, still-needed checklist, budget, searched queries."""
+        parts = []
+
+        # --- Confirmed bookings ---
+        if self.tracker.bookings:
+            lines = [f"- [{b.type}] {b.booking_id}  cost=${b.cost}" for b in self.tracker.bookings]
+            parts.append(
+                "CONFIRMED BOOKINGS (do not re-book these):\n" +
+                "\n".join(lines) +
+                f"\nTotal spent: ${self.tracker.budget_used}"
             )
-            self.metadata["api_calls"] += 1
-            self.metadata["total_tokens"] += response.usage.input_tokens + response.usage.output_tokens
-            response_text = response.content[0].text
+        else:
+            parts.append("No bookings confirmed yet.")
+
+        # --- Budget math ---
+        if self.tracker.budget_max:
+            remaining = self.tracker.get_remaining_budget()
+            booked_types = {b.type for b in self.tracker.bookings}
+            still_needed_types = []
+            if "flight" not in booked_types:
+                still_needed_types.append("flights (×2 round-trip)")
+            if "hotel" not in booked_types:
+                still_needed_types.append("hotel")
+            if "activity" not in booked_types:
+                still_needed_types.append("activities")
+            if "restaurant" not in booked_types:
+                still_needed_types.append("restaurants")
+            budget_lines = [f"Budget remaining: ${remaining:.0f} of ${self.tracker.budget_max:.0f}"]
+            if still_needed_types and remaining > 0:
+                approx = remaining / max(len(still_needed_types), 1)
+                budget_lines.append(f"Still need to spend on: {', '.join(still_needed_types)}")
+                budget_lines.append(f"Approx ${approx:.0f} available per remaining category — use this as max_price in searches")
+            parts.append("\n".join(budget_lines))
+
+        # --- STILL NEEDED checklist from required_components ---
+        if self._required_components:
+            booked_ids = {b.booking_id for b in self.tracker.bookings}
+            booked_types = [b.type for b in self.tracker.bookings]
+            checklist = []
+            for component in self._required_components:
+                # Map component name to booking type to check if covered
+                done = False
+                c = component.lower()
+                if "flight" in c and booked_types.count("flight") >= (2 if "return" in c or "outbound" in c else 1):
+                    done = True
+                elif "hotel" in c and "hotel" in booked_types:
+                    done = True
+                elif "activity" in c and "activity" in booked_types:
+                    done = True
+                elif "restaurant" in c and "restaurant" in booked_types:
+                    done = True
+                checklist.append(f"  [{'x' if done else ' '}] {component}")
+            parts.append("STILL NEEDED (book these before finalizing):\n" + "\n".join(checklist))
+
+        # --- Already-searched queries ---
+        if self._searched:
+            parts.append("ALREADY SEARCHED (do not search again):\n- " +
+                         "\n- ".join(sorted(self._searched)))
+
+        return "\n\n".join(parts)
+
+    def _build_confirmed_bookings_text(self) -> str:
+        """Fix 2: ground-truth booking list for the final itinerary prompt."""
+        if not self.tracker.bookings:
+            return "No bookings were confirmed by the system."
+        lines = []
+        for b in self.tracker.bookings:
+            lines.append(
+                f"- [{b.type.upper()}] booking_id={b.booking_id}  cost=${b.cost}"
+                + (f"  details={json.dumps(b.details)}" if b.details else "")
+            )
+        lines.append(f"\nTotal confirmed spend: ${self.tracker.budget_used}")
+        if self.tracker.budget_max:
+            lines.append(f"Budget limit: ${self.tracker.budget_max}")
+        return "\n".join(lines)
+
+    def _build_messages(self) -> List[Dict]:
+        """Build windowed message list with injected booking summary."""
+        window = 8
+        if len(self.conversation_history) > window + 1:
+            messages = [self.conversation_history[0]] + self.conversation_history[-window:]
+        else:
+            messages = list(self.conversation_history)
+        booking_note = {"role": "user", "content": self._booking_summary()}
+        return [messages[0], booking_note] + messages[1:]
+
+    def _get_agent_response(self) -> str:
+        """
+        Always uses Sonnet. Planning/replanning/final turns get a full blocking response
+        (3000 tokens). Tool-calling turns use streaming with early stop once a complete
+        ACTION(...) line is received (700 tokens), avoiding waiting for the full output.
+        """
+        full = self._use_full_model
+        max_tokens = 3000 if full else 700
+        messages = self._build_messages()
+
+        try:
+            if full:
+                response = self.client.messages.create(
+                    model=self.model,
+                    max_tokens=max_tokens,
+                    messages=messages,
+                    system=SYSTEM_PROMPT,
+                    timeout=90,
+                )
+                self.metadata["api_calls"] += 1
+                self.metadata["total_tokens"] += response.usage.input_tokens + response.usage.output_tokens
+                response_text = response.content[0].text
+            else:
+                response_text = self._stream_until_action(self.model, max_tokens, messages)
+                self.metadata["api_calls"] += 1
+
             self.conversation_history.append({"role": "assistant", "content": response_text})
             return response_text
         except Exception as e:
             return f"Error: {e}"
+
+    def _stream_until_action(self, model: str, max_tokens: int, messages: List[Dict]) -> str:
+        """Stream the response and stop as soon as a complete ACTION(...) line is received."""
+        chunks: List[str] = []
+        try:
+            with self.client.messages.stream(
+                model=model,
+                max_tokens=max_tokens,
+                messages=messages,
+                system=SYSTEM_PROMPT,
+                timeout=60,
+            ) as stream:
+                for text in stream.text_stream:
+                    chunks.append(text)
+                    current = "".join(chunks)
+                    # Stop early once we have a complete ACTION(...)  line
+                    if "ACTION:" in current:
+                        for line in current.split("\n"):
+                            if "ACTION:" in line and "(" in line and line.count(")") >= line.count("("):
+                                return current   # complete action found — stop streaming
+        except Exception as e:
+            if chunks:
+                return "".join(chunks)  # return whatever we got before the error
+            raise
+        return "".join(chunks)
 
     # ------------------------------------------------------------------
 
@@ -252,6 +420,13 @@ class TravelAgent:
         except Exception as e:
             return {"error": str(e)}
 
+        # Fix 1: record completed searches so the booking summary can warn the model
+        if method == "search":
+            city = processed_params.get("city") or processed_params.get("destination_city", "?")
+            origin = processed_params.get("original_city", "")
+            key = f"{tool_name}:{origin}->{city}" if origin else f"{tool_name}:{city}"
+            self._searched.add(key)
+
         if isinstance(result, dict) and result.get("status") == "success":
             if method == "book":
                 booking_type = tool_name.split("_", 1)[1]  # "book_flight" → "flight"
@@ -266,6 +441,24 @@ class TravelAgent:
                 if booking_id:
                     self.tracker.remove_booking(booking_id)
 
+        return self._trim_result(result, method)
+
+    def _trim_result(self, result: Any, method: str) -> Any:
+        """Strip bulky fields from tool results before they enter conversation history."""
+        if method == "book" and isinstance(result, dict) and "details" in result:
+            details = {k: v for k, v in result["details"].items() if k != "full_data"}
+            return {**result, "details": details}
+        if method == "search" and isinstance(result, list):
+            trimmed = []
+            keep = {"flight_id", "hotel_id", "restaurant_id", "activity_id",
+                    "name", "city", "price", "price_per_night", "price_per_person",
+                    "stars", "departure_time", "arrival_time", "duration_hours",
+                    "airline", "origin_city", "destination_city", "departure_date",
+                    "wheelchair_accessible", "tags", "neighborhood", "cuisine_type",
+                    "type", "category"}
+            for item in result[:5]:  # cap at 5 results
+                trimmed.append({k: v for k, v in item.items() if k in keep})
+            return trimmed
         return result
 
     # ------------------------------------------------------------------
