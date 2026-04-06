@@ -13,44 +13,51 @@ TASKS = [
 OUTPUT_DIR = Path("agent_planning_results")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-agent = TravelAgent(api_key=os.environ["ANTHROPIC_API_KEY"])
+def main():
+    api_key = os.getenv("ANTHROPIC_API_KEY")
+    if not api_key:
+        raise RuntimeError("ANTHROPIC_API_KEY is required to run this integration script.")
 
-for task_path in TASKS:
-    task_name = Path(task_path).stem  # e.g. "easy1"
-    print(f"\n{'='*60}")
-    print(f"Running: {task_name}  ({task_path})")
-    print(f"{'='*60}")
+    agent = TravelAgent(api_key=api_key)
 
-    with open(task_path) as f:
-        task = json.load(f)
+    for task_path in TASKS:
+        task_name = Path(task_path).stem  # e.g. "easy1"
+        print(f"\n{'='*60}")
+        print(f"Running: {task_name}  ({task_path})")
+        print(f"{'='*60}")
 
-    wall_start = time.time()
-    result = agent.plan_trip(task)
-    wall_elapsed = round(time.time() - wall_start, 2)
+        with open(task_path) as f:
+            task = json.load(f)
 
-    result["metadata"]["wall_time_seconds"] = wall_elapsed
+        wall_start = time.time()
+        result = agent.plan_trip(task)
+        wall_elapsed = round(time.time() - wall_start, 2)
 
-    # Metadata JSON (no itinerary string — avoids \n and \uXXXX escaping)
-    metadata_output = {
-        "task_id":    task.get("task_id", task_name),
-        "task_file":  task_path,
-        "title":      task.get("title", ""),
-        "difficulty": task.get("difficulty", ""),
-        "success":    result["success"],
-        "metadata":   result["metadata"],
-    }
-    json_path = OUTPUT_DIR / f"{task_name}.json"
-    with open(json_path, "w") as f:
-        json.dump(metadata_output, f, indent=2)
+        result["metadata"]["wall_time_seconds"] = wall_elapsed
 
-    # Itinerary as plain markdown — renders properly, no escaping
-    md_path = OUTPUT_DIR / f"{task_name}.md"
-    with open(md_path, "w", encoding="utf-8") as f:
-        f.write(result["itinerary"])
+        metadata_output = {
+            "task_id":    task.get("task_id", task_name),
+            "task_file":  task_path,
+            "title":      task.get("title", ""),
+            "difficulty": task.get("difficulty", ""),
+            "success":    result["success"],
+            "metadata":   result["metadata"],
+        }
+        json_path = OUTPUT_DIR / f"{task_name}.json"
+        with open(json_path, "w") as f:
+            json.dump(metadata_output, f, indent=2)
 
-    print(f"  Success:   {result['success']}")
-    print(f"  API calls: {result['metadata']['api_calls']}")
-    print(f"  Tokens:    {result['metadata']['total_tokens']}")
-    print(f"  Time:      {wall_elapsed}s")
-    print(f"  Metadata:  {json_path}")
-    print(f"  Itinerary: {md_path}")
+        md_path = OUTPUT_DIR / f"{task_name}.md"
+        with open(md_path, "w", encoding="utf-8") as f:
+            f.write(result["itinerary"])
+
+        print(f"  Success:   {result['success']}")
+        print(f"  API calls: {result['metadata']['api_calls']}")
+        print(f"  Tokens:    {result['metadata']['total_tokens']}")
+        print(f"  Time:      {wall_elapsed}s")
+        print(f"  Metadata:  {json_path}")
+        print(f"  Itinerary: {md_path}")
+
+
+if __name__ == "__main__":
+    main()

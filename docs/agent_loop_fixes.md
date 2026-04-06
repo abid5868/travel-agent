@@ -205,16 +205,15 @@ Do not move to the next step until the current one has a confirmed booking.
 
 This reduces the upper bound the model can generate per call, and ensures planning turns have enough room for full itineraries.
 
-### What Was Tried but Reverted: Haiku for Tool Turns
+### Model Choice
 
-Using `claude-haiku-4-5-20251001` for routine tool-calling turns achieved ~35% speed reduction (94s vs 145s) but degraded planning quality severely — Haiku re-booked already-confirmed flights multiple times and searched activities 5 times without booking anything. Instruction-following reliability is too important here. Haiku was removed; Sonnet is used throughout.
+The agent now uses Sonnet throughout. There is no `_fast_model` path in the runtime code.
 
 ### Measured Impact (medium1)
 
 | Run | Model | Time | Activities Booked | Restaurants Booked |
 |-----|-------|------|-------------------|--------------------|
 | Baseline (no streaming) | Sonnet | 145s | 4 | 4 |
-| Haiku for tool turns | Haiku + Sonnet | 94s | 0 | 0 |
 | Sonnet + streaming early stop | Sonnet | 147s | 4 | 5 ✅ |
 
 The streaming optimization keeps quality intact and hits the 5-restaurant requirement. Time is comparable to baseline; the main benefit is capping max_tokens at 700 for tool turns, which keeps per-turn latency bounded.

@@ -27,8 +27,7 @@ class TravelAgent:
 
     def __init__(self, api_key: str):
         self.client = Anthropic(api_key=api_key)
-        self.model = "claude-sonnet-4-6"           # used for planning / replanning / final
-        self._fast_model = "claude-haiku-4-5-20251001"  # used for routine tool-calling turns
+        self.model = "claude-sonnet-4-6"
         self._initialize_tools()
         # these are reset per-run in _reset()
         self.tracker = None
@@ -49,7 +48,7 @@ class TravelAgent:
         self.turn_count = 0
         self._searched = set()            # track completed searches to prevent repetition
         self._required_components = []    # required_components from task spec
-        self._use_full_model = True       # first turn always uses Sonnet; haiku for the rest
+        self._use_full_model = True
         self.metadata = {
             "total_tokens": 0,
             "api_calls": 0,
@@ -103,11 +102,10 @@ class TravelAgent:
         while iteration < max_iterations:
             iteration += 1
             self.turn_count += 1
-            mode_tag = "sonnet/full" if self._use_full_model else "sonnet/stream"
-            print(f"  [iter {iteration}/{max_iterations}] thinking ({mode_tag})...", flush=True)
+            print(f"  [iter {iteration}/{max_iterations}] thinking...", flush=True)
 
             response = self._get_agent_response()
-            self._use_full_model = False  # subsequent turns default to haiku
+            self._use_full_model = False
 
             action_needed, tool_name, tool_params = self._parse_action(response)
             if action_needed:
@@ -135,7 +133,7 @@ class TravelAgent:
                     print(f"  [iter {iteration}] DYNAMIC EVENT: {event.get('event_type')}", flush=True)
                     replanning_prompt = self._handle_dynamic_event(event, response, task)
                     self.conversation_history.append({"role": "user", "content": replanning_prompt})
-                    self._use_full_model = True  # replanning needs Sonnet
+                    self._use_full_model = True
                     break  # one event at a time
 
             else:
@@ -146,7 +144,7 @@ class TravelAgent:
                     print(f"  [iter {iteration}] DYNAMIC EVENT: {event.get('event_type')}", flush=True)
                     replanning_prompt = self._handle_dynamic_event(event, response, task)
                     self.conversation_history.append({"role": "user", "content": replanning_prompt})
-                    self._use_full_model = True  # replanning needs Sonnet
+                    self._use_full_model = True
                     user_message_added = True
                     break
 
@@ -158,7 +156,7 @@ class TravelAgent:
             if iteration >= max_iterations - 3:
                 final_prompt = create_final_itinerary_prompt(self._build_confirmed_bookings_text())
                 self.conversation_history.append({"role": "user", "content": final_prompt})
-                self._use_full_model = True  # final summary needs Sonnet
+                self._use_full_model = True
                 user_message_added = True
 
             if not user_message_added:
