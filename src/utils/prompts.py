@@ -104,18 +104,27 @@ CURRENT ITINERARY:
  
 AFFECTED COMPONENTS:
 {affected_components}
+
+AFFECTED CONFIRMED BOOKINGS:
+{affected_bookings}
+
+DEPENDENT BOOKINGS TO REVIEW:
+{dependent_bookings}
+
+RESOLUTION REQUIREMENTS:
+{resolution_requirements}
  
 REPLANNING INSTRUCTIONS:
-1. Identify exactly which bookings are affected — cancel them first
-2. Find alternatives ONLY for affected components — search then book
+1. Any invalidated bookings listed above have already been removed from the confirmed-bookings state block
+2. Find alternatives ONLY for affected components that are now missing — search then book
 3. PRESERVE all unaffected bookings (do not cancel or re-search these)
-4. Update dependent bookings if timing changed
+4. Review dependent bookings and update them only if the new hotel/location makes them unsuitable
 5. Verify all hard constraints are still satisfied
-
+ 
 IMPORTANT: Do NOT write a prose analysis. Take action immediately.
 Your very next response must be:
-THOUGHT: [one sentence — the first affected booking to cancel or first search needed]
-ACTION: [the tool call — cancel_X or search_X]"""
+THOUGHT: [one sentence — the first search or dependent update needed]
+ACTION: [the tool call — search_X, book_X, or cancel_X]"""
  
  
 CONSTRAINT_REMINDER_PROMPT = """CONSTRAINT CHECK REMINDER:
@@ -145,7 +154,11 @@ What should you do:
 Think about how to proceed given this issue."""
  
  
-def create_final_itinerary_prompt(confirmed_bookings_text: str) -> str:
+def create_final_itinerary_prompt(
+    confirmed_bookings_text: str,
+    requirement_status_text: str,
+    operation_log_text: str,
+) -> str:
     """
     Build the finalization prompt with ground-truth bookings injected.
     This prevents the model from hallucinating bookings that were never made.
@@ -156,10 +169,19 @@ The following bookings were ACTUALLY confirmed by the system. Use ONLY these —
 
 {confirmed_bookings_text}
 
+The following requirement status was computed by the system. Treat it as ground truth.
+
+{requirement_status_text}
+
+The following replanning action log was recorded by the system. Use it as the audit trail.
+
+{operation_log_text}
+
 Write a FINAL ITINERARY using the confirmed bookings above.
 - Do NOT call any more tools.
 - Do NOT write THOUGHT or ACTION lines.
 - For any missing components (e.g. no hotel booked), explicitly state "not booked" — do not fabricate a booking.
+- Do NOT claim unmet requirements are satisfied.
 
 Format:
 - Flights (booking ID, route, date, cost)
@@ -167,7 +189,8 @@ Format:
 - Activities (booking ID, name, date, cost — or "none booked")
 - Restaurants (booking ID, name, date, cost — or "none booked")
 - Total confirmed cost
-- Constraint verification
+- Requirement status
+- Replanning audit trail
 
 Begin your response with: FINAL ITINERARY"""
  
@@ -226,7 +249,10 @@ def create_planning_prompt(task: dict) -> str:
 def create_replanning_prompt(
     event: dict,
     current_itinerary: str,
-    affected_components: list
+    affected_components: list,
+    affected_bookings_text: str,
+    dependent_bookings_text: str,
+    resolution_requirements_text: str,
 ) -> str:
     """
     Create replanning prompt for a dynamic event
@@ -235,7 +261,10 @@ def create_replanning_prompt(
         event: Event dictionary
         current_itinerary: Current planned itinerary
         affected_components: List of affected component names
-    
+        affected_bookings_text: Ground-truth affected bookings
+        dependent_bookings_text: Bookings that should be reviewed after replanning
+        resolution_requirements_text: Event-specific resolution criteria
+
     Returns:
         Formatted replanning prompt
     """
@@ -243,7 +272,10 @@ def create_replanning_prompt(
         event_type=event.get("event_type", "Unknown"),
         event_description=event.get("description", ""),
         current_itinerary=current_itinerary,
-        affected_components=", ".join(affected_components)
+        affected_components=", ".join(affected_components),
+        affected_bookings=affected_bookings_text,
+        dependent_bookings=dependent_bookings_text,
+        resolution_requirements=resolution_requirements_text,
     )
  
  

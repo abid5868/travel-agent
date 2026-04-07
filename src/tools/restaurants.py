@@ -130,8 +130,8 @@ class RestaurantSearchTool:
                         if start_time < open_time and start_time > close_time:
                             continue
 
+            match_score = 0
             if user_interests:
-
                 keywords = set()
                 for m_type in r['meal_type']:
                     keywords.update(self.helper(m_type))
@@ -139,15 +139,13 @@ class RestaurantSearchTool:
                     keywords.update(self.helper(dietary_option))
                 for tag in r['tags']:
                     keywords.update(self.helper(tag))
-                
-                if not user_interests.intersection(keywords):
-                    continue
+                match_score = len(user_interests.intersection(keywords))
 
-            candidates.append(r)
+            candidates.append((match_score, r))
         
-        candidates.sort(key=lambda x: x['average_cost_per_person'])        
+        candidates.sort(key=lambda item: (-item[0], item[1]['average_cost_per_person']))
 
-        return candidates[:10]
+        return [restaurant for _, restaurant in candidates[:10]]
     
     @staticmethod
     def helper(word: str) -> set:

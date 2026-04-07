@@ -200,7 +200,7 @@ _USER_TEMPLATE = """\
 
 
 class LLMJudge:
-    MODEL = "claude-opus-4-6"
+    MODEL = "claude-sonnet-4-6"
     MAX_RETRIES = 3
     INITIAL_RETRY_DELAY = 1.0  # seconds
 
@@ -214,7 +214,7 @@ class LLMJudge:
 
     DIMENSION_KEYS = ["hard_constraints", "required_components", "soft_preferences", "replanning_quality", "itinerary_coherence"]
 
-    def __init__(self, api_key: Optional[str] = None, pass_threshold: float = 70.0, max_conversation_turns: int = 20, max_tokens: int = 2048):
+    def __init__(self, api_key: Optional[str] = None, pass_threshold: float = 70.0, max_conversation_turns: int = 20, max_tokens: int = 4096):
         self.client = Anthropic(api_key=api_key)  # reads ANTHROPIC_API_KEY from env automatically
         self.pass_threshold = pass_threshold
         self.max_conversation_turns = max_conversation_turns
@@ -383,21 +383,21 @@ if __name__ == "__main__":
     parser.add_argument("task_file", help="Path to benchmark task JSON")
     parser.add_argument("agent_output_file", help="Path to agent output JSON")
     parser.add_argument("--threshold", type=float, default=70.0)
-    parser.add_argument("--output", help="Path to write judge result JSON")
+    parser.add_argument("--max-tokens", type=int, default=8192, help="Max tokens for judge response")
     args = parser.parse_args()
 
     with open(args.task_file) as f:
         task = json.load(f)
-    with open(args.agent_output_file) as f:
-        agent_output = json.load(f)
 
-    judge = LLMJudge(pass_threshold=args.threshold)
+    if args.agent_output_file.endswith(".md"):
+        with open(args.agent_output_file) as f:
+            agent_output = {"itinerary": f.read(), "conversation": []}
+    else:
+        with open(args.agent_output_file) as f:
+            agent_output = json.load(f)
+
+    judge = LLMJudge(pass_threshold=args.threshold, max_tokens=args.max_tokens)
     result = judge.evaluate(task, agent_output)
     print(result.summary())
-
-    if args.output:
-        with open(args.output, "w") as f:
-            json.dump(result.to_dict(), f, indent=2)
-        logger.info(f"Result written to {args.output}")
 
     sys.exit(0 if result.passed else 1)

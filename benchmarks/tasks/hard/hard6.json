@@ -54,7 +54,6 @@
   ],
   "required_components": [
     "flight_nyc_to_lv",
-    "rental_car",
     "zion_lodge_2_nights",
     "bryce_lodge_2_nights",
     "moab_hotel_4_nights",
@@ -68,5 +67,5 @@
     "time_zone_awareness_correct": true,
     "replanning_successful": true
   },
-  "notes": "HARD task because: (1) Remote geography with limited road networks forcing high-stakes rerouting, (2) Three specific options with conflicting constraints (safety vs. budget vs. park access), (3) Time zone changes (PST to MST) impacting travel logic, (4) Cascading effect on fixed timed-entry permits, (5) Tests ability to prioritize milestones over secondary preferences."
+  "notes": "HARD task because: (1) Remote geography with limited road networks forcing high-stakes rerouting, (2) Three specific options with conflicting constraints (safety vs. budget vs. park access), (3) Time zone changes (PST to MST) impacting travel logic, (4) Cascading effect on fixed timed-entry permits, (5) Tests ability to prioritize milestones over secondary preferences. Ground transfer between parks is part of itinerary reasoning, but a standalone rental-car booking is not required."
 }

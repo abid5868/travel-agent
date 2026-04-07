@@ -537,16 +537,16 @@
     },
     {
       "activity_id": "act_SAN_003",
-      "name": "Mission Beach Surf & Swim",
+      "name": "Mission Beach Adaptive Surf & Swim",
       "city": "San Diego",
       "state": "CA",
       "country": "USA",
       "type": "beach_activity",
       "category": ["beach", "swimming", "watersports", "outdoor", "family"],
-      "description": "Half-day beach experience at Mission Beach with access to surfboard and boogie board rentals. Optional surf lesson for beginners available. Family-friendly stretch of beach.",
+      "description": "Half-day accessible beach experience at Mission Beach with adaptive surf coaching, beach wheelchair access mats, and boogie board rentals. Designed for mixed-mobility families who want time in the surf and on the shoreline.",
       "duration_hours": 4.0,
       "price_per_person": 40,
-      "wheelchair_accessible": false,
+      "wheelchair_accessible": true,
       "family_friendly": true,
       "indoor": false,
       "min_group": 1,
@@ -556,7 +556,7 @@
       "booking_required": false,
       "advance_booking_days": 0,
       "location": {"address": "3000 Ocean Front Walk, San Diego, CA 92109", "neighborhood": "Mission Beach"},
-      "tags": ["beach_activity", "swimming", "outdoor", "family_friendly", "watersports"]
+      "tags": ["beach_activity", "swimming", "outdoor", "family_friendly", "watersports", "adaptive_surf", "wheelchair_accessible", "accessible_beach"]
     },
     {
       "activity_id": "act_SAN_004",
@@ -603,6 +603,29 @@
       "advance_booking_days": 0,
       "location": {"address": "910 N Harbor Dr, San Diego, CA 92101", "neighborhood": "Downtown / Embarcadero"},
       "tags": ["history_museum", "family_friendly", "family_activity", "interactive_museum", "wheelchair_accessible"]
+    },
+    {
+      "activity_id": "act_SAN_006",
+      "name": "Coronado Accessible Beach Day & Sand Chair Rental",
+      "city": "San Diego",
+      "state": "CA",
+      "country": "USA",
+      "type": "beach_activity",
+      "category": ["beach", "relaxation", "coastal_walk", "outdoor", "family"],
+      "description": "Reserved accessible beach setup at Coronado with sand wheelchair rental, shaded cabana access, paved promenade route, and a short family shoreline naturalist program.",
+      "duration_hours": 3.0,
+      "price_per_person": 26,
+      "wheelchair_accessible": true,
+      "family_friendly": true,
+      "indoor": false,
+      "min_group": 1,
+      "max_group": 12,
+      "operating_hours": {"open": "09:00", "close": "17:00"},
+      "days_available": ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"],
+      "booking_required": true,
+      "advance_booking_days": 1,
+      "location": {"address": "1100 Orange Ave, Coronado, CA 92118", "neighborhood": "Coronado Beach"},
+      "tags": ["beach_activity", "accessible_beach", "family_friendly", "wheelchair_accessible", "relaxation", "beach_adjacent"]
     },
 
     {

@@ -3,14 +3,14 @@
   "task_file": "benchmarks/tasks/easy/easy1.json",
   "title": "Weekend trip from Detroit to Chicago",
   "difficulty": "easy",
-  "success": true,
+  "success": false,
   "metadata": {
-    "total_tokens": 85991,
-    "api_calls": 18,
-    "tool_calls": 17,
-    "start_time": 1775414505.977858,
-    "end_time": 1775414667.218194,
-    "time_elapsed": 161.24,
-    "wall_time_seconds": 161.24
+    "total_tokens": 17351,
+    "api_calls": 8,
+    "tool_calls": 7,
+    "start_time": 1775600108.770012,
+    "end_time": 1775600203.500679,
+    "time_elapsed": 94.73,
+    "wall_time_seconds": 94.73
   }
 }

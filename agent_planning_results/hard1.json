@@ -3,14 +3,14 @@
   "task_file": "benchmarks/tasks/hard/hard1.json",
   "title": "Alaska Glacier and Northern Lights Adventure",
   "difficulty": "hard",
-  "success": true,
+  "success": false,
   "metadata": {
-    "total_tokens": 80990,
-    "api_calls": 19,
-    "tool_calls": 17,
-    "start_time": 1775414840.803401,
-    "end_time": 1775415007.612536,
-    "time_elapsed": 166.81,
-    "wall_time_seconds": 166.81
+    "total_tokens": 19706,
+    "api_calls": 24,
+    "tool_calls": 23,
+    "start_time": 1775604978.982304,
+    "end_time": 1775605181.3426812,
+    "time_elapsed": 202.36,
+    "wall_time_seconds": 202.37
   }
 }

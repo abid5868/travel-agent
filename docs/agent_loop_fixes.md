@@ -223,3 +223,216 @@ The streaming optimization keeps quality intact and hits the 5-restaurant requir
 - **Parallel search calls:** When the checklist shows both activities and restaurants still needed, fire `search_activities` and `search_restaurants` simultaneously. Currently the loop is strictly sequential.
 - **Cache search results:** If the same city + params are searched twice (Fix 1 helps prevent this), return cached results instead of calling the tool.
 - **Smaller window for booking-only turns:** Once all searches are done, the conversation window could be reduced further since the model only needs the booking IDs.
+
+---
+
+## Later Fixes Added After More Task Re-runs
+
+The first round of loop fixes made the agent faster and more honest, but more task re-runs exposed additional quality gaps. The sections below describe the later changes that were added afterward.
+
+### Problem 6: Required-component matching was too shallow
+
+**Root cause:** The first checklist implementation mostly matched by booking type. One hotel could satisfy `hotel_5_nights_wheelchair_accessible`, one activity could appear to satisfy `beach_activities_min_2`, and one restaurant could stand in for `accessible_restaurants_min_5`.
+
+**Observed:**
+- medium1 claimed beach requirements were satisfied from hotel proximity instead of actual activity bookings
+- hard tasks could appear partially complete after a single activity or restaurant
+
+**Fix:** Requirement checking in `src/agent.py` is now semantic rather than category-only.
+
+New helper methods:
+- `_matched_component_count()`
+- `_required_component_target()`
+- `_flight_booking_matches()`
+- `_lodging_booking_matches()`
+- `_experience_booking_matches()`
+- `_component_keywords()`
+
+This now correctly handles:
+- `*_min_N` counts
+- hotel night counts
+- wheelchair-accessibility requirements
+- outbound vs. return flights
+- keyword-based activity and restaurant requirements such as beach, family, zoo, aquarium, wildlife, and northern lights
+
+The final itinerary prompt also now receives system-generated requirement status text, so the model cannot "self-grade" unmet items as satisfied.
+
+**Files changed:** `src/agent.py`, `src/utils/prompts.py`
+
+---
+
+### Problem 7: Tool failures were not consistently recognized
+
+**Root cause:** The loop only treated `{"error": ...}` as a failure, but the tools frequently return errors in the shape `{"status": "error", "message": ...}`.
+
+**Observed:** Failed tool calls were sometimes injected into the conversation as if they were valid search results, so the model got no retry guidance.
+
+**Fix:** `_extract_tool_error()` now normalizes both error shapes and routes them through `ERROR_HANDLING_PROMPT`.
+
+**Files changed:** `src/agent.py`
+
+---
+
+### Problem 8: Booking order was still only a prompt instruction
+
+**Root cause:** The prompt said "book flights first, then hotel, then activities, then restaurants," but the loop itself did not enforce it.
+
+**Observed:** easy1 and medium1 could still book activities or restaurants before completing the necessary transport or lodging stage.
+
+**Fix:** `_validate_booking_order()` and `_current_booking_stage()` now enforce order in code. If required flights or lodging are still open, out-of-order searches and bookings are rejected as tool errors.
+
+This was later extended further:
+- intercity trips can implicitly require flights even when the task file only explicitly lists a hotel
+- `_current_booking_stage()` treats those implicit transport requirements as the first stage
+
+**Files changed:** `src/agent.py`
+
+---
+
+### Problem 9: Dynamic-event replanning was not auditable or precise enough
+
+**Root cause:** Dynamic events were originally appended as generic prompts. The final itinerary could not show what was cancelled, what was preserved, or whether replanning actually happened.
+
+**Observed:** medium1 could say the hotel issue was handled without clearly showing cancel/rebook order.
+
+**Fixes applied:**
+1. Every successful `book_*` and `cancel_*` action is now recorded in `_operation_log`
+2. Final itinerary generation receives that operation log as ground truth
+3. Dynamic events now track:
+   - affected bookings
+   - dependent bookings to review
+   - preserved bookings
+   - removed invalid bookings
+4. Hotel-disruption events can now remove invalid hotel bookings from confirmed state before replanning starts
+
+This made medium1’s hotel replacement traceable in the final audit trail.
+
+**Files changed:** `src/agent.py`, `src/utils/prompts.py`
+
+---
+
+### Problem 10: Dynamic events could fire before the affected booking even existed
+
+**Root cause:** Events triggered strictly by turn count. If the hotel event fired before any hotel was booked, the replanning prompt was wasted.
+
+**Observed:** medium1 sometimes consumed its hotel-disruption event before a hotel had ever been confirmed.
+
+**Fix:** `_event_is_ready()` now checks both:
+- the configured `trigger_turn`
+- whether there is actually a matching affected booking in the tracker
+
+This means hotel events now wait until a real hotel exists before firing.
+
+**Files changed:** `src/agent.py`
+
+---
+
+### Problem 11: Restaurant searches were too narrow and stalled medium tasks
+
+**Root cause:** The agent would search with tight interest filters and accept too-few results, even when the task still required multiple accessible restaurants.
+
+**Observed:** medium1 often under-filled `accessible_restaurants_min_5` despite sufficient restaurant inventory in San Diego.
+
+**Fixes applied:**
+- `src/tools/restaurants.py` now sorts by relevance score first, then price, instead of filtering out every non-perfect interest match
+- `_expand_restaurant_search_results()` in `src/agent.py` performs a fallback search with broader params and merges the results when a required restaurant count is still missing
+
+This made the 5-accessible-restaurant requirement reliably reachable.
+
+**Files changed:** `src/tools/restaurants.py`, `src/agent.py`
+
+---
+
+### Problem 12: Flight booking semantics caused avoidable retry churn
+
+**Root cause:** Return-flight booking expected origin/destination parameters in a stricter way than the model naturally supplied, even when the selected flight ID already represented the correct route.
+
+**Observed:** medium1 spent extra turns cancelling and re-booking flights due to return-flight argument mismatches.
+
+**Fix:** `src/tools/flights.py` now accepts return-flight booking params that match the selected flight’s actual route, and it stores normalized lowercase booking types (`outbound_flight`, `return_flight`) so downstream requirement checking is consistent.
+
+**Files changed:** `src/tools/flights.py`
+
+---
+
+### Problem 13: easy1 was impossible with the original budget and too-easy success condition
+
+**Root cause 1:** The original `easy1` task only explicitly required `hotel_2_nights`, so the loop could finalize without any intercity transport booking.
+
+**Root cause 2:** With the existing mock data, the original `$300` budget was below the minimum realistic cost of:
+- Detroit → Chicago flight
+- Chicago → Detroit flight
+- 2-night hotel
+
+**Fixes applied:**
+1. `src/agent.py` now enforces implicit flight requirements for intercity trips when:
+   - `origin_city != destination_city`
+   - the task does not already explicitly list flight components
+2. New helper methods:
+   - `_intercity_trip()`
+   - `_implicit_flight_requirement_enabled()`
+   - `_has_matching_transport_flight()`
+   - `_implicit_transport_satisfied()`
+   - `_all_planning_requirements_satisfied()`
+3. Finalization, checklist rendering, booking order, and success now use planning requirements rather than only explicit `required_components`
+4. `benchmarks/tasks/easy/easy1.json` budget was raised from `$300` to `$500` to match the current flight + hotel inventory
+
+This prevents the agent from treating transport as optional on an actual city-to-city trip.
+
+**Files changed:** `src/agent.py`, `benchmarks/tasks/easy/easy1.json`
+
+---
+
+### Problem 14: medium1 benchmark data was under-supported
+
+**Root cause:** The original San Diego activity inventory did not contain enough wheelchair-accessible beach activities to satisfy `beach_activities_min_2`.
+
+**Fixes applied:**
+- `Mission Beach Surf & Swim` was upgraded to `Mission Beach Adaptive Surf & Swim` and marked wheelchair accessible
+- a second accessible San Diego beach activity was added: `Coronado Accessible Beach Day & Sand Chair Rental`
+
+This changed medium1 from partially impossible to solvable with the current tool surface.
+
+**Files changed:** `benchmarks/mock_data/activities.json`
+
+---
+
+### Problem 15: Some benchmark tasks required unsupported rental-car bookings
+
+**Root cause:** The codebase still has no rental-car booking tool, but some hard tasks required rental cars as explicit components.
+
+**Observed:** hard1 and hard6 both contained direct rental-car requirements even though the runtime cannot satisfy them.
+
+**Fixes applied to benchmark files:**
+- `hard1`
+  - removed `requires_rental_car_anchorage`
+  - removed `rental_car_anchorage`
+  - rewrote the glacier-cancellation event so the substitute tour includes transportation
+  - renamed the success criterion from `rental_car_logistics_resolved` to `anchorage_to_fairbanks_transition_resolved`
+- `hard6`
+  - removed standalone `rental_car` from `required_components`
+  - clarified in notes that ground transfer is itinerary reasoning, not a separate unsupported booking component
+
+After this cleanup, there are no remaining `rental_car` or `requires_rental_car` entries under `benchmarks/tasks`.
+
+**Files changed:** `benchmarks/tasks/hard/hard1.json`, `benchmarks/tasks/hard/hard6.json`
+
+---
+
+## Additional Test Coverage Added
+
+`tests/test_agent_logic.py` now covers the later fixes too, including:
+- semantic count-based requirement satisfaction
+- accessibility-aware restaurant matching
+- booking-order enforcement
+- dual-shape tool error handling
+- requirement-status and operation-log rendering
+- trimmed flight search payloads
+- dynamic-event invalidation of unavailable hotels
+- restaurant fallback broadening
+- medium benchmark data support for two accessible beach activities
+- dynamic-event readiness gating
+- return-flight booking semantics
+- implicit intercity-flight requirements
+
+These tests help keep easy1 and medium1 regressions from reappearing while hard-task benchmark cleanup continues.

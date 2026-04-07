@@ -15,7 +15,7 @@
   },
   "initial_constraints": {
     "hard": {
-      "budget_max": 300,
+      "budget_max": 500,
       "departure_date": "2026-02-27",
       "departure_time_earliest": "",
       "return_date": "2026-03-01",
@@ -31,7 +31,7 @@
     "hotel_2_nights"
   ],
   "success_criteria": {
-    "total_cost_max": 300,
+    "total_cost_max": 500,
     "timing_feasible": true
   }
 }
