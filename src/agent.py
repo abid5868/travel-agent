@@ -120,7 +120,7 @@ class TravelAgent:
 
     # ------------------------------------------------------------------
 
-    def _react_planning_loop(self, prompt: str, task: Dict[str, Any], max_iterations: int = 24) -> str:
+    def _react_planning_loop(self, prompt: str, task: Dict[str, Any], max_iterations: int = 50) -> str:
         self.conversation_history.append({"role": "user", "content": prompt})
 
         pending_events = list(task.get("dynamic_events", []))
@@ -296,6 +296,8 @@ class TravelAgent:
             remaining = self.tracker.get_remaining_budget()
             still_needed_types = self._remaining_required_categories()
             budget_lines = [f"Budget remaining: ${remaining:.0f} of ${self.tracker.budget_max:.0f}"]
+            if self.tracker.get_constraint("strict_vegan_only"):
+                budget_lines.append("All restaurants MUST be strictly vegan. Check 'dietary_options' before booking.")
             if still_needed_types and remaining > 0:
                 approx = remaining / max(len(still_needed_types), 1)
                 budget_lines.append(f"Still need to spend on: {', '.join(still_needed_types)}")
@@ -475,7 +477,7 @@ class TravelAgent:
         if any(word in normalized for word in (
             "activity", "activities", "tour", "tours", "museum", "museums", "visit",
             "visits", "experience", "experiences", "park", "parks", "attraction",
-            "attractions", "venue", "venues"
+            "attractions", "venue", "venues", "entertainment", "show"
         )):
             return sum(
                 1 for booking in self.tracker.get_bookings_by_type("activity")
@@ -609,6 +611,8 @@ class TravelAgent:
             tokens.update(self._tokenize_component(str(item)))
         for tag in full_data.get("tags", []):
             tokens.update(self._tokenize_component(str(tag)))
+        for diet in full_data.get("dietary_options", []):
+            tokens.update(self._tokenize_component(str(diet)))
         if full_data.get("family_friendly") is True:
             tokens.update({"family", "family_friendly"})
         if full_data.get("wheelchair_accessible") is True or full_data.get("is_wheelchair_accessible") is True:
@@ -720,11 +724,11 @@ class TravelAgent:
     def _get_agent_response(self) -> str:
         """
         Always uses Sonnet. Planning/replanning/final turns get a full blocking response
-        (3000 tokens). Tool-calling turns use streaming with early stop once a complete
+        (4096 tokens). Tool-calling turns use streaming with early stop once a complete
         ACTION(...) line is received (700 tokens), avoiding waiting for the full output.
         """
         full = self._use_full_model
-        max_tokens = 3000 if full else 700
+        max_tokens = 4096 if full else 700
         messages = self._build_messages()
 
         try:
@@ -933,6 +937,7 @@ class TravelAgent:
             "search_activities":  (self.activity_tool,   "search"),
             "book_activity":      (self.activity_tool,   "book"),
             "cancel_activity":    (self.activity_tool,   "cancel"),
+            "record_surcharge":   (self,                 "record_surcharge"),
         }
 
         entry = tool_action_map.get(tool_name)
@@ -1111,6 +1116,24 @@ class TravelAgent:
         return "\n".join(formatted) if formatted else "- None"
 
 
+    def record_surcharge(self, amount: float, description: str):
+        import time
+        fake_id = f"bk_surcharge_{int(time.time())}"
+        
+        self.tracker.add_booking(Booking(
+            booking_id=fake_id,
+            type="surcharge",
+            details={"name": description},
+            cost=float(amount)
+        ))
+        
+        return {
+            "status": "success", 
+            "booking_id": fake_id, 
+            "cost": float(amount),
+            "message": f"Surcharge of ${amount} recorded successfully."
+        }
+    
 if __name__ == "__main__":
     import os
 

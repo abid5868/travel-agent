@@ -5864,6 +5864,150 @@
                 "halfway_stop",
                 "adventure_friendly"
             ]
+        },
+        {
+            "restaurant_id": "rest_168",
+            "name": "Le Déjeuner Royal",
+            "city": "Paris",
+            "state": "IDF",
+            "country": "France",
+            "coordinates": {
+                "latitude": 48.8600,
+                "longitude": 2.3300
+            },
+            "price_level": "$$$$",
+            "average_cost_per_person": 160,
+            "max_group_size": 4,
+            "meal_type": [
+                "lunch"
+            ],
+            "opening_hours": {
+                "Monday": "11:30-15:00",
+                "Tuesday": "11:30-15:00",
+                "Wednesday": "11:30-15:00",
+                "Thursday": "11:30-15:00",
+                "Friday": "11:30-15:00",
+                "Saturday": "11:30-15:00",
+                "Sunday": "11:30-15:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "vegetarian",
+                "gluten_free"
+            ],
+            "tags": [
+                "fine_dining",
+                "romantic_experiences",
+                "historical_sites"
+            ]
+        },
+        {
+            "restaurant_id": "rest_169",
+            "name": "Catalonia Grand Bodega & Tasting",
+            "city": "Barcelona",
+            "state": "Catalonia",
+            "country": "Spain",
+            "coordinates": {
+                "latitude": 41.3855,
+                "longitude": 2.1730
+            },
+            "price_level": "$$$$",
+            "average_cost_per_person": 140,
+            "max_group_size": 8,
+            "meal_type": [
+                "lunch",
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "13:00-23:00",
+                "Tuesday": "13:00-23:00",
+                "Wednesday": "13:00-23:00",
+                "Thursday": "13:00-23:00",
+                "Friday": "13:00-23:30",
+                "Saturday": "13:00-23:30",
+                "Sunday": "13:00-22:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "vegetarian"
+            ],
+            "tags": [
+                "fine_dining",
+                "guided_wine_tastings",
+                "romantic_experiences"
+            ]
+        },
+        {
+            "restaurant_id": "rest_170",
+            "name": "Marina Bay Michelin Seafood",
+            "city": "Barcelona",
+            "state": "Catalonia",
+            "country": "Spain",
+            "coordinates": {
+                "latitude": 41.3800,
+                "longitude": 2.1900
+            },
+            "price_level": "$$$$",
+            "average_cost_per_person": 180,
+            "max_group_size": 6,
+            "meal_type": [
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "19:00-23:30",
+                "Tuesday": "19:00-23:30",
+                "Wednesday": "19:00-23:30",
+                "Thursday": "19:00-23:30",
+                "Friday": "19:00-00:00",
+                "Saturday": "19:00-00:00",
+                "Sunday": "19:00-23:30"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "seafood",
+                "gluten_free"
+            ],
+            "tags": [
+                "fine_dining",
+                "romantic_experiences",
+                "beach_adjacent",
+                "sunset_viewpoints"
+            ]
+        },
+        {
+            "restaurant_id": "rest_171",
+            "name": "Ristorante Laguna Vista",
+            "city": "Venice",
+            "state": "Veneto",
+            "country": "Italy",
+            "coordinates": {
+                "latitude": 45.4320,
+                "longitude": 12.3380
+            },
+            "price_level": "$$$",
+            "average_cost_per_person": 110,
+            "max_group_size": 6,
+            "meal_type": [
+                "lunch"
+            ],
+            "opening_hours": {
+                "Monday": "11:30-15:30",
+                "Tuesday": "11:30-15:30",
+                "Wednesday": "11:30-15:30",
+                "Thursday": "11:30-15:30",
+                "Friday": "11:30-15:30",
+                "Saturday": "11:30-15:30",
+                "Sunday": "11:30-15:30"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "seafood"
+            ],
+            "tags": [
+                "fine_dining",
+                "canal_side",
+                "romantic_experiences"
+            ]
         }
     ]
 }

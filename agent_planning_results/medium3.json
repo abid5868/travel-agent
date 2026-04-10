@@ -1,0 +1,16 @@
+{
+  "task_id": "task_008",
+  "task_file": "benchmarks/tasks/medium/medium3.json",
+  "title": "Anniversary Weekend in Chicago with Restaurant Cancellation",
+  "difficulty": "medium",
+  "success": false,
+  "metadata": {
+    "total_tokens": 22673,
+    "api_calls": 24,
+    "tool_calls": 17,
+    "start_time": 1775839633.1390562,
+    "end_time": 1775839885.249154,
+    "time_elapsed": 252.11,
+    "wall_time_seconds": 252.11
+  }
+}

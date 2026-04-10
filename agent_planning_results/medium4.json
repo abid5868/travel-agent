@@ -1,0 +1,16 @@
+{
+  "task_id": "task_009",
+  "task_file": "benchmarks/tasks/medium/medium4.json",
+  "title": "Historical Weekend in D.C. with Weather Disruption",
+  "difficulty": "medium",
+  "success": true,
+  "metadata": {
+    "total_tokens": 29082,
+    "api_calls": 19,
+    "tool_calls": 18,
+    "start_time": 1775839885.252904,
+    "end_time": 1775840040.179178,
+    "time_elapsed": 154.93,
+    "wall_time_seconds": 154.93
+  }
+}

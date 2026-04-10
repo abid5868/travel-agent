@@ -1,17 +1,16 @@
 # FINAL ITINERARY
-### 8-Day Alaska Adventure: New York → Anchorage → Fairbanks
-*Solo Adventure Traveler | September 15–23, 2026*
+## 🌌 Alaska Adventure: New York → Anchorage → Fairbanks | Sept 15–23, 2026
 
 ---
 
 ## ✈️ FLIGHTS
 
-| Booking ID | Route | Date | Flight # | Departure | Arrival | Cost |
-|---|---|---|---|---|---|---|
-| bk_flight_NYC_ANC_001_20260915 | New York → Anchorage | Sep 15, 2026 | AS501 | 18:00 | 05:00+1 | $379.00 |
-| bk_flight_FAI_NYC_001_20260923 | Fairbanks → New York | Sep 23, 2026 | AS602 | 10:00 | 21:30 | $379.00 |
+| Booking ID | Route | Date | Flight # | Departure → Arrival | Cost |
+|---|---|---|---|---|---|
+| `bk_flight_NYC_ANC_001_20260915` | New York → Anchorage | Sept 15, 2026 | Alaska Airlines AS501 | 18:00 → 05:00+1 | $379.00 |
+| `bk_flight_FAI_NYC_001_20260923` | Fairbanks → New York | Sept 23, 2026 | Alaska Airlines AS602 | 10:00 → 21:30 | $379.00 |
 
-**Flight Notes:** Both operated by Alaska Airlines on Boeing 737. WiFi, in-flight entertainment, and meal service included. 1 bag allowance per flight (additional baggage fee $25 if needed).
+**Flight Notes:** Both flights operated by Alaska Airlines on Boeing 737 with WiFi, in-flight entertainment, and meal service. One stop each way. Baggage allowance: 1 bag included (additional bag fee: $25).
 
 ---
 
@@ -19,63 +18,48 @@
 
 | Booking ID | Property | Location | Dates | Nights | Cost |
 |---|---|---|---|---|---|
-| bk_hotel_ANC_002_20260915 | Midtown Anchorage Inn ⭐⭐⭐ | 4800 Spenard Rd, Anchorage, AK | Sep 15–18, 2026 | 3 nights | $447.00 |
-| bk_hotel_FAI_001_20260919 | Fairbanks Aurora Lodge ⭐⭐⭐ | 1650 Airport Way, Fairbanks, AK | Sep 19–23, 2026 | 4 nights | $716.00 |
+| `bk_hotel_ANC_002_20260915` | Midtown Anchorage Inn ⭐⭐⭐ | 4800 Spenard Rd, Anchorage, AK | Sept 15–18, 2026 | 3 nights | $447.00 |
+| `bk_hotel_FAI_001_20260919` | Fairbanks Aurora Lodge ⭐⭐⭐ | 1650 Airport Way, Fairbanks, AK | Sept 19–23, 2026 | 4 nights | $716.00 |
 
-**Hotel Notes:**
-- **Midtown Anchorage Inn:** Complimentary breakfast, free parking, gear storage. Adventure-friendly, 5 miles from Chugach State Park.
-- **Fairbanks Aurora Lodge:** Includes **Aurora Alert Service** — you'll be notified when northern lights are active! Bar, restaurant, guided tour desk, and gear storage on-site. Aurora View Suites available for upgrade.
+**Hotel Highlights:**
+- **Midtown Anchorage Inn:** Free parking, complimentary breakfast, gear storage — perfect for adventure travelers. 5 miles from Chugach State Park.
+- **Fairbanks Aurora Lodge:** Aurora alert service, guided tour desk, gear storage, on-site restaurant & bar. 2 miles from University of Alaska Museum. 50 miles from Chena Hot Springs. ⚠️ *Note: An earlier hotel booking (bk_hotel_FAI_003) was cancelled due to a weather-related system event and successfully re-booked.*
 
 ---
 
 ## 🎯 ACTIVITIES
 
+### 📍 Anchorage (Sept 15–18)
+
 | Booking ID | Activity | Date | Time | Duration | Cost |
 |---|---|---|---|---|---|
-| bk_act_ANC_003_20260916 | 🦌 Alaska Wildlife Conservation Center Visit | Sep 16, 2026 | 10:00 | 3 hrs | $25.00 |
-| bk_act_FAI_001_20260920 | 🌌 Northern Lights Aurora Viewing Tour | Sep 20, 2026 | 21:00 | 4 hrs | $79.00 |
-| bk_act_FAI_002_20260921 | 🧊 Aurora Ice Museum at Chena Hot Springs | Sep 21, 2026 | 14:00 | 6 hrs | $120.00 |
-| bk_act_FAI_003_20260922 | 🐕 Yukon Quest Sled Dog Racing Experience | Sep 22, 2026 | 10:00 | 2 hrs | $145.00 |
+| `bk_act_ANC_003_20260915` | Alaska Wildlife Conservation Center Visit | Sept 15, 2026 | 14:00 | 3 hrs | $25.00 |
+| `bk_act_ANC_002_20260916` | Matanuska Glacier Hiking Tour | Sept 16, 2026 | 08:00 | 8 hrs | $185.00 |
+| `bk_act_ANC_004_20260917` | Denali National Park Day Trip | Sept 17, 2026 | 06:00 | 14 hrs | $189.00 |
 
-**Activity Notes:**
-- **Wildlife Conservation Center:** Brown bears, moose, musk ox, wolves & bald eagles. Located 45 min south of Anchorage on the Seward Highway. Excellent photography opportunities.
-- **Northern Lights Tour:** Guided tour to optimal dark-sky locations outside Fairbanks. Warm beverages and photography tips included. ⚠️ Weather-dependent.
-- **Chena Hot Springs:** 60 miles from Fairbanks — world's largest year-round ice environment + natural hot springs. Northern lights viewable from open-air pools at night.
-- **Sled Dog Experience:** 2-hour mushing run through Alaskan boreal forest near Fairbanks. Meet the dogs and learn authentic mushing culture.
+### 📍 Fairbanks (Sept 19–23)
+
+| Booking ID | Activity | Date | Time | Duration | Cost |
+|---|---|---|---|---|---|
+| `bk_act_FAI_003_20260919` | Yukon Quest Sled Dog Racing Experience | Sept 19, 2026 | 10:00 | 2 hrs | $145.00 |
+| `bk_act_FAI_001_20260920` | Northern Lights Aurora Viewing Tour | Sept 20, 2026 | 21:00 | 4 hrs | $79.00 |
+| `bk_act_FAI_002_20260921` | Aurora Ice Museum at Chena Hot Springs | Sept 21, 2026 | 18:00 | 6 hrs | $120.00 |
+
+**Activity Highlights:**
+- 🦌 **Wildlife Conservation Center** — Brown bears, moose, wolves, bald eagles; great arrival-day warmup activity
+- 🧊 **Matanuska Glacier Hike** — Walk on the glacier with crampons & ice axes; weather-dependent ⚠️
+- 🏔️ **Denali Day Trip** — Full-day guided tour; chance to spot caribou, grizzly bears & Dall sheep; Mt. Denali views
+- 🐕 **Sled Dog Experience** — Authentic Alaskan mushing through boreal forest
+- 🌌 **Aurora Viewing Tour** — Guided dark-sky drive with photography tips & warm beverages; weather-dependent ⚠️
+- 🌡️ **Chena Hot Springs** — Aurora Ice Museum + natural hot spring soaking + potential aurora viewing
 
 ---
 
 ## 🍽️ RESTAURANTS
 
-| Booking ID | Name | Date | Cost |
-|---|---|---|---|
-| — | *None booked* | — | — |
-
-**Dining Recommendations (unbooked):** The Fairbanks Aurora Lodge has an on-site restaurant and bar. In Anchorage, consider **Snow City Cafe** (local favorite for breakfast), **Crush Wine Bistro** (upscale Alaskan cuisine), or **Humpy's Great Alaskan Alehouse** for local seafood. Budget ~$15–40/meal from the remaining $1,210 buffer.
-
----
-
-## 📅 DAY-BY-DAY OVERVIEW
-
-| Day | Date | Location | Plan |
-|---|---|---|---|
-| Day 1 | Sep 15 | ✈️ NYC → Anchorage | Depart NYC at 18:00, overnight flight |
-| Day 2 | Sep 16 | 🏔️ Anchorage | Check in Midtown Inn; Alaska Wildlife Conservation Center (10:00) |
-| Day 3 | Sep 17 | 🏔️ Anchorage | Free day — explore Chugach State Park, photography, downtown Anchorage |
-| Day 4 | Sep 18 | 🚗 Anchorage → Denali | Travel day toward Denali region (self-guided drive on Parks Highway) |
-| Day 5 | Sep 19 | 🏕️ Denali → Fairbanks | Continue to Fairbanks; check in Aurora Lodge |
-| Day 6 | Sep 20 | 🌌 Fairbanks | Northern Lights Aurora Viewing Tour (21:00) |
-| Day 7 | Sep 21 | 🧊 Fairbanks | Chena Hot Springs — Ice Museum + Hot Springs + Night Aurora (14:00) |
-| Day 8 | Sep 22 | 🐕 Fairbanks | Yukon Quest Sled Dog Experience (10:00); final evening in Fairbanks |
-| Day 9 | Sep 23 | ✈️ Fairbanks → NYC | Depart Fairbanks 10:00, arrive NYC 21:30 |
-
----
-
-## ⚠️ UNMET REQUIREMENT
-
-| Requirement | Status | Notes |
-|---|---|---|
-| **denali_national_park_visit** | ❌ **NOT BOOKED** | No Denali-specific activity was available in the booking system. A self-guided drive through the Denali region is recommended on Sep 18 (travel day between Anchorage and Fairbanks via Parks Highway — Denali is directly on this route), but **no guided tour has been formally booked**. |
+> **None booked.** Restaurant bookings were not completed within the confirmed budget allocation. With $836 remaining in the budget, travelers are encouraged to explore the following dining options independently:
+> - **Anchorage:** 49th State Brewing Co. (local craft beer & Alaskan fare), Humpy's Great Alaskan Alehouse, Snow City Café (breakfast)
+> - **Fairbanks:** Pike's Landing (riverfront dining), Lavelle's Bistro, Silver Gulch Brewing & Bottling Co.
 
 ---
 
@@ -83,46 +67,66 @@
 
 | Category | Cost |
 |---|---|
-| Flights (2) | $758.00 |
-| Hotels (7 nights total) | $1,163.00 |
-| Activities (4) | $369.00 |
-| Restaurants | $0.00 |
-| **Total Confirmed Spend** | **$2,290.00** |
-| **Budget Remaining** | **$1,210.00** |
+| ✈️ Flights (2) | $758.00 |
+| 🏨 Hotels (7 nights total) | $1,163.00 |
+| 🎯 Activities (6) | $743.00 |
+| 🍽️ Restaurants | $0.00 |
+| **TOTAL CONFIRMED SPEND** | **$2,664.00** |
 | **Budget Limit** | **$3,500.00** |
+| **💵 Remaining Budget** | **$836.00** |
 
-✅ **Well within budget — $1,210 remaining** for meals, ground transportation, gear, tips, and any walk-up Denali entrance fees.
+> 💡 **Tip:** Use the $836 remaining for meals, gear rentals, park entrance fees, tips for guides, and any spontaneous experiences along the way!
 
 ---
 
 ## ✅ REQUIREMENT STATUS
 
-| Requirement | Status |
-|---|---|
-| ✅ flight_nyc_to_anchorage | SATISFIED |
-| ✅ flight_fairbanks_to_nyc | SATISFIED |
-| ✅ hotel_anchorage_3_nights | SATISFIED |
-| ✅ hotel_fairbanks_4_nights | SATISFIED |
-| ✅ glacier_tour_or_viewing | SATISFIED (2 matched) |
-| ✅ northern_lights_tour_or_viewing_min_2_nights | SATISFIED (3 matched) |
-| ✅ wildlife_viewing_activity | SATISFIED (2 matched) |
-| ❌ denali_national_park_visit | **UNMET** — no bookable activity found in system |
-| ✅ outdoor_activities_min_4 | SATISFIED (4 matched) |
+| Requirement | Status | Evidence |
+|---|---|---|
+| ✈️ Flight: NYC → Anchorage | ✅ SATISFIED | `bk_flight_NYC_ANC_001_20260915` |
+| ✈️ Flight: Fairbanks → NYC | ✅ SATISFIED | `bk_flight_FAI_NYC_001_20260923` |
+| 🏨 Hotel: Anchorage (3 nights) | ✅ SATISFIED | `bk_hotel_ANC_002_20260915` (Sept 15–18) |
+| 🏨 Hotel: Fairbanks (4 nights) | ✅ SATISFIED | `bk_hotel_FAI_001_20260919` (Sept 19–23) |
+| 🧊 Must See Glaciers | ✅ SATISFIED | Matanuska Glacier Hike (`bk_act_ANC_002`) |
+| 🌌 Must See Northern Lights (min 2 nights) | ✅ SATISFIED | Aurora Tour (`bk_act_FAI_001`) + Chena Hot Springs (`bk_act_FAI_002`) |
+| 🦌 Must See Wildlife | ✅ SATISFIED | Wildlife Conservation Center (`bk_act_ANC_003`) + Denali Day Trip (`bk_act_ANC_004`) |
+| 🏔️ Denali National Park Visit | ✅ SATISFIED | `bk_act_ANC_004_20260917` |
+| 🎯 Outdoor Activities (min 4) | ✅ SATISFIED | 6 outdoor activities booked |
+| 💰 Budget ≤ $3,500 | ✅ SATISFIED | $2,664 spent / $836 remaining |
 
 ---
 
 ## 🔄 REPLANNING AUDIT TRAIL
 
-| Turn | Action | Result |
+| Turn | Action | Details |
 |---|---|---|
-| Turn 2 | Book outbound flight NYC→ANC | ✅ Confirmed bk_flight_NYC_ANC_001_20260915 |
-| Turn 4 | Book return flight FAI→NYC | ✅ Confirmed bk_flight_FAI_NYC_001_20260923 |
-| Turn 6 | Book Anchorage hotel | ✅ Confirmed bk_hotel_ANC_002_20260915 |
-| Turn 8 | Book Fairbanks hotel | ✅ Confirmed bk_hotel_FAI_001_20260918 |
-| Turn 8 | ⚠️ System cancellation — weather event | ❌ Hotels bk_hotel_ANC_002 & bk_hotel_FAI_001 removed due to `weather_cancellation_glacier_tour` |
-| Turn 12 | Rebook Anchorage hotel | ✅ Re-confirmed bk_hotel_ANC_002_20260915 |
-| Turn 14 | Rebook Fairbanks hotel (adjusted check-in) | ✅ Re-confirmed bk_hotel_FAI_001_20260919 |
-| Turn 16 | Book wildlife activity | ✅ Confirmed bk_act_ANC_003_20260916 |
-| Turn 19 | Book Northern Lights tour | ✅ Confirmed bk_act_FAI_001_20260920 |
-| Turn 20 | Book Chena Hot Springs/Ice Museum | ✅ Confirmed bk_act_FAI_002_20260921 |
-| Turn 21 | Book Sled Dog experience | ✅ Confirmed bk_act_FAI_003_20260922 |
+| Turn 3 | ✅ Book Flight | `bk_flight_NYC_ANC_001_20260915` — NYC → Anchorage confirmed |
+| Turn 4 | ✅ Book Flight | `bk_flight_FAI_NYC_001_20260923` — Fairbanks → NYC confirmed |
+| Turn 6 | ✅ Book Hotel | `bk_hotel_ANC_002_20260915` — Midtown Anchorage Inn confirmed |
+| Turn 8 | ✅ Book Hotel | `bk_hotel_FAI_003_20260918` — Initial Fairbanks hotel confirmed |
+| Turn 8 | ⚠️ System Cancel | `bk_hotel_ANC_002_20260915` cancelled — weather_cancellation_glacier_tour event |
+| Turn 8 | ⚠️ System Cancel | `bk_hotel_FAI_003_20260918` cancelled — weather_cancellation_glacier_tour event |
+| Turn 12 | ✅ Re-book Hotel | `bk_hotel_ANC_002_20260915` — Midtown Anchorage Inn re-confirmed |
+| Turn 14 | ✅ Re-book Hotel | `bk_hotel_FAI_001_20260919` — Fairbanks Aurora Lodge confirmed (upgrade!) |
+| Turn 16 | ✅ Book Activity | `bk_act_ANC_002_20260916` — Matanuska Glacier Hike |
+| Turn 17 | ✅ Book Activity | `bk_act_ANC_004_20260917` — Denali National Park Day Trip |
+| Turn 18 | ✅ Book Activity | `bk_act_ANC_003_20260915` — Alaska Wildlife Conservation Center |
+| Turn 20 | ✅ Book Activity | `bk_act_FAI_001_20260920` — Northern Lights Aurora Viewing Tour |
+| Turn 21 | ✅ Book Activity | `bk_act_FAI_002_20260921` — Aurora Ice Museum at Chena Hot Springs |
+| Turn 22 | ✅ Book Activity | `bk_act_FAI_003_20260919` — Yukon Quest Sled Dog Racing Experience |
+
+---
+
+## 📅 DAY-BY-DAY OVERVIEW
+
+| Day | Date | Location | Key Activities |
+|---|---|---|---|
+| Day 1 | Sept 15 (Tue) | ✈️ NYC → Anchorage | Depart 18:00 NYC; Arrive 05:00 Anchorage. Afternoon: Wildlife Conservation Center |
+| Day 2 | Sept 16 (Wed) | 📍 Anchorage | **Matanuska Glacier Hike** (all day, depart 08:00) |
+| Day 3 | Sept 17 (Thu) | 📍 Anchorage → Denali | **Denali National Park Day Trip** (full day, depart 06:00) |
+| Day 4 | Sept 18 (Fri) | 📍 Anchorage | Free day — rest, explore downtown, prepare for Fairbanks transfer |
+| Day 5 | Sept 19 (Sat) | 🚗 Anchorage → Fairbanks | Check in Aurora Lodge. **Sled Dog Experience** (10:00) |
+| Day 6 | Sept 20 (Sun) | 📍 Fairbanks | Explore city/museum. **Northern Lights Tour** (21:00) 🌌 |
+| Day 7 | Sept 21 (Mon) | 📍 Fairbanks → Chena | **Aurora Ice Museum + Hot Springs** (18:00) 🌌 |
+| Day 8 | Sept 22 (Tue) | 📍 Fairbanks | Free day — backup aurora viewing, photography, local exploration |
+| Day 9 |

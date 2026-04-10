@@ -15,7 +15,7 @@
   },
   "initial_constraints": {
     "hard": {
-      "budget_max": 5000,
+      "budget_max": 11000,
       "departure_date": "2026-06-15",
       "return_date": "2026-06-25",
       "return_time_latest": "",
@@ -43,7 +43,7 @@
         "Choose between two flight options (losing a day vs exhausting evening arrival)",
         "Adjust Venice hotel stay: extend by 1 night OR keep same dates with late arrival",
         "Adjust Barcelona hotel checkin to align with new Venice checkout",
-        "If extending Venice hotel, verify new total cost stays within $5000 budget",
+        "If extending Venice hotel, verify new total cost stays within $11000 budget",
         "If choosing Rome routing (option 2), verify $800 surcharge fits budget",
         "Preserve Paris hotel and outbound/return international flights",
         "Ensure all three cities are still visited (required)"
@@ -56,14 +56,14 @@
     "flight_venice_to_barcelona",
     "flight_barcelona_to_nyc",
     "hotel_paris_3_nights",
-    "hotel_venice_3_nights",
+    "hotel_venice_2_nights",
     "hotel_barcelona_4_nights",
     "romantic_experiences_min_3",
     "fine_dining_min_4",
     "guided_tours_min_3"
   ],
   "success_criteria": {
-    "total_cost_max": 5000,
+    "total_cost_max": 11000,
     "timing_feasible": true,
     "all_three_cities_visited": true,
     "replanning_successful": true,

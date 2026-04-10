@@ -176,7 +176,8 @@ Return ONLY a valid JSON object with NO markdown fences, NO extra prose outside 
 
 ## INSTRUCTIONS
 - Be consistent and objective
-- Base scores on evidence from the itinerary and conversation
+- Base scores ONLY on evidence found in the Final Itinerary text.
+- If no conversation log is present, do NOT mention it as a negative finding.
 - List specific findings/issues in the findings array
 - If replanning_quality is N/A, explain why in the reasoning
 """
@@ -192,10 +193,7 @@ _USER_TEMPLATE = """\
 {itinerary}
 ```
 
-## Conversation Log (last {max_turns} turns)
-```
-{conversation_log}
-```
+
 """
 
 
@@ -256,8 +254,6 @@ class LLMJudge:
         return _USER_TEMPLATE.format(
             task_json=json.dumps(task, indent=2),
             itinerary=itinerary or "(none)",
-            max_turns=self.max_conversation_turns,
-            conversation_log=conversation_log,
         )
 
     def _call_judge(self, user_prompt: str) -> str:

@@ -1,0 +1,16 @@
+{
+  "task_id": "task_002",
+  "task_file": "benchmarks/tasks/easy/easy2.json",
+  "title": "Solo Beach Getaway from Boston to Miami",
+  "difficulty": "easy",
+  "success": true,
+  "metadata": {
+    "total_tokens": 19279,
+    "api_calls": 8,
+    "tool_calls": 7,
+    "start_time": 1775758147.3602638,
+    "end_time": 1775758243.756771,
+    "time_elapsed": 96.4,
+    "wall_time_seconds": 96.4
+  }
+}

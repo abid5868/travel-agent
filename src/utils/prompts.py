@@ -19,6 +19,21 @@ CRITICAL RULES:
 3. After each tool result, think about what to do next
 4. Keep track of total cost and verify it stays within budget
 5. When replanning, identify affected components and preserve unaffected bookings
+6. TEMPORAL LOGIC & LOGISTICS: 
+   - Arrival Day: Compare the 'arrival_time' of the flight with your booking times. You CANNOT be in the destination city before your flight arrives.
+   - Buffer Times: Allow 90 mins after arrival for check-in and 120 mins before departure for airport transit.
+   - Meals: Assume 90 mins; Activities: Assume 2 hours.
+7. NO SPACE-TIME PARADOX (THE TRANSIT RULE): Travel takes time. You are physically "in transit" between your flight's departure time and arrival time. You MUST NOT book any activity, restaurant, or hotel check-in at a destination BEFORE the flight's exact 'arrival_date' and 'arrival_time'. Always explicitly check if a flight is a red-eye/overnight flight that arrives on the next calendar day, and align your destination schedule accordingly. 
+8. ANTI-CONCURRENCY RULE: You are a single party. You CANNOT be in two places at once. NEVER book two restaurants or two activities at the same time. Each booking must have its own unique, non-overlapping time slot.
+9. GEOGRAPHIC COHERENCE: Prioritize booking hotels, restaurants, and activities in the SAME neighborhood to satisfy 'walkable' preferences.
+10. NO ID, NO BOOKING: Every single segment of travel (including flights between European cities) MUST have a unique Booking ID. If you do not have a tool result with a booking_id, you MUST NOT claim the requirement is satisfied.
+11. CHECK-OUT ALIGNMENT: A hotel check-out date MUST exactly match the departure date of the flight leaving that city. If a flight date changes due to replanning, you must align the hotel dates to avoid paying for ghost nights after you have left.
+12. STRICT ID RULE: Every flight and hotel MUST have a valid bk_ prefix ID. Using placeholders like 'system-matched' or 'included' is an automatic FAILURE. If a tool fails, you MUST re-search and re-book.
+13. BUDGET PRIORITIZATION & RESERVES: You MUST satisfy ALL required components. Before booking luxury hotels, mentally calculate and reserve a realistic budget for required activities and restaurants. If your projected total exceeds the budget, downgrade hotel star ratings.
+14. DYNAMIC SURCHARGE ACCOUNTING: If a dynamic event imposes an additional fee, penalty, or rebooking cost, you MUST immediately use the `record_surcharge` tool. Do NOT do mental math; trust the system's updated "Budget remaining" after the tool call.
+15. SCHEDULE SYNC RULE: Your Day-by-Day schedule MUST exactly match the dates in your confirmed Flights and Hotels tables. If replanning shifts a flight to a new date, you MUST update the arrival date in the daily schedule accordingly to prevent temporal paradoxes.
+16. ITINERARY COMPLETENESS & BUDGET UTILIZATION: Do not stop planning prematurely. Even after meeting the minimum required components, if you still have ample remaining budget and significant empty gaps in your daily schedule, you MUST continue booking activities and restaurants that align with the traveler's soft preferences. Fill the unstructured days logically until the budget is appropriately utilized.
+17. NO EXCUSES FOR MISTAKES: If you realize you booked an activity or restaurant that conflicts with a flight time (e.g., booked on the wrong day), you MUST use the cancel tool (e.g., ACTION: cancel_activity) to remove it and re-book it correctly. DO NOT leave notes in the final itinerary apologizing for temporal conflicts. Fix the error using tools.
 
 BOOKING ORDER — follow this strictly, do not skip ahead:
   Step 1: Search then book ALL flights (outbound + return)
@@ -51,7 +66,10 @@ ACTION: cancel_hotel(booking_id="bk_hotel_CHI_001_20260715")
 ACTION: cancel_flight(booking_id="bk_flight_CHI_NYC_003_20260715")
 ACTION: cancel_restaurant(booking_id="bk_rest_001_20260715")
 ACTION: cancel_activity(booking_id="bk_act_CHI_001_20260716")
- 
+
+# 4. Utility Tools
+ACTION: record_surcharge(amount=800, description="Flight rebooking penalty")
+
 Available tools (USE EXACT PARAMETER NAMES):
 - search_flights(original_city, destination_city, departure_date, return_date, departure_time_earliest, return_time_latest, max_price, wheelchair_accessible): Find outbound and return flights between cities.
 - book_flight(flight_id, outbound, origin_city, destination_city, departure_date, party_size): Book a specific flight.
@@ -65,6 +83,7 @@ Available tools (USE EXACT PARAMETER NAMES):
 - search_activities(city, interests, preferences, max_price, party_size, target_date, start_time, wheelchair_accessible): Find tourist attractions and activities.
 - book_activity(activity_id, date, time, party_size): Book a specific activity.
 - cancel_activity(booking_id): Cancel an activity booking.
+- record_surcharge(amount, description): Record a mandatory penalty fee or surcharge from a dynamic event. You MUST call this tool immediately when an event states a rebooking cost or fee, so the system deducts it from your budget.
 
 """
  
@@ -86,10 +105,10 @@ PREFERENCES (Optimize for these when possible):
  
 START PLANNING:
 Think step-by-step about what you need to book:
-1. What flights are needed?
-2. What hotels for how many nights?
-3. What activities match the traveler's interests?
-4. What restaurants to recommend?
+1. What flights are needed? (Check the EXACT arrival and departure times first)
+2. What hotels for how many nights? (Ensure check-in is AFTER flight arrival)
+3. What activities match the traveler's interests? (Ensure no timing overlaps)
+4. What restaurants to recommend? (Verify you are actually in the city at that time!)
  
 Begin with your first THOUGHT and ACTION."""
  
@@ -119,7 +138,10 @@ REPLANNING INSTRUCTIONS:
 2. Find alternatives ONLY for affected components that are now missing — search then book
 3. PRESERVE all unaffected bookings (do not cancel or re-search these)
 4. Review dependent bookings and update them only if the new hotel/location makes them unsuitable
-5. Verify all hard constraints are still satisfied
+5. **DECISION LOGGING:** If the event offers multiple options, you **MUST** explicitly state in your next THOUGHT which one you choose and why (balancing budget, time, and trip quality).
+6. **SURCHARGE TRACKING:** If your choice involves an additional fee or surcharge, you **MUST** explicitly state: "Surcharge of $[Amount] will be added to total cost" in your THOUGHT and reflect this in your next budget check.
+7. **LABEL NEW BOOKINGS:** When you book a replacement, keep track that this is the [REPLACEMENT] for the [CANCELLED] item.
+8. **NO GAPS:** Ensure inter-city transport (Paris -> Venice, etc.) has a confirmed Booking ID. Do not assume transport is satisfied without an ACTION: book_flight.
  
 IMPORTANT: Do NOT write a prose analysis. Take action immediately.
 Your very next response must be:
@@ -178,17 +200,22 @@ The following replanning action log was recorded by the system. Use it as the au
 {operation_log_text}
 
 Write a FINAL ITINERARY using the confirmed bookings above.
+- BE CONCISE: Use tables for bookings. Do not write long descriptions for activities. 
+- TRUNCATION PREVENTION: Ensure the TOTAL COST is visible within the first 2000 tokens of your output to avoid being cut off.
 - Do NOT call any more tools.
 - Do NOT write THOUGHT or ACTION lines.
 - For any missing components (e.g. no hotel booked), explicitly state "not booked" — do not fabricate a booking.
 - Do NOT claim unmet requirements are satisfied.
+- NO simultaneous bookings: Ensure NO two events overlap in time.
+- REPLANNING CLARITY: If an activity or restaurant was booked to replace a cancelled one, explicitly label it as "[REPLACEMENT FOR BK_ID_XXX]".
+- AUDIT TRAIL: In the Replanning section, clearly state: "CANCELLED: [ID] -> REPLACED BY: [ID]".
 
 Format:
 - Flights (booking ID, route, date, cost)
 - Hotel (booking ID, name, dates, cost — or "not booked")
 - Activities (booking ID, name, date, cost — or "none booked")
 - Restaurants (booking ID, name, date, cost — or "none booked")
-- Total confirmed cost
+- BUDGET SUMMARY TABLE: Display the system's "Total confirmed spend" directly as the GRAND TOTAL. If you used the `record_surcharge` tool, list that fee as a line item for transparency, but DO NOT mathematically add it on top of the system total (the system has already included it).
 - Requirement status
 - Replanning audit trail
 
