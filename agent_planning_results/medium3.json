@@ -3,14 +3,14 @@
   "task_file": "benchmarks/tasks/medium/medium3.json",
   "title": "Anniversary Weekend in Chicago with Restaurant Cancellation",
   "difficulty": "medium",
-  "success": false,
+  "success": true,
   "metadata": {
-    "total_tokens": 22673,
-    "api_calls": 24,
-    "tool_calls": 17,
-    "start_time": 1775839633.1390562,
-    "end_time": 1775839885.249154,
-    "time_elapsed": 252.11,
-    "wall_time_seconds": 252.11
+    "total_tokens": 28841,
+    "api_calls": 16,
+    "tool_calls": 15,
+    "start_time": 1775862716.452832,
+    "end_time": 1775862893.3091068,
+    "time_elapsed": 176.86,
+    "wall_time_seconds": 176.86
   }
 }

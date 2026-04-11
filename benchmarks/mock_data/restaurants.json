@@ -2059,13 +2059,13 @@
                 "dinner"
             ],
             "opening_hours": {
-                "Monday": "10:30-22:00",
-                "Tuesday": "10:30-22:00",
-                "Wednesday": "10:30-22:00",
-                "Thursday": "10:30-22:00",
-                "Friday": "10:30-23:00",
-                "Saturday": "10:30-23:00",
-                "Sunday": "10:30-22:00"
+                "Monday": "06:30-22:00",
+                "Tuesday": "06:30-22:00",
+                "Wednesday": "06:30-22:00",
+                "Thursday": "06:30-22:00",
+                "Friday": "06:30-23:00",
+                "Saturday": "06:30-23:00",
+                "Sunday": "06:30-22:00"
             },
             "is_wheelchair_accessible": true,
             "dietary_options": [
@@ -6007,6 +6007,151 @@
                 "fine_dining",
                 "canal_side",
                 "romantic_experiences"
+            ]
+        },
+        {
+            "restaurant_id": "rest_172",
+            "name": "Sunrise GF Bakery & Cafe",
+            "city": "Chicago",
+            "state": "IL",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 41.8810,
+                "longitude": -87.6250
+            },
+            "price_level": "$",
+            "average_cost_per_person": 14,
+            "max_group_size": 12,
+            "meal_type": [
+                "breakfast",
+                "lunch"
+            ],
+            "opening_hours": {
+                "Monday": "07:00-15:00",
+                "Tuesday": "07:00-15:00",
+                "Wednesday": "07:00-15:00",
+                "Thursday": "07:00-15:00",
+                "Friday": "07:00-15:00",
+                "Saturday": "07:00-16:00",
+                "Sunday": "07:00-16:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "gluten_free",
+                "vegetarian"
+            ],
+            "tags": [
+                "quick_bite",
+                "casual",
+                "walkable"
+            ]
+        },
+        {
+            "restaurant_id": "rest_173",
+            "name": "The Early Bird Diner Loop",
+            "city": "Chicago",
+            "state": "IL",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 41.8835,
+                "longitude": -87.6320
+            },
+            "price_level": "$",
+            "average_cost_per_person": 16,
+            "max_group_size": 8,
+            "meal_type": [
+                "breakfast",
+                "lunch"
+            ],
+            "opening_hours": {
+                "Monday": "06:30-14:00",
+                "Tuesday": "06:30-14:00",
+                "Wednesday": "06:30-14:00",
+                "Thursday": "06:30-14:00",
+                "Friday": "06:30-14:00",
+                "Saturday": "06:30-14:30",
+                "Sunday": "06:30-14:30"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "gluten_free"
+            ],
+            "tags": [
+                "local_food",
+                "budget_friendly"
+            ]
+        },
+        {
+            "restaurant_id": "rest_174",
+            "name": "Lakeshore Elegance",
+            "city": "Chicago",
+            "state": "IL",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 41.8960,
+                "longitude": -87.6180
+            },
+            "price_level": "$$$",
+            "average_cost_per_person": 105,
+            "max_group_size": 6,
+            "meal_type": [
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "Closed",
+                "Tuesday": "17:30-22:30",
+                "Wednesday": "17:30-22:30",
+                "Thursday": "17:30-22:30",
+                "Friday": "17:00-23:00",
+                "Saturday": "17:00-23:00",
+                "Sunday": "17:00-22:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "gluten_free",
+                "vegan"
+            ],
+            "tags": [
+                "fine_dining",
+                "romantic_atmosphere",
+                "lake_view"
+            ]
+        },
+        {
+            "restaurant_id": "rest_175",
+            "name": "Midnight GF Tacos & Tapas",
+            "city": "Chicago",
+            "state": "IL",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 41.8890,
+                "longitude": -87.6250
+            },
+            "price_level": "$",
+            "average_cost_per_person": 20,
+            "max_group_size": 10,
+            "meal_type": [
+                "dinner",
+                "late_night"
+            ],
+            "opening_hours": {
+                "Monday": "18:00-02:00",
+                "Tuesday": "18:00-02:00",
+                "Wednesday": "18:00-02:00",
+                "Thursday": "18:00-02:00",
+                "Friday": "18:00-02:00",
+                "Saturday": "18:00-02:00",
+                "Sunday": "18:00-00:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "gluten_free",
+                "vegan_friendly"
+            ],
+            "tags": [
+                "casual",
+                "late_night",
+                "local_food_scene"
             ]
         }
     ]
