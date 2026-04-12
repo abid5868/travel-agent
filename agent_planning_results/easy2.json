@@ -5,12 +5,12 @@
   "difficulty": "easy",
   "success": true,
   "metadata": {
-    "total_tokens": 19279,
-    "api_calls": 8,
-    "tool_calls": 7,
-    "start_time": 1775758147.3602638,
-    "end_time": 1775758243.756771,
-    "time_elapsed": 96.4,
-    "wall_time_seconds": 96.4
+    "total_tokens": 23065,
+    "api_calls": 10,
+    "tool_calls": 9,
+    "start_time": 1775956646.202154,
+    "end_time": 1775956773.826108,
+    "time_elapsed": 127.62,
+    "wall_time_seconds": 127.63
   }
 }

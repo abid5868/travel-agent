@@ -233,9 +233,41 @@ Benchmark tasks are evaluated against structured success criteria:
 - **Preference alignment** — soft preferences honored where possible
 
 ```bash
-# Run the full benchmark suite
-pytest evaluations/
+# Run the automated tests
+pytest
 ```
+
+### Run the LLM Judge
+
+The LLM-as-a-judge evaluator scores itineraries across hard constraints, required components, soft preferences, replanning quality, itinerary coherence, and an overall score.
+
+Set your Anthropic API key before running:
+
+```bash
+export ANTHROPIC_API_KEY=your_key_here
+```
+
+Evaluate one task against one agent output:
+
+```bash
+python evaluations/llm_judge.py \
+  benchmarks/tasks/easy/easy1.json \
+  agent_planning_results/easy1.md
+```
+
+Evaluate a whole folder of task JSONs against a folder of planning results:
+
+```bash
+python evaluations/llm_judge.py benchmarks/tasks agent_planning_results
+```
+
+Batch mode behavior:
+
+- Task files are discovered recursively under the input task folder
+- Agent outputs are discovered recursively under the output folder
+- Files are matched by filename stem, so `easy1.json` matches `easy1.md`
+- If both `easy1.md` and `easy1.json` exist in the output folder, the judge uses `easy1.md`
+- The output is a table with per-task scores by criterion plus an average overall score
 
 ---
 

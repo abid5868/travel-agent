@@ -1,109 +1,109 @@
 # FINAL ITINERARY
-## 🌴 Boston → Miami | March 13–16, 2026 | Solo Leisure Trip
+## 🌴 Boston → Miami | March 13–16, 2026 | Party of 1
+
+---
+
+## 💰 BUDGET SUMMARY (Up Front)
+
+| Category | Booking ID | Cost |
+|---|---|---|
+| Outbound Flight | bk_flight_BOS_MIA_001_20260313 | $169.00 |
+| Return Flight | bk_flight_MIA_BOS_001_20260316 | $169.00 |
+| Hotel (3 nights) | bk_hotel_MIA_004_20260313 | $267.00 |
+| Activity | bk_act_MIA_001_20260314 | $65.00 |
+| **GRAND TOTAL** | | **$670.00 / $800.00** |
+| **Budget Remaining** | | **$130.00** |
 
 ---
 
 ## ✈️ FLIGHTS
 
-| # | Booking ID | Route | Flight | Date | Time | Cost |
-|---|-----------|-------|--------|------|------|------|
-| Outbound | `bk_flight_BOS_MIA_001_20260313` | Boston → Miami | Horizon Express HE507 | Mar 13, 2026 | 07:00 → 11:30 (non-stop) | $169.00 |
-| Return | `bk_flight_MIA_BOS_001_20260316` | Miami → Boston | Continental Air CA605 | Mar 16, 2026 | 16:00 → 21:00 (non-stop) | $169.00 |
-
-> ✅ Both flights are direct on Boeing 737 aircraft with Wi-Fi & snacks included.
+| Booking ID | Route | Flight # | Date | Departure | Arrival | Cost |
+|---|---|---|---|---|---|---|
+| bk_flight_BOS_MIA_001_20260313 | Boston → Miami | HE507 (Horizon Express) | Mar 13, 2026 | 07:00 | 11:30 | $169.00 |
+| bk_flight_MIA_BOS_001_20260316 | Miami → Boston | CA605 (Continental Air) | Mar 16, 2026 | 16:00 | 21:00 | $169.00 |
 
 ---
 
 ## 🏨 HOTEL
 
-| Booking ID | Hotel | Location | Dates | Nights | Cost |
-|-----------|-------|----------|-------|--------|------|
-| `bk_hotel_MIA_004_20260313` | **Cubanito Hostel & Inn** | 1234 SW 8th St, Little Havana, Miami, FL | Mar 13–16, 2026 | 3 nights | $267.00 |
+| Booking ID | Hotel | Neighborhood | Check-In | Check-Out | Nights | Cost |
+|---|---|---|---|---|---|---|
+| bk_hotel_MIA_004_20260313 | Cubanito Hostel & Inn | Little Havana | Mar 13, 2026 | Mar 16, 2026 | 3 | $267.00 |
 
-> 🏠 Amenities: Wi-Fi, shared lounge, local breakfast included. Vibrant Little Havana neighborhood; South Beach is ~5 miles away.
+> ⚠️ **Note:** Hotel is located in Little Havana (~5 miles from South Beach). It is a budget-friendly 2-star property with WiFi, shared lounge, and local breakfast included. Does not fully satisfy the "beachfront hotel" preference, but was the best available within budget.
 
 ---
 
-## 🏄 ACTIVITIES
+## 🎯 ACTIVITIES
 
-| # | Booking ID | Activity | Date | Time | Duration | Cost |
-|---|-----------|----------|------|------|----------|------|
-| 1 | `bk_act_MIA_001_20260314` | **South Beach Guided Water Sports Package** | Mar 14, 2026 | 10:00 AM | 3 hours | $65.00 |
+| Booking ID | Activity | Date | Time | Duration | Cost |
+|---|---|---|---|---|---|
+| bk_act_MIA_001_20260314 | South Beach Guided Water Sports Package | Mar 14, 2026 | 10:00 AM | 3 hours | $65.00 |
 
-> 🌊 Includes paddleboarding, kayaking & swimming at South Beach with equipment rental and safety instruction. Located at Ocean Dr & 10th St, Miami Beach.
+> Includes paddleboarding, kayaking, and swimming at South Beach. Equipment rental and safety instruction included. ✅ Matches beach, swimming & outdoor interests.
 
 ---
 
 ## 🍽️ RESTAURANTS
 
 | Booking ID | Restaurant | Date | Cost |
-|-----------|------------|------|------|
-| — | **Not booked** | — | — |
+|---|---|---|---|
+| — | *None booked* | — | $0.00 |
 
-> ℹ️ No restaurant bookings were made. With $130 remaining in the budget, consider exploring seafood spots near South Beach on your own — Joe's Stone Crab and Garcia's Seafood Grille are popular local options!
-
----
-
-## 📅 DAY-BY-DAY ITINERARY
-
-### **Day 1 — Friday, March 13** ✈️ Arrival Day
-- 🕖 **07:00** — Depart Boston Logan (HE507)
-- 🕦 **11:30** — Arrive Miami International Airport
-- 🏨 **Afternoon** — Check in at Cubanito Hostel & Inn, Little Havana
-- 🌆 **Evening** — Explore Calle Ocho, stroll Little Havana, enjoy local Cuban cuisine nearby
-
-### **Day 2 — Saturday, March 14** 🏄 Beach & Water Sports Day
-- 🕙 **10:00 AM** — South Beach Guided Water Sports Package (paddleboard, kayak, swim!) — 3 hours
-- 🌅 **Afternoon** — Relax on South Beach, soak up the sun
-- 🍤 **Evening** — Explore South Beach for a seafood dinner (budget: ~$65 remaining)
-
-### **Day 3 — Sunday, March 15** 🌴 Relaxation Day
-- 🏖️ **Morning/Afternoon** — Free day — return to South Beach, explore Wynwood, or simply relax
-- 🌇 **Evening** — Farewell dinner in Miami
-
-### **Day 4 — Monday, March 16** ✈️ Departure Day
-- 🕓 **16:00** — Depart Miami (CA605) — arrive Boston 21:00
-- 🌙 Arrive Boston Logan at 9:00 PM
+> ⚠️ **Note:** $130 of remaining budget could support a seafood restaurant booking. A search was not completed before planning was finalized. Consider exploring Joe's Stone Crab or Garcia's Seafood Grille independently upon arrival.
 
 ---
 
-## 💰 BUDGET SUMMARY
+## 📅 DAY-BY-DAY SCHEDULE
 
-| Component | Booking ID | Cost |
-|-----------|-----------|------|
-| Outbound Flight (BOS→MIA) | `bk_flight_BOS_MIA_001_20260313` | $169.00 |
-| Return Flight (MIA→BOS) | `bk_flight_MIA_BOS_001_20260316` | $169.00 |
-| Hotel – Cubanito Hostel & Inn (3 nights) | `bk_hotel_MIA_004_20260313` | $267.00 |
-| Activity – South Beach Water Sports | `bk_act_MIA_001_20260314` | $65.00 |
-| **Total Confirmed Spend** | | **$670.00** |
-| **Budget Remaining** | | **$130.00** |
-| **Budget Limit** | | **$800.00** |
+### Day 1 — Friday, March 13 (Arrival Day)
+| Time | Event |
+|---|---|
+| 07:00 | ✈️ Depart Boston (HE507) |
+| 11:30 | 🛬 Arrive Miami |
+| 13:00 | 🏨 Check in: Cubanito Hostel & Inn *(arrival + 90 min buffer)* |
+| 13:00+ | 🌊 Explore Little Havana / relax |
 
-> 💡 **$130.00 remaining** — perfect for a seafood dinner or two during your stay!
+### Day 2 — Saturday, March 14 (Full Day)
+| Time | Event |
+|---|---|
+| 10:00–13:00 | 🏄 South Beach Guided Water Sports Package *(paddleboarding, kayaking, swimming)* |
+| 13:00+ | 🌴 Free time — beach relaxation, explore South Beach |
+| Evening | 🍽️ Dinner (unbooked — explore local seafood options) |
+
+### Day 3 — Sunday, March 15 (Full Free Day)
+| Time | Event |
+|---|---|
+| All day | 🌊 Free day — beach, relaxation, explore Miami |
+| Evening | 🍽️ Dinner (unbooked — explore local seafood options) |
+
+### Day 4 — Monday, March 16 (Departure Day)
+| Time | Event |
+|---|---|
+| Before 14:00 | 🏨 Hotel check-out *(must depart by 14:00 to make 120 min pre-flight buffer)* |
+| 16:00 | ✈️ Depart Miami (CA605) |
+| 21:00 | 🛬 Arrive Boston |
 
 ---
 
 ## ✅ REQUIREMENT STATUS
 
-| Requirement | Status |
-|------------|--------|
-| Outbound Flight | ✅ SATISFIED |
-| Return Flight | ✅ SATISFIED |
-| Hotel (3 nights) | ✅ SATISFIED |
-| Activity (beach/swimming/relaxation) | ✅ BOOKED (South Beach Water Sports) |
-| Budget ≤ $800 | ✅ SATISFIED ($670 spent) |
+| Requirement | Status | Booking ID |
+|---|---|---|
+| Outbound Flight | ✅ SATISFIED | bk_flight_BOS_MIA_001_20260313 |
+| Return Flight | ✅ SATISFIED | bk_flight_MIA_BOS_001_20260316 |
+| Hotel (3 nights) | ✅ SATISFIED | bk_hotel_MIA_004_20260313 |
 
 ---
 
 ## 🔄 REPLANNING AUDIT TRAIL
 
-| Turn | Action | Result |
-|------|--------|--------|
-| Turn 2 | `book_flight` (outbound BOS→MIA) | ✅ Confirmed `bk_flight_BOS_MIA_001_20260313` |
-| Turn 3 | `book_flight` (return MIA→BOS) | ✅ Confirmed `bk_flight_MIA_BOS_001_20260316` |
-| Turn 5 | `book_hotel` (Cubanito Hostel & Inn) | ✅ Confirmed `bk_hotel_MIA_004_20260313` |
-| Turn 7 | `book_activity` (South Beach Water Sports) | ✅ Confirmed `bk_act_MIA_001_20260314` |
+| Turn | Action | Booking ID | Notes |
+|---|---|---|---|
+| Turn 2 | BOOKED outbound flight | bk_flight_BOS_MIA_001_20260313 | No replanning needed |
+| Turn 3 | BOOKED return flight | bk_flight_MIA_BOS_001_20260316 | No replanning needed |
+| Turn 7 | BOOKED hotel | bk_hotel_MIA_004_20260313 | No replanning needed |
+| Turn 9 | BOOKED activity | bk_act_MIA_001_20260314 | Added to satisfy beach/swimming soft preferences |
 
----
-
-🌟 **Have a wonderful beach getaway in Miami! Enjoy the sun, surf, and South Beach vibes!** 🏖️
+> **No cancellations were made during this planning session.**

@@ -1,0 +1,16 @@
+{
+  "task_id": "task_004",
+  "task_file": "benchmarks/tasks/easy/easy4.json",
+  "title": "Museum and Culture Weekend in New York",
+  "difficulty": "easy",
+  "success": false,
+  "metadata": {
+    "total_tokens": 13154,
+    "api_calls": 50,
+    "tool_calls": 49,
+    "start_time": 1775956960.7882729,
+    "end_time": 1775957399.1397939,
+    "time_elapsed": 438.35,
+    "wall_time_seconds": 438.35
+  }
+}

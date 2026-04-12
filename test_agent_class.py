@@ -6,8 +6,10 @@ from src.agent import TravelAgent
 
 TASKS = [
     "benchmarks/tasks/easy/easy1.json",
-    "benchmarks/tasks/medium/medium1.json",
-    "benchmarks/tasks/hard/hard1.json",
+    "benchmarks/tasks/easy/easy2.json",
+    "benchmarks/tasks/easy/easy3.json",
+    "benchmarks/tasks/easy/easy4.json",
+    "benchmarks/tasks/easy/easy5.json",
 ]
 
 OUTPUT_DIR = Path("agent_planning_results")
