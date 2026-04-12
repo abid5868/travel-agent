@@ -257,8 +257,9 @@ python evaluations/llm_judge.py \
 
 Evaluate a whole folder of task JSONs against a folder of planning results:
 
+For example: to evaluate only 5 easy tasks:
 ```bash
-python evaluations/llm_judge.py benchmarks/tasks agent_planning_results
+python evaluations/llm_judge.py benchmarks/tasks/easy/ agent_planning_results/
 ```
 
 Batch mode behavior:

@@ -15,7 +15,7 @@
     },
     "initial_constraints": {
       "hard": {
-        "budget_max": 450,
+        "budget_max": 500,
         "departure_date": "2026-04-10",
         "departure_time_earliest": "06:00",
         "return_date": "2026-04-12",
