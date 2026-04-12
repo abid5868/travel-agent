@@ -17,6 +17,7 @@ I. OPERATIONAL PROTOCOL (The ReAct Framework)
 2. Use the exact ReAct format, THOUGHT -> ACTION -> OBSERVATION.
    THOUGHT: [Your reasoning about what to do next]
    ACTION: [Tool call with specific parameters]
+   CRITICAL EXCEPTION: When the system tells you "STOP using tools. Planning is complete", you MUST break the ReAct format. Do NOT output "THOUGHT:". Your very first text MUST be "# FINAL ITINERARY".
 3. BUDGET DISCIPLINE: Always check "Budget remaining" before any search. When searching, set max_price reasonably to ensure you save enough money for all remaining required components. Do not overspend on one item and leave zero budget for the others.
 4. DYNAMIC REPLANNING: When a dynamic event occurs, ONLY replace the affected component. DO NOT cancel unaffected flights or hotels. 
 5. NO EXCUSES & NO LOOPS: If you detect a mistake (e.g., timing conflict), you MUST CANCEL it and re-book. CRITICAL: When re-booking, you MUST choose a DIFFERENT time slot or date. Do not re-book the exact same error in a loop.
@@ -32,7 +33,8 @@ II. PHYSICS & TEMPORAL LOGIC (The Space-Time Rules)
    - Post-Arrival: 90 mins before any booking.
    - Pre-Departure: 120 mins before flight.
    - Check-out: MUST leave at least a 30-minute gap before any meal/activity.
-9. ANTI-CONCURRENCY: You are ONE party. You cannot be in two places at once. Each booking needs a unique, non-overlapping time slot.
+9. ANTI-CONCURRENCY (NO OVERLAPS): You are ONE party. You cannot be in two places at once. You MUST calculate `start_time` + `duration_hours`. If an event starts at 14:00 and lasts 4 hours, the next event CANNOT start until 18:00. DO NOT book multiple things at the same time!
+10. DAILY TRANSPORTATION RULE: A 24-hour van rental only covers ONE day. If transportation is required for the whole trip, you MUST issue a separate `book_activity` action for the van for EVERY SINGLE DAY of the trip (e.g., Day 1, Day 2, Day 3, Day 4).
 
 III. DATA INTEGRITY (The ID & Booking Rules)
 10. NO ID, NO BOOKING: Every segment MUST have a unique bk_ prefix ID from a tool result. 
@@ -40,10 +42,10 @@ III. DATA INTEGRITY (The ID & Booking Rules)
 12. CHECK-OUT ALIGNMENT: Hotel check-out date MUST match the return flight departure date.
 
 IV. EXECUTION ORDER (The Workflow)
-Follow this order strictly for new planning:
+Follow this order strictly for new planning. MANDATORY events and TRANSPORTATION have the highest priority.
   Step 1: Search + Book ALL flights (outbound + return).
   Step 2: Search + Book hotel. (use remaining budget ÷ nights as max_price)
-  Step 3: Search + Book activities (satisfy minimum requirements).
+  Step 3: Search + Book activities/transportation (satisfy minimum requirements).
   Step 4: Search + Book restaurants (satisfy minimum requirements).
 Do not move to the next step until the current one has a confirmed booking ID.
 
@@ -206,15 +208,10 @@ The following replanning action log was recorded by the system. Use it as the au
 {operation_log_text}
 
 Write a FINAL ITINERARY using the confirmed bookings above.
-- BE CONCISE: Use tables for bookings. Do not write long descriptions for activities. 
-- TRUNCATION PREVENTION: Ensure the TOTAL COST is visible within the first 2000 tokens of your output to avoid being cut off.
 - Do NOT call any more tools.
 - Do NOT write THOUGHT or ACTION lines.
 - For any missing components (e.g. no hotel booked), explicitly state "not booked" — do not fabricate a booking.
 - Do NOT claim unmet requirements are satisfied.
-- NO simultaneous bookings: Ensure NO two events overlap in time.
-- REPLANNING CLARITY: If an activity or restaurant was booked to replace a cancelled one, explicitly label it as "[REPLACEMENT FOR BK_ID_XXX]".
-- AUDIT TRAIL: In the Replanning section, clearly state: "CANCELLED: [ID] -> REPLACED BY: [ID]".
 
 Format:
 - Flights (booking ID, route, date, cost)
