@@ -178,7 +178,9 @@ class TravelAgent:
 
                 if not due:
                     if "FINAL ITINERARY" in response:
-                        return response
+                        self._use_full_model = True
+                        idx = response.find("FINAL ITINERARY")
+                        return "# " + response[idx:].strip() if idx != -1 else response
 
             # Nudge to wrap up when nearing the iteration limit.
             all_required_done = self._all_planning_requirements_satisfied()
@@ -477,7 +479,7 @@ class TravelAgent:
         if any(word in normalized for word in (
             "activity", "activities", "tour", "tours", "museum", "museums", "visit",
             "visits", "experience", "experiences", "park", "parks", "attraction",
-            "attractions", "venue", "venues", "entertainment", "show"
+            "attractions", "venue", "venues", "entertainment", "show", "transportation", "transport", "wedding", "ceremony"
         )):
             return sum(
                 1 for booking in self.tracker.get_bookings_by_type("activity")
@@ -729,7 +731,7 @@ class TravelAgent:
         ACTION(...) line is received (700 tokens), avoiding waiting for the full output.
         """
         full = self._use_full_model
-        max_tokens = 4096 if full else 700
+        max_tokens = 4096
         messages = self._build_messages()
 
         try:
@@ -739,7 +741,7 @@ class TravelAgent:
                     max_tokens=max_tokens,
                     messages=messages,
                     system=SYSTEM_PROMPT,
-                    timeout=90,
+                    timeout=180,
                 )
                 self.metadata["api_calls"] += 1
                 self.metadata["total_tokens"] += response.usage.input_tokens + response.usage.output_tokens
@@ -791,7 +793,7 @@ class TravelAgent:
         if any(word in normalized for word in (
             "activity", "activities", "tour", "tours", "museum", "museums", "visit",
             "visits", "experience", "experiences", "park", "parks", "attraction",
-            "attractions", "venue", "venues"
+            "attractions", "venue", "venues", "transportation", "transport", "wedding", "ceremony"
         )):
             return {"activity"}
         return set()

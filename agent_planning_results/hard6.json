@@ -1,0 +1,16 @@
+{
+  "task_id": "task_021",
+  "task_file": "benchmarks/tasks/hard/hard6.json",
+  "title": "Grand Circle Road Trip: The Great West National Parks",
+  "difficulty": "hard",
+  "success": false,
+  "metadata": {
+    "total_tokens": 15838,
+    "api_calls": 50,
+    "tool_calls": 49,
+    "start_time": 1775973414.0442612,
+    "end_time": 1775973823.173482,
+    "time_elapsed": 409.13,
+    "wall_time_seconds": 409.13
+  }
+}
