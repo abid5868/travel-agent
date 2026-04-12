@@ -3,14 +3,14 @@
   "task_file": "benchmarks/tasks/easy/easy3.json",
   "title": "Budget City Exploration in Austin",
   "difficulty": "easy",
-  "success": false,
+  "success": true,
   "metadata": {
-    "total_tokens": 14597,
-    "api_calls": 30,
-    "tool_calls": 19,
-    "start_time": 1775959847.18643,
-    "end_time": 1775960122.656509,
-    "time_elapsed": 275.47,
-    "wall_time_seconds": 275.47
+    "total_tokens": 24634,
+    "api_calls": 14,
+    "tool_calls": 13,
+    "start_time": 1776005480.635573,
+    "end_time": 1776005645.05626,
+    "time_elapsed": 164.42,
+    "wall_time_seconds": 164.42
   }
 }

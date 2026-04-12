@@ -564,7 +564,8 @@ class TravelAgent:
             token for token in component_tokens
             if token not in {
                 "flight", "flights", "outbound", "return", "after", "before",
-                "arriving", "meeting", "arriving_before_meeting"
+                "arriving", "meeting", "arriving_before_meeting",
+                "train", "trains", "rail", "rails", "or"
             } and not token.isdigit()
         }
         route_tokens = set()

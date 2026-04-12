@@ -28,8 +28,8 @@
     },
     "dynamic_events": [],
     "required_components": [
-      "outbound_train_or_flight",
-      "return_train_or_flight",
+      "outbound_flight",
+      "return_flight",
       "hotel_2_nights",
       "museum_visits_min_3",
       "restaurants_min_4"

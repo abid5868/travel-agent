@@ -679,7 +679,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run LLM judge on agent output.")
     parser.add_argument("task_path", help="Path to a benchmark task JSON file or a directory of task JSON files")
     parser.add_argument("agent_output_path", help="Path to an agent output file or a directory of agent output files")
-    parser.add_argument("--threshold", type=float, default=60.0)
+    parser.add_argument("--threshold", type=float, default=70.0)
     parser.add_argument("--max-tokens", type=int, default=8192, help="Max tokens for judge response")
     args = parser.parse_args()
 

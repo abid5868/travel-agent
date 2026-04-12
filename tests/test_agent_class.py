@@ -1,18 +1,24 @@
 import os
 import json
 import time
+import sys
 from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from src.agent import TravelAgent
 
 TASKS = [
-    "benchmarks/tasks/easy/easy1.json",
-    "benchmarks/tasks/easy/easy2.json",
+    #"benchmarks/tasks/easy/easy1.json",
+    #"benchmarks/tasks/easy/easy2.json",
     "benchmarks/tasks/easy/easy3.json",
-    "benchmarks/tasks/easy/easy4.json",
-    "benchmarks/tasks/easy/easy5.json",
+    #"benchmarks/tasks/easy/easy4.json",
+    #"benchmarks/tasks/easy/easy5.json",
 ]
 
-OUTPUT_DIR = Path("agent_planning_results")
+OUTPUT_DIR = PROJECT_ROOT / "agent_planning_results"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 def main():
@@ -24,11 +30,12 @@ def main():
 
     for task_path in TASKS:
         task_name = Path(task_path).stem  # e.g. "easy1"
+        task_file = PROJECT_ROOT / task_path
         print(f"\n{'='*60}")
         print(f"Running: {task_name}  ({task_path})")
         print(f"{'='*60}")
 
-        with open(task_path) as f:
+        with open(task_file) as f:
             task = json.load(f)
 
         wall_start = time.time()

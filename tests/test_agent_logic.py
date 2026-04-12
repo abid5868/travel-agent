@@ -101,6 +101,43 @@ def test_intercity_trip_requires_flights_even_without_explicit_flight_components
     assert "- intercity_return_flight: UNMET (matched 0 / required 1)" in requirement_text
 
 
+def test_train_or_flight_requirements_are_satisfied_by_flight_bookings():
+    agent = make_agent()
+    agent._required_components = ["outbound_train_or_flight", "return_train_or_flight"]
+    agent._scenario = {"origin_city": "Philadelphia", "destination_cities": ["New York"]}
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_flight_1",
+            type="flight",
+            details={
+                "type": "outbound_flight",
+                "origin_city": "Philadelphia",
+                "destination_city": "New York",
+                "departure_time": "08:00",
+            },
+            cost=89.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_flight_2",
+            type="flight",
+            details={
+                "type": "return_flight",
+                "origin_city": "New York",
+                "destination_city": "Philadelphia",
+                "departure_time": "20:00",
+            },
+            cost=89.0,
+        )
+    )
+
+    assert agent._matched_component_count("outbound_train_or_flight") == 1
+    assert agent._matched_component_count("return_train_or_flight") == 1
+    assert agent._component_satisfied("outbound_train_or_flight") is True
+    assert agent._component_satisfied("return_train_or_flight") is True
+
+
 def test_extract_tool_error_supports_both_error_shapes():
     agent = make_agent()
 

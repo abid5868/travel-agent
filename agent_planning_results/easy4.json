@@ -3,14 +3,14 @@
   "task_file": "benchmarks/tasks/easy/easy4.json",
   "title": "Museum and Culture Weekend in New York",
   "difficulty": "easy",
-  "success": false,
+  "success": true,
   "metadata": {
-    "total_tokens": 13154,
-    "api_calls": 50,
-    "tool_calls": 49,
-    "start_time": 1775956960.7882729,
-    "end_time": 1775957399.1397939,
-    "time_elapsed": 438.35,
-    "wall_time_seconds": 438.35
+    "total_tokens": 29395,
+    "api_calls": 21,
+    "tool_calls": 19,
+    "start_time": 1776004497.927249,
+    "end_time": 1776004734.614271,
+    "time_elapsed": 236.69,
+    "wall_time_seconds": 236.69
   }
 }

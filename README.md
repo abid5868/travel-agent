@@ -237,6 +237,12 @@ Benchmark tasks are evaluated against structured success criteria:
 pytest
 ```
 
+
+### Run agent on particular tasks:
+```bash
+python tests/test_agent_class.py    
+```
+
 ### Run the LLM Judge
 
 The LLM-as-a-judge evaluator scores itineraries across hard constraints, required components, soft preferences, replanning quality, itinerary coherence, and an overall score.
