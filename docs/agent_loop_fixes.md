@@ -419,6 +419,67 @@ After this cleanup, there are no remaining `rental_car` or `requires_rental_car`
 
 ---
 
+### Problem 16: `trip_cut_short` events caused false negatives on valid replans
+
+**Root cause:** Dynamic-event matching was still too broad. Components like `return_flight`, `saturday_hotel`, and `saturday_activities` were reduced to generic booking types, so the evaluator could treat:
+- any flight as the affected flight
+- any hotel as the affected hotel
+- unchanged valid Friday bookings as "not reviewed"
+
+This showed up most clearly on `medium7`: the traveler-facing itinerary could be valid, but `success` still came back `false`.
+
+**Fixes applied:**
+1. Event matching is now component-aware rather than type-only.
+2. `return_flight` matches only bookings whose stored type is `return_flight`.
+3. Day-specific components such as `saturday_hotel`, `saturday_activities`, and `sunday_activities` are resolved against actual booking dates using:
+   - `_component_target_dates()`
+   - `_dates_for_weekday_in_trip()`
+   - `_booking_occurs_on_date()`
+   - `_booking_overlaps_date()`
+4. `trip_cut_short` success is now checked explicitly via:
+   - `_trip_cut_short_resolved()`
+   - the `early_return_executed` branch in `_success_criteria_satisfied()`
+5. Dependent bookings can now count as "reviewed" if they remain valid unchanged after the cutoff, via `_dependents_still_valid_without_changes()`, instead of requiring a cancel/rebook operation just to satisfy bookkeeping.
+
+**Impact:** `medium7` no longer produces a false negative when:
+- the return flight is moved to the required earlier date/time
+- the shortened hotel stay is still valid
+- preserved pre-cutoff bookings remain untouched and temporally feasible
+
+**Files changed:** `src/agent.py`
+
+---
+
+### Problem 17: `budget_reduced` events parsed the wrong dollar amount
+
+**Root cause:** The first budget-reduction implementation scanned every dollar amount in the event text and chose the smallest one. For `medium6`, the event description contains:
+- `$500` set aside for art
+- new maximum budget `$1700`
+- old maximum budget `$2200`
+
+Choosing the minimum value incorrectly set `tracker.budget_max = 500`, so a valid replanned trip under `$1700` could still fail as over-budget internally.
+
+**Fixes applied:**
+1. `_apply_event_budget_update()` now prefers `task["success_criteria"]["total_cost_max"]` when present.
+2. If that value is absent, it parses the specific "new maximum budget ... now $X" phrasing instead of taking the minimum dollar figure in the description.
+3. The updated cap is written back into live tracker state:
+   - `tracker.budget_max`
+   - the stored `budget_max` hard constraint value
+4. The event state now records `budget_max_after`, making budget-changing events auditable.
+5. `_booking_summary()` now warns when the current plan is over the active budget cap.
+6. Finalization now requires:
+   - planning requirements satisfied
+   - hard constraints satisfied
+   - success criteria satisfied
+
+This prevents the loop from wrapping up while still violating a post-event reduced budget.
+
+**Impact:** `medium6` now replans against the actual reduced cap (`$1700`) instead of the incorrect `$500` cap or the stale original `$2200` cap.
+
+**Files changed:** `src/agent.py`
+
+---
+
 ## Additional Test Coverage Added
 
 `tests/test_agent_logic.py` now covers the later fixes too, including:
@@ -434,5 +495,8 @@ After this cleanup, there are no remaining `rental_car` or `requires_rental_car`
 - dynamic-event readiness gating
 - return-flight booking semantics
 - implicit intercity-flight requirements
+- budget-reduction events updating the live budget cap correctly
+- `trip_cut_short` matching only the actually shortened portion of the trip
+- valid unchanged dependent bookings counting as reviewed after an early-return replan
 
 These tests help keep easy1 and medium1 regressions from reappearing while hard-task benchmark cleanup continues.
