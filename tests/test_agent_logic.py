@@ -373,3 +373,170 @@ def test_return_flight_booking_accepts_actual_route_cities():
     assert result["details"]["type"] == "return_flight"
     assert result["details"]["origin_city"] == "San Diego"
     assert result["details"]["destination_city"] == "Denver"
+
+
+def test_budget_reduced_event_updates_live_budget_cap():
+    agent = make_agent()
+
+    class FakeHotelTool:
+        def cancel(self, booking_id):
+            return {"status": "success", "cancellation_id": f"cancel_{booking_id}"}
+
+    agent.hotel_tool = FakeHotelTool()
+    agent.turn_count = 5
+    agent.tracker.add_constraint("budget_max", 2200, is_hard=True)
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_hotel_1",
+            type="hotel",
+            details={"hotel_name": "French Quarter Grand Hotel", "check_in": "2026-11-06", "check_out": "2026-11-08", "nights": 2},
+            cost=538.0,
+        )
+    )
+
+    agent._handle_dynamic_event(
+        {
+            "event_type": "budget_reduced",
+            "description": (
+                "You decide to set aside $500 from your trip budget to purchase a piece "
+                "of local art you just saw online. Your new maximum budget for the trip "
+                "booking is now $1700 instead of $2200."
+            ),
+            "affected_components": ["hotel", "restaurants"],
+            "resolution_requirements": ["Stay under $1700"],
+        },
+        "CURRENT ITINERARY",
+        {"success_criteria": {"total_cost_max": 1700}},
+    )
+
+    assert agent.tracker.budget_max == 1700
+    assert agent._operation_log[0]["summary"] == "updated budget cap to $1700 due to budget_reduced"
+
+
+def test_trip_cut_short_event_matches_only_the_shortened_part_of_the_trip():
+    agent = make_agent()
+
+    class FakeHotelTool:
+        def __init__(self):
+            self.cancelled = []
+
+        def cancel(self, booking_id):
+            self.cancelled.append(booking_id)
+            return {"status": "success", "cancellation_id": f"cancel_{booking_id}"}
+
+    agent.hotel_tool = FakeHotelTool()
+    agent.turn_count = 5
+    agent.tracker.add_constraint("departure_date", "2026-03-05", is_hard=True)
+    agent.tracker.add_constraint("return_date", "2026-03-08", is_hard=True)
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_flight_out",
+            type="flight",
+            details={"type": "outbound_flight", "departure_date": "2026-03-05", "departure_time": "07:00"},
+            cost=89.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_flight_ret",
+            type="flight",
+            details={"type": "return_flight", "departure_date": "2026-03-08", "departure_time": "16:30"},
+            cost=119.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_hotel_1",
+            type="hotel",
+            details={"hotel_name": "Vegas Convention Center Hotel", "check_in": "2026-03-05", "check_out": "2026-03-07", "nights": 2},
+            cost=258.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_rest_1",
+            type="restaurant",
+            details={"name": "Silicon Desert Steakhouse", "date": "2026-03-06", "time": "19:00"},
+            cost=120.0,
+        )
+    )
+
+    agent._handle_dynamic_event(
+        {
+            "event_type": "trip_cut_short",
+            "description": "You must change your return flight to depart Las Vegas no later than Saturday (2026-03-07) at 1:00 PM. You also need to cancel your Saturday night hotel stay and any weekend entertainment you had planned.",
+            "affected_components": ["return_flight", "saturday_hotel", "saturday_activities", "sunday_activities"],
+            "resolution_requirements": ["Return before Saturday afternoon"],
+        },
+        "CURRENT ITINERARY",
+        {},
+    )
+
+    event_state = agent._triggered_events[0]
+
+    assert "bk_flight_ret" in event_state["affected_booking_ids"]
+    assert "bk_hotel_1" not in event_state["affected_booking_ids"]
+    assert "bk_hotel_1" in event_state["dependent_booking_ids"]
+    assert agent.hotel_tool.cancelled == []
+    assert agent.tracker.get_booking("bk_hotel_1") is not None
+
+
+def test_trip_cut_short_success_criteria_accept_valid_unchanged_dependents():
+    agent = make_agent()
+    agent._scenario = {"origin_city": "San Jose", "destination_cities": ["Las Vegas"]}
+    agent._success_criteria = {
+        "total_cost_max": 2000,
+        "timing_feasible": True,
+        "early_return_executed": True,
+        "unaffected_bookings_preserved": True,
+        "dependent_bookings_updated": True,
+    }
+
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_flight_out",
+            type="flight",
+            details={"type": "outbound_flight", "departure_date": "2026-03-05", "departure_time": "07:00"},
+            cost=89.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_flight_ret",
+            type="flight",
+            details={"type": "return_flight", "departure_date": "2026-03-07", "departure_time": "09:00"},
+            cost=89.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_hotel_1",
+            type="hotel",
+            details={"hotel_name": "Vegas Convention Center Hotel", "check_in": "2026-03-05", "check_out": "2026-03-07", "nights": 2},
+            cost=258.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_rest_1",
+            type="restaurant",
+            details={"name": "Silicon Desert Steakhouse", "date": "2026-03-06", "time": "19:00"},
+            cost=120.0,
+        )
+    )
+
+    event_state = {
+        "turn": 5,
+        "event_type": "trip_cut_short",
+        "description": "You must change your return flight to depart Las Vegas no later than Saturday (2026-03-07) at 1:00 PM. You also need to cancel your Saturday night hotel stay and any weekend entertainment you had planned.",
+        "affected_components": ["return_flight", "saturday_hotel", "saturday_activities", "sunday_activities"],
+        "affected_booking_ids": ["bk_flight_ret"],
+        "dependent_booking_ids": ["bk_hotel_1", "bk_rest_1"],
+        "preserved_booking_ids": ["bk_flight_out"],
+        "removed_booking_ids": [],
+    }
+    agent._triggered_events = [event_state]
+
+    assert agent._event_resolved(event_state) is True
+    assert agent._dependent_bookings_reviewed(event_state) is True
+    assert agent._success_criteria_satisfied() is True

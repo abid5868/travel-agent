@@ -13,9 +13,11 @@ from src.agent import TravelAgent
 TASKS = [
     #"benchmarks/tasks/easy/easy1.json",
     #"benchmarks/tasks/easy/easy2.json",
-    "benchmarks/tasks/easy/easy3.json",
+    #"benchmarks/tasks/easy/easy3.json",
     #"benchmarks/tasks/easy/easy4.json",
     #"benchmarks/tasks/easy/easy5.json",
+    "benchmarks/tasks/medium/medium6.json",
+    #"benchmarks/tasks/medium/medium7.json"
 ]
 
 OUTPUT_DIR = PROJECT_ROOT / "agent_planning_results"

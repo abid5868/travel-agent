@@ -1,0 +1,16 @@
+{
+  "task_id": "task_012",
+  "task_file": "benchmarks/tasks/medium/medium7.json",
+  "title": "Las Vegas Tech Conference with Emergency Early Return",
+  "difficulty": "medium",
+  "success": false,
+  "metadata": {
+    "total_tokens": 12299,
+    "api_calls": 12,
+    "tool_calls": 11,
+    "start_time": 1776207100.714519,
+    "end_time": 1776207233.573249,
+    "time_elapsed": 132.86,
+    "wall_time_seconds": 132.86
+  }
+}
