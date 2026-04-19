@@ -3,14 +3,14 @@
   "task_file": "benchmarks/tasks/hard/hard4.json",
   "title": "International Business-Leisure Hybrid with Meeting Conflict and Flight Cancellation",
   "difficulty": "hard",
-  "success": false,
+  "success": true,
   "metadata": {
-    "total_tokens": 13894,
-    "api_calls": 33,
-    "tool_calls": 32,
-    "start_time": 1775971942.94114,
-    "end_time": 1775972380.218951,
-    "time_elapsed": 437.28,
-    "wall_time_seconds": 437.28
+    "total_tokens": 13445,
+    "api_calls": 25,
+    "tool_calls": 24,
+    "start_time": 1776570938.993644,
+    "end_time": 1776571182.520659,
+    "time_elapsed": 243.53,
+    "wall_time_seconds": 243.53
   }
 }

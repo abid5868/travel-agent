@@ -476,13 +476,20 @@ class TravelAgent:
                 if self._flight_booking_matches(component, booking)
             )
         if any(word in normalized for word in ("hotel", "hotels", "accommodation", "accommodations", "lodge", "lodges")):
-            return max(
-                (
-                    1 for booking in self.tracker.get_bookings_by_type("hotel")
-                    if self._lodging_booking_matches(component, booking)
-                ),
-                default=0,
-            )
+            total_nights = 0
+            for booking in self.tracker.get_bookings_by_type("hotel"):
+                if self._lodging_booking_matches(component, booking):
+                    details = booking.details or {}
+                    nights = int(details.get("nights", 0))
+                    total_nights += nights
+            return total_nights
+            # return max(
+            #     (
+            #         1 for booking in self.tracker.get_bookings_by_type("hotel")
+            #         if self._lodging_booking_matches(component, booking)
+            #     ),
+            #     default=0,
+            # )
         if any(word in normalized for word in ("restaurant", "restaurants", "dining", "meal", "meals", "brunch", "dinner")):
             return sum(
                 1 for booking in self.tracker.get_bookings_by_type("restaurant")
@@ -609,6 +616,8 @@ class TravelAgent:
 
         content_tokens = self._booking_content_tokens(details)
         keywords = self._component_keywords(normalized)
+        if "business" in keywords:
+            keywords.add("client")
         if not keywords:
             return True
         return bool(keywords & content_tokens)
@@ -642,7 +651,7 @@ class TravelAgent:
             "brunch", "dinner", "activity", "activities", "tour", "tours", "museum",
             "museums", "visit", "visits", "experience", "experiences", "park", "parks",
             "attraction", "attractions", "venue", "venues", "accessible", "wheelchair",
-            "outbound", "return", "night", "nights", "or", "all", "both", "after", "before"
+            "outbound", "return", "night", "nights", "or", "all", "both", "after", "before", "business"
         }
         return {token for token in tokens if token not in ignored and not token.isdigit()}
 

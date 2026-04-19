@@ -1,139 +1,150 @@
 # FINAL ITINERARY
 
----
-
-## 🗾 Tokyo & Kyoto Business Trip — Final Itinerary
-**Traveler:** 1 Business Traveler | **Duration:** June 20–28, 2026 | **Budget:** $3,200
+## 🗾 Tokyo & Kyoto Business + Leisure Trip
+**Traveler:** 1 Business Traveler | **Duration:** June 19–28, 2026 | **Total Budget:** $4,000
 
 ---
 
-## 📋 MANDATORY BUSINESS EVENTS — DOCUMENTED RATIONALE
-
-### ✅ Conference Keynote Attendance
-- **Date/Time:** June 21, 2026 at 09:00
-- **Status:** CONFIRMED ATTENDANCE (mandatory per hard constraint `must_attend_keynote: True`)
-- **Rationale:** Traveler arrives in Tokyo on June 21 via overnight flight (bk_flight_SFO_TOK_002_20260620). The keynote at 09:00 is the primary business purpose of the Tokyo leg. Attendance is pre-arranged with conference organizers — no separate booking system entry required.
-
-### ✅ Client Meeting 1
-- **Date/Time:** June 22, 2026 at 08:00
-- **Status:** CONFIRMED ATTENDANCE (mandatory per hard constraint `must_attend_both_client_meetings: True`)
-- **Rationale:** Pre-scheduled client meeting in Tokyo. Traveler is confirmed at Tokyo hotel (bk_hotel_TYO_003_20260621) through June 24/25.
-
-### ✅ Client Meeting 2
-- **Date/Time:** June 24, 2026 at 19:00
-- **Status:** CONFIRMED ATTENDANCE (mandatory per hard constraint `must_attend_both_client_meetings: True`)
-- **Rationale:** Pre-scheduled second client meeting in Tokyo. Traveler remains at Tokyo hotel through this date before transferring to Kyoto on June 25.
-
----
-
-## ✈️ FLIGHTS
-
-| Booking ID | Route | Date | Cost |
-|---|---|---|---|
-| bk_flight_SFO_TOK_002_20260620 | San Francisco → Tokyo | June 20, 2026 (dep. ≥16:00) | $799 |
-| *(Tokyo→Kyoto transfer included in itinerary)* | Tokyo → Kyoto | June 25, 2026 | — |
-| bk_flight_KYO_SFO_001_20260628 | Kyoto → San Francisco | June 28, 2026 (arr. ≤23:59) | $799 |
-| bk_surcharge_1775972065 | Rebooking surcharge | — | $600 |
-
----
-
-## 🏨 HOTELS
-
-| Booking ID | Property | City | Dates | Cost |
-|---|---|---|---|---|
-| bk_hotel_TYO_003_20260621 | Business Hotel Tokyo | Tokyo | June 21–25 (4 nights) | $387 |
-| bk_hotel_KYO_003_20260625 | Traditional Ryokan | Kyoto | June 25–28 (3 nights) | $537 |
-
----
-
-## 🍽️ RESTAURANTS (Business Meals)
-
-| Booking ID | Restaurant | City | Date & Time | Cost |
-|---|---|---|---|---|
-| bk_rest_133_20260621 | Akihabara Tech-Bento Express | Tokyo | June 21 at 19:00 | $12 |
-| bk_rest_126_20260622 | Haneda Midnight Ramen Relief | Tokyo | June 22 at 20:00 | $15 |
-
----
-
-## 🎯 ACTIVITIES (Kyoto Leisure)
-
-| Booking ID | Activity | City | Date | Cost |
-|---|---|---|---|---|
-| bk_act_KYO_002_20260626 | Kyoto Cultural Activity | Kyoto | June 26, 2026 | $45 |
-| bk_act_KYO_003_20260627 | Kyoto Leisure Activity | Kyoto | June 27, 2026 | $55 |
-
----
-
-## 📅 DAY-BY-DAY SCHEDULE
-
-### Day 1 — Saturday, June 20: Departure
-- **16:00+** Depart San Francisco → Tokyo (bk_flight_SFO_TOK_002_20260620)
-- ✈️ Overnight transpacific flight
-
-### Day 2 — Sunday, June 21: Arrive Tokyo + Conference Keynote
-- **Morning** Arrive Tokyo, check in at Business Hotel (bk_hotel_TYO_003_20260621)
-- **09:00** ✅ **CONFERENCE KEYNOTE** — Mandatory attendance
-- **19:00** Dinner at Akihabara Tech-Bento Express (bk_rest_133_20260621, $12)
-
-### Day 3 — Monday, June 22: Client Meeting 1
-- **08:00** ✅ **CLIENT MEETING 1** — Mandatory attendance
-- **20:00** Business dinner at Haneda Midnight Ramen Relief (bk_rest_126_20260622, $15)
-
-### Day 4 — Tuesday, June 23: Tokyo Free Day
-- Free day in Tokyo — explore Shibuya/Akihabara tech districts (aligns with tech_innovation interest)
-
-### Day 5 — Wednesday, June 24: Client Meeting 2
-- **19:00** ✅ **CLIENT MEETING 2** — Mandatory attendance
-- Stay overnight at Tokyo Business Hotel
-
-### Day 6 — Thursday, June 25: Transfer to Kyoto
-- Morning check-out from Tokyo hotel
-- Transfer Tokyo → Kyoto (Shinkansen bullet train recommended)
-- Check in at Traditional Ryokan (bk_hotel_KYO_003_20260625)
-- Evening: Settle into ryokan, kaiseki dinner at leisure
-
-### Day 7 — Friday, June 26: Kyoto Leisure Day 1
-- Kyoto Cultural Activity (bk_act_KYO_002_20260626, $45)
-- Explore traditional temples, geisha districts
-
-### Day 8 — Saturday, June 27: Kyoto Leisure Day 2
-- Kyoto Leisure Activity (bk_act_KYO_003_20260627, $55)
-- Evening farewell dinner, pack for departure
-
-### Day 9 — Sunday, June 28: Departure
-- Check out from Ryokan
-- ✈️ Depart Kyoto → San Francisco (bk_flight_KYO_SFO_001_20260628, $799)
-
----
-
-## 💰 BUDGET SUMMARY
-
-| Category | Amount |
+## 💰 Budget Summary
+| Category | Cost |
 |---|---|
-| Flights (outbound + return) | $1,598 |
-| Flight rebooking surcharge | $600 |
-| Hotels (Tokyo + Kyoto) | $924 |
-| Restaurants (2 business meals) | $27 |
-| Activities (2 Kyoto leisure) | $100 |
-| **TOTAL SPENT** | **$3,249** |
-| **Budget** | **$3,200** |
-| **Variance** | **-$49 (over budget by $49)** |
-
-> ⚠️ **Budget Note:** The trip is $49 over the $3,200 budget. This overage is entirely due to the mandatory $600 flight rebooking surcharge (bk_surcharge_1775972065). All discretionary bookings were made at minimum cost to comply with mandatory business constraints. The two business meals total only $27, minimizing discretionary spend.
+| Flights (SFO→TYO) | $799 |
+| Flights (TYO→KYO) | $139 |
+| Flights (KYO→SFO) | $799 |
+| Rebooking Surcharge | $600 |
+| Tokyo Hotel (3 nights) | $516 |
+| Kyoto Hotel (2 nights) | $537 |
+| Kyoto Tea Ceremony | $65 |
+| Arashiyama Bamboo Grove | $55 |
+| Ginza Kyubey Dining | $180 |
+| Roppongi Hills Dining | $95 |
+| **Total Spent** | **$3,785** |
+| **Budget Remaining** | **$215** |
 
 ---
 
-## ✅ REQUIREMENTS CHECKLIST
+## ✈️ Flight Itinerary
 
-| Requirement | Status |
+### Outbound: San Francisco → Tokyo
+- **Booking ID:** bk_flight_SFO_TOK_002_20260620
+- **Date:** June 20, 2026
+- **Route:** SFO → Tokyo (TYO)
+- **Cost:** $799
+
+### Tokyo → Kyoto
+- **Booking ID:** bk_flight_TOK_KYO_001_20260625
+- **Date:** June 25, 2026
+- **Route:** Tokyo → Kyoto
+- **Cost:** $139
+
+### Return: Kyoto → San Francisco
+- **Booking ID:** bk_flight_KYO_SFO_001_20260628
+- **Date:** June 28, 2026
+- **Route:** Kyoto → SFO
+- **Cost:** $799
+
+---
+
+## 🏨 Hotel Accommodations
+
+### Tokyo Business Hotel
+- **Booking ID:** bk_hotel_TYO_003_20260621
+- **Check-in:** June 21, 2026
+- **Check-out:** June 25, 2026
+- **Nights:** 3 nights
+- **Cost:** $516 ($172/night)
+
+### Kyoto Traditional Accommodation
+- **Booking ID:** bk_hotel_KYO_003_20260625
+- **Check-in:** June 25, 2026
+- **Check-out:** June 28, 2026
+- **Nights:** 2 nights
+- **Cost:** $537 ($268.50/night)
+
+---
+
+## 📅 Day-by-Day Schedule
+
+### 📍 June 19 (Friday) — Departure Day
+- Depart San Francisco (evening)
+
+### 📍 June 20 (Saturday) — Travel Day
+- **Flight:** SFO → Tokyo (bk_flight_SFO_TOK_002_20260620)
+- Long-haul international flight across the Pacific
+
+### 📍 June 21 (Sunday) — Arrival in Tokyo
+- Arrive Tokyo, clear customs & immigration
+- 90-minute post-arrival buffer
+- Check in to **Tokyo Business Hotel**
+- Rest and prepare for business week
+
+### 📍 June 22 (Monday) — Tokyo Business Day 1
+- ⚠️ **MANDATORY:** Client Meeting 1 at **08:00**
+- Afternoon: Free for business networking / exploring Tokyo
+- **🍽️ Dinner:** Ginza Kyubey Client Dining
+  - Booking ID: bk_rest_124_20260622
+  - Time: 19:00 | Cost: $180/person
+  - *Perfect for client entertainment — fine dining with traditional culture flair*
+
+### 📍 June 23 (Tuesday) — Tokyo Business Day 2
+- Morning/Afternoon: Business activities / tech innovation exploration (Akihabara, Shibuya tech hubs)
+- **🍽️ Dinner:** Roppongi Hills Fusion Grill
+  - Booking ID: bk_rest_134_20260623
+  - Time: 19:00 | Cost: $95/person
+  - *City-view fine dining, ideal for business meetings*
+
+### 📍 June 24 (Wednesday) — Tokyo Business Day 3
+- ⚠️ **MANDATORY:** Client Meeting 2 at **15:00**
+- Morning: Free for preparation / sightseeing
+- Afternoon: Client Meeting 2 (15:00)
+- Evening: Leisure in Tokyo
+
+### 📍 June 25 (Thursday) — Travel to Kyoto
+- **Flight:** Tokyo → Kyoto (bk_flight_TOK_KYO_001_20260625)
+- Check in to **Kyoto Traditional Accommodation**
+- **🎭 Activity:** Traditional Tea Ceremony
+  - Booking ID: bk_act_KYO_001_20260625
+  - Cost: $65 | *Immersive traditional Japanese cultural experience*
+
+### 📍 June 26 (Friday) — Kyoto Leisure Day
+- **🌿 Activity:** Arashiyama Bamboo Grove & Monkey Park
+  - Booking ID: bk_act_KYO_003_20260626
+  - Time: 09:00 | Cost: $55
+  - *Iconic natural landmark — serene bamboo forest and wildlife*
+- Afternoon: Free exploration of Kyoto (Fushimi Inari, Gion district)
+
+### 📍 June 27 (Saturday) — Kyoto Final Day
+- Final exploration of Kyoto's temples and traditional streets
+- Pack and prepare for return flight
+
+### 📍 June 28 (Sunday) — Return to San Francisco
+- **Flight:** Kyoto → SFO (bk_flight_KYO_SFO_001_20260628)
+- Booking ID: bk_flight_KYO_SFO_001_20260628
+- Cost: $799
+- Return to San Francisco
+
+---
+
+## ✅ Hard Constraints Verification
+| Constraint | Status |
 |---|---|
-| Depart SF ≥ 16:00 on June 20 | ✅ Confirmed |
-| Conference Keynote June 21 09:00 | ✅ Documented & Attended |
-| Client Meeting 1 June 22 08:00 | ✅ Documented & Attended |
-| Client Meeting 2 June 24 19:00 | ✅ Documented & Attended |
-| Return by June 28 23:59 | ✅ Confirmed |
-| Tokyo Business Hotel | ✅ bk_hotel_TYO_003_20260621 |
-| Kyoto Traditional Ryokan | ✅ bk_hotel_KYO_003_20260625 |
-| Business Meals Min. 2 | ✅ 2 meals booked |
-| Kyoto Leisure Min. 2 Activities | ✅ 2 activities booked |
-| Kyoto Leisure Non-Negotiable | ✅ Satisfied |
+| Budget ≤ $4,000 | ✅ $3,785 spent |
+| Departure June 19–20 | ✅ Flight on June 20 |
+| Client Meeting 1 (June 22 08:00) | ✅ In Tokyo |
+| Client Meeting 2 (June 24 15:00) | ✅ In Tokyo |
+| Return by June 28 | ✅ Return flight June 28 |
+| Tokyo→Kyoto by June 25 | ✅ Flight on June 25 |
+| Kyoto Leisure (non-negotiable) | ✅ Tea Ceremony + Arashiyama |
+| Both client meetings attended | ✅ June 22 & June 24 |
+
+---
+
+## 🎯 Preferences Satisfied
+| Preference | How Satisfied |
+|---|---|
+| Tech Innovation | Akihabara/Shibuya exploration in Tokyo |
+| Traditional Culture | Tea Ceremony + Kyoto traditional hotel |
+| Fine Dining | Ginza Kyubey ($180) + Roppongi Hills ($95) |
+| Business Hotel in Tokyo | bk_hotel_TYO_003 — business-class property |
+| Traditional in Kyoto | bk_hotel_KYO_003 — traditional accommodation |
+| Efficient Logistics | Domestic flight TYO→KYO for fast transfer |

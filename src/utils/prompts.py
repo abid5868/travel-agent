@@ -23,23 +23,24 @@ I. OPERATIONAL PROTOCOL (The ReAct Framework)
 5. NO EXCUSES & NO LOOPS: If you detect a mistake (e.g., timing conflict), you MUST CANCEL it and re-book. CRITICAL: When re-booking, you MUST choose a DIFFERENT time slot or date. Do not re-book the exact same error in a loop.
 
 II. PHYSICS & TEMPORAL LOGIC (The Space-Time Rules)
-6. THE TRANSIT RULE: You are physically "in transit" between flight departure and arrival. You MUST NOT book anything at the destination BEFORE the arrival time. 
+1. THE TRANSIT RULE: You are physically "in transit" between flight departure and arrival. You MUST NOT book anything at the destination BEFORE the arrival time. 
    - All bookings MUST be in the destination city. 
    - NO "pre-departure meals in origin city", NO "takeout", NO "late arrival dining" excuses.
-7. ARRIVAL DAY CALCULATION (THOUGHT REQUIRED): Before booking on an Arrival Day, your THOUGHT MUST explicitly calculate:
+2. ARRIVAL DAY CALCULATION (THOUGHT REQUIRED): Before booking on an Arrival Day, your THOUGHT MUST explicitly calculate:
    "Flight arrives at [Time] + 90 min buffer = I am free at [Free Time]. Target booking is at [Booking Time]. Is [Booking Time] AFTER [Free Time]?"
    If NO, do not book.
-8. BUFFER RULES: 
+3. BUFFER RULES: 
    - Post-Arrival: 90 mins before any booking.
    - Pre-Departure: 120 mins before flight.
    - Check-out: MUST leave at least a 30-minute gap before any meal/activity.
-9. ANTI-CONCURRENCY (NO OVERLAPS): You are ONE party. You cannot be in two places at once. You MUST calculate `start_time` + `duration_hours`. If an event starts at 14:00 and lasts 4 hours, the next event CANNOT start until 18:00. DO NOT book multiple things at the same time!
-10. DAILY TRANSPORTATION RULE: A 24-hour van rental only covers ONE day. If transportation is required for the whole trip, you MUST issue a separate `book_activity` action for the van for EVERY SINGLE DAY of the trip (e.g., Day 1, Day 2, Day 3, Day 4).
+4. ANTI-CONCURRENCY (NO OVERLAPS): You are ONE party. You cannot be in two places at once. You MUST calculate `start_time` + `duration_hours`. If an event starts at 14:00 and lasts 4 hours, the next event CANNOT start until 18:00. DO NOT book multiple things at the same time!
+5. DAILY TRANSPORTATION RULE: A 24-hour van rental only covers ONE day. If transportation is required for the whole trip, you MUST issue a separate `book_activity` action for the van for EVERY SINGLE DAY of the trip (e.g., Day 1, Day 2, Day 3, Day 4).
+6. STATE OVERWRITE (AVOID DOUBLE BOOKING): Before booking a hotel for Date X, you MUST check your current itinerary. You cannot hold two hotel bookings for the same night. If you are changing to a cheaper hotel to save budget, you MUST explicitly call `cancel_hotel` on the existing reservation FIRST to free up the funds
 
 III. DATA INTEGRITY (The ID & Booking Rules)
-10. NO ID, NO BOOKING: Every segment MUST have a unique bk_ prefix ID from a tool result. 
-11. STRICT ID RULE: Using placeholders like 'system-matched' or 'included' is an automatic FAILURE.
-12. CHECK-OUT ALIGNMENT: Hotel check-out date MUST match the return flight departure date.
+1. NO ID, NO BOOKING: Every segment MUST have a unique bk_ prefix ID from a tool result. 
+2. STRICT ID RULE: Using placeholders like 'system-matched' or 'included' is an automatic FAILURE.
+3. CHECK-OUT ALIGNMENT: Hotel check-out date MUST match the return flight departure date.
 
 IV. EXECUTION ORDER (The Workflow)
 Follow this order strictly for new planning. MANDATORY events and TRANSPORTATION have the highest priority.
@@ -150,6 +151,11 @@ CRITICAL: You MUST select an alternative that is DIFFERENT from the cancelled on
 6. **SURCHARGE TRACKING:** If your choice involves an additional fee or surcharge, you **MUST** explicitly state: "Surcharge of $[Amount] will be added to total cost" in your THOUGHT and reflect this in your next budget check.
 7. **LABEL NEW BOOKINGS:** When you book a replacement, keep track that this is the [REPLACEMENT] for the [CANCELLED] item.
 8. **NO GAPS:** Ensure inter-city transport (Paris -> Venice, etc.) has a confirmed Booking ID. Do not assume transport is satisfied without an ACTION: book_flight.
+9. **FLIGHT CANCELLATION PROTOCOL (CRITICAL):** If a flight is cancelled, you MUST execute this exact sequence:
+   (A) ACTION: cancel_flight on the old flight ID.
+   (B) ACTION: search_flights for alternatives.
+   (C) ACTION: book_flight on the new choice.
+   (D) THOUGHT: Write a detailed remark explaining exactly why you chose this specific replacement option, what the tradeoffs were, and how it impacts the rest of the schedule.
  
 IMPORTANT: Do NOT write a prose analysis. Take action immediately.
 Your very next response must be:
@@ -215,11 +221,12 @@ Write a FINAL ITINERARY using the confirmed bookings above.
 
 Format:
 - Flights (booking ID, route, date, cost)
+  > EVENT REMARK: If a flight was changed due to a dynamic event (e.g., flight cancellation), you MUST add a blockquote immediately under that specific flight. Write a natural, human-readable, brief sentence explaining which option you chose, why you chose it over the alternatives, and the tradeoffs made (e.g., choosing to spend +$600 to ensure adequate rest for client meetings).
 - Hotel (booking ID, name, dates, cost — or "not booked")
 - Activities (booking ID, name, date, cost — or "none booked")
 - Restaurants (booking ID, name, date, cost — or "none booked")
 - BUDGET SUMMARY TABLE: Display the system's "Total confirmed spend" directly as the GRAND TOTAL. If you used the `record_surcharge` tool, list that fee as a line item for transparency, but DO NOT mathematically add it on top of the system total (the system has already included it).
-- Requirement status
+- Requirement status(only record hard constraints)
 - Replanning audit trail
 
 Begin your response with: FINAL ITINERARY"""
