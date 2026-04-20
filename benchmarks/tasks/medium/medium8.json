@@ -35,11 +35,11 @@
       "event_id": "event_1",
       "trigger_turn": 5,
       "event_type": "schedule_swap_required",
-      "description": "The operator for your planned Saturday morning guided boat tour just called. Their boats need emergency maintenance, so Saturday operations are cancelled. However, they can fit you in on Sunday morning. You must move the boat tour to Sunday morning, and shift your Sunday morning beach activities to Saturday.",
-      "affected_components": ["guided_boat_tour", "sunday_activity"],
+      "description": "The operator for your planned Saturday morning guided boat tour just called. Their boats need emergency maintenance, so Saturday operations are cancelled. However, they can fit you in on Sunday morning. You must move the boat tour to Sunday morning, and shift your planned Sunday morning beach activity to Saturday.",
+      "affected_components": ["guided_boat_tour", "sunday_beach_activity"],
       "resolution_requirements": [
         "Reschedule the guided boat tour to Sunday morning",
-        "Move the beach activities originally planned for Sunday to the now-empty Saturday morning slot",
+        "Move the beach activity originally planned for Sunday to the now-empty Saturday morning slot",
         "Ensure the new Sunday tour does not conflict with the hotel check-out time or the return flight to Chicago",
         "Keep the overall budget strictly under $1800"
       ]
@@ -50,7 +50,7 @@
     "return_flight",
     "hotel_2_nights",
     "guided_boat_tour_min_1",
-    "beach_activities_min_2",
+    "beach_activities_min_1",
     "cuban_restaurants_min_2"
   ],
   "success_criteria": {
@@ -63,9 +63,9 @@
     "dependent_bookings_updated": true
   },
   "expected_challenges": [
-    "Agent must perform a direct temporal swap of two distinct itinerary blocks without dropping any generic activities.",
+    "Agent must perform a direct temporal swap of two distinct itinerary blocks without dropping the core beach activity.",
     "Handling the logistical danger of placing a major tour on the final day (Sunday), which has a hard boundary (the return flight).",
     "Updating any adjacent restaurant reservations if the geographical location changes due to the swapped activities."
   ],
-  "notes": "Tests complex temporal permutations. The agent must successfully swap blocks of time while validating that the newly placed Sunday tour does not violate the return flight constraint."
+  "notes": "Tests complex temporal permutations. The agent must successfully swap the main boat-tour and beach blocks while validating that the newly placed Sunday tour does not violate the return flight constraint."
 }

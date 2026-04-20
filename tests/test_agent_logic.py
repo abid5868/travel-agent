@@ -2,6 +2,7 @@ import json
 
 from src.agent import TravelAgent
 from src.core.constraints import ConstraintTracker
+from src.tools.activities import ActivitySearchTool
 from src.tools.flights import FlightSearchTool
 from src.utils.types import Booking
 
@@ -19,6 +20,7 @@ def make_agent():
     agent._soft_preferences = {}
     agent._success_criteria = {}
     agent._scenario = {}
+    agent._current_party_size = 1
     agent._operation_log = []
     agent._triggered_events = []
     agent._post_requirements_turns = 0
@@ -136,6 +138,20 @@ def test_train_or_flight_requirements_are_satisfied_by_flight_bookings():
     assert agent._matched_component_count("return_train_or_flight") == 1
     assert agent._component_satisfied("outbound_train_or_flight") is True
     assert agent._component_satisfied("return_train_or_flight") is True
+
+
+def test_activity_booking_ids_include_time_suffix():
+    tool = ActivitySearchTool("benchmarks/mock_data/activities.json")
+
+    result = tool.book(
+        activity_id="act_MIA_001",
+        date="2026-12-05",
+        time="09:00",
+        party_size=2,
+    )
+
+    assert result["status"] == "success"
+    assert result["booking_id"] == "bk_act_MIA_001_20261205t0900"
 
 
 def test_extract_tool_error_supports_both_error_shapes():
@@ -283,7 +299,7 @@ def test_dynamic_event_removes_invalid_hotel_and_marks_dependent_restaurants_for
     assert "bk_rest_1" in prompt
     assert agent._triggered_events[0]["preserved_booking_ids"] == ["bk_flight_1"]
     assert agent._operation_log[-1]["summary"] == (
-        "removed unavailable hotel bk_hotel_1 due to accommodation_unavailable"
+        "removed invalidated hotel bk_hotel_1 due to accommodation_unavailable"
     )
 
 
@@ -540,3 +556,437 @@ def test_trip_cut_short_success_criteria_accept_valid_unchanged_dependents():
     assert agent._event_resolved(event_state) is True
     assert agent._dependent_bookings_reviewed(event_state) is True
     assert agent._success_criteria_satisfied() is True
+
+
+def test_schedule_swap_success_requires_sunday_boat_and_saturday_beach():
+    agent = make_agent()
+    agent.tracker.add_constraint("departure_date", "2026-12-04", is_hard=True)
+    agent.tracker.add_constraint("return_date", "2026-12-06", is_hard=True)
+    agent._success_criteria = {
+        "boat_tour_on_sunday": True,
+        "beach_activities_on_saturday": True,
+    }
+
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="boat_sat",
+            type="activity",
+            details={"date": "2026-12-05", "time": "08:00", "full_data": {"type": "guided_boat_tour", "tags": ["guided_boat_tour"]}},
+            cost=178.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="beach_sun",
+            type="activity",
+            details={"date": "2026-12-06", "time": "08:00", "full_data": {"type": "beach_activity", "tags": ["beach_activity"]}},
+            cost=130.0,
+        )
+    )
+
+    assert agent._success_criteria_satisfied() is False
+
+    agent.tracker.remove_booking("boat_sat")
+    agent.tracker.remove_booking("beach_sun")
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="boat_sun",
+            type="activity",
+            details={"date": "2026-12-06", "time": "08:00", "full_data": {"type": "guided_boat_tour", "tags": ["guided_boat_tour"]}},
+            cost=118.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="beach_sat",
+            type="activity",
+            details={"date": "2026-12-05", "time": "08:00", "full_data": {"type": "beach_activity", "tags": ["beach_activity"]}},
+            cost=130.0,
+        )
+    )
+
+    assert agent._success_criteria_satisfied() is True
+
+
+def test_guided_beach_activity_does_not_count_as_boat_tour():
+    agent = make_agent()
+    beach_booking = Booking(
+        booking_id="beach_sat",
+        type="activity",
+        details={
+            "name": "South Beach Guided Water Sports Package",
+            "date": "2026-12-05",
+            "time": "09:00",
+            "full_data": {
+                "type": "beach_activity",
+                "category": ["beach", "watersports", "outdoor", "swimming"],
+                "tags": ["beach_activity", "swimming", "watersports", "outdoor", "relaxation", "family_friendly"],
+                "family_friendly": True,
+            },
+        },
+        cost=130.0,
+    )
+
+    assert agent._experience_booking_matches("guided_boat_tour_min_1", beach_booking) is False
+    assert agent._experience_booking_matches("beach_activities_min_1", beach_booking) is True
+
+
+def test_schedule_swap_with_real_miami_activity_metadata_counts_one_boat_and_one_beach():
+    agent = make_agent()
+    agent.tracker.add_constraint("departure_date", "2026-12-04", is_hard=True)
+    agent.tracker.add_constraint("return_date", "2026-12-06", is_hard=True)
+    agent._success_criteria = {
+        "boat_tour_on_sunday": True,
+        "beach_activities_on_saturday": True,
+        "replanning_successful": True,
+    }
+    event_state = {"event_type": "schedule_swap_required"}
+    agent._triggered_events = [event_state]
+
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_MIA_001_20261205t0900",
+            type="activity",
+            details={
+                "name": "South Beach Guided Water Sports Package",
+                "date": "2026-12-05",
+                "time": "09:00",
+                "full_data": {
+                    "type": "beach_activity",
+                    "category": ["beach", "watersports", "outdoor", "swimming"],
+                    "tags": ["beach_activity", "swimming", "watersports", "outdoor", "relaxation", "family_friendly"],
+                    "family_friendly": True,
+                },
+            },
+            cost=130.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_MIA_006_20261206t0900",
+            type="activity",
+            details={
+                "name": "Biscayne Bay Morning Eco Cruise",
+                "date": "2026-12-06",
+                "time": "09:00",
+                "full_data": {
+                    "type": "guided_boat_tour",
+                    "category": ["boat_tour", "nature", "wildlife", "morning", "guided"],
+                    "tags": ["guided_boat_tour", "boat_tour", "morning_activities", "wildlife", "nature", "family_friendly", "beach_adjacent"],
+                    "family_friendly": True,
+                },
+            },
+            cost=118.0,
+        )
+    )
+
+    assert agent._matched_component_count("guided_boat_tour_min_1") == 1
+    assert agent._matched_component_count("beach_activities_min_1") == 1
+    assert agent._schedule_swap_resolved(event_state) is True
+    assert agent._success_criteria_satisfied() is True
+
+
+def test_party_size_increase_updates_live_state_and_forces_future_bookings_to_new_size():
+    agent = make_agent()
+    updated_size = agent._apply_event_party_size_update(
+        {
+            "event_type": "party_size_increase",
+            "description": "Your total party size is now 2 adults. Your new combined budget is $2200.",
+        }
+    )
+
+    params = agent._apply_live_trip_state_to_params(
+        "book_restaurant",
+        "book",
+        {"restaurant_id": "rest_082", "date": "2026-08-14", "time": "19:30", "party_size": 1},
+    )
+
+    assert updated_size == 2
+    assert agent._current_party_size == 2
+    assert params["party_size"] == 2
+
+
+def test_budget_context_uses_current_active_cap_after_budget_reduction():
+    agent = make_agent()
+    agent.tracker.add_constraint("budget_max", 2200, is_hard=True)
+    agent.tracker.budget_max = 2200
+    agent.tracker.budget_used = 1250
+    agent._original_budget_max = 2200.0
+
+    agent._apply_event_budget_update(
+        {
+            "event_type": "budget_reduced",
+            "description": "Your new maximum budget for the trip booking is now $1700 instead of $2200.",
+        },
+        {"success_criteria": {"total_cost_max": 1700}},
+    )
+
+    budget_text = agent._build_budget_context_text()
+
+    assert "current_active_budget_limit: $1700.00" in budget_text
+    assert "original_pre_event_budget_limit: $2200.00" in budget_text
+    assert "active_budget_note" in budget_text
+
+
+def test_final_party_size_success_criteria_requires_two_person_bookings_after_plus_one():
+    agent = make_agent()
+    agent._current_party_size = 2
+    agent._success_criteria = {"final_party_size": 2}
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_flight_1",
+            type="flight",
+            details={"type": "outbound_flight", "party_size": 1},
+            cost=129.0,
+        )
+    )
+
+    assert agent._success_criteria_satisfied() is False
+
+
+def test_timing_validator_blocks_restaurant_during_existing_activity():
+    agent = make_agent()
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_SAN_001_20260612",
+            type="activity",
+            details={
+                "date": "2026-06-12",
+                "time": "10:00",
+                "full_data": {"duration_hours": 6.0},
+            },
+            cost=276.0,
+        )
+    )
+
+    message = agent._validate_candidate_timing(
+        "book_restaurant",
+        "book",
+        {"restaurant_id": "rest_025", "date": "2026-06-12", "time": "12:00", "party_size": 4},
+    )
+
+    assert "Timing conflict" in message
+
+
+def test_timing_validator_reports_exact_conflict_window_for_restaurants():
+    agent = make_agent()
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_rest_1",
+            type="restaurant",
+            details={"name": "Lunch Spot", "date": "2026-11-07", "time": "12:00"},
+            cost=20.0,
+        )
+    )
+
+    message = agent._validate_candidate_timing(
+        "book_restaurant",
+        "book",
+        {"restaurant_id": "rest_063", "date": "2026-11-07", "time": "13:00", "party_size": 2},
+    )
+
+    assert "2026-11-07 13:00 to 14:30" in message
+    assert "existing restaurant bk_rest_1 (2026-11-07 12:00 to 13:30)" in message
+    assert "Choose a start time at or after 13:30" in message
+
+
+def test_timing_validator_blocks_duplicate_same_day_activity_booking():
+    agent = make_agent()
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_MIA_001_20261205t0900",
+            type="activity",
+            details={
+                "activity_id": "act_MIA_001",
+                "date": "2026-12-05",
+                "time": "09:00",
+                "full_data": {"duration_hours": 3.0},
+            },
+            cost=130.0,
+        )
+    )
+
+    message = agent._validate_candidate_timing(
+        "book_activity",
+        "book",
+        {"activity_id": "act_MIA_001", "date": "2026-12-05", "time": "13:00", "party_size": 2},
+    )
+
+    assert "Duplicate activity booking" in message
+
+
+def test_timing_validator_blocks_departure_day_meal_inside_airport_buffer():
+    agent = make_agent()
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_flight_MIA_CHI_002_20261206",
+            type="flight",
+            details={
+                "type": "return_flight",
+                "departure_date": "2026-12-06",
+                "departure_time": "14:00",
+                "arrival_time": "17:15",
+                "party_size": 2,
+            },
+            cost=358.0,
+        )
+    )
+
+    message = agent._validate_candidate_timing(
+        "book_restaurant",
+        "book",
+        {"restaurant_id": "rest_074", "date": "2026-12-06", "time": "12:00", "party_size": 2},
+    )
+
+    assert "airport or arrival buffer" in message
+
+
+def test_venue_closed_success_criteria_requires_weekend_animal_park_removal():
+    agent = make_agent()
+    agent.tracker.add_constraint("departure_date", "2026-06-11", is_hard=True)
+    agent.tracker.add_constraint("return_date", "2026-06-14", is_hard=True)
+    agent._success_criteria = {"animal_park_removed": True}
+    agent._triggered_events = [
+        {
+            "event_type": "venue_closed",
+            "description": "The major animal park you scheduled for Saturday just announced a total closure for the entire weekend due to a power facility failure.",
+            "affected_components": ["major_animal_park_visit"],
+        }
+    ]
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_SAN_001_20260613",
+            type="activity",
+            details={
+                "date": "2026-06-13",
+                "time": "10:00",
+                "full_data": {"type": "zoo", "tags": ["zoo", "family_friendly"]},
+            },
+            cost=276.0,
+        )
+    )
+
+    assert agent._success_criteria_satisfied() is False
+
+
+def test_schedule_swap_event_auto_removes_invalidated_activity_bookings():
+    agent = make_agent()
+
+    class FakeActivityTool:
+        def __init__(self):
+            self.cancelled = []
+
+        def cancel(self, booking_id):
+            self.cancelled.append(booking_id)
+            return {"status": "success", "cancellation_id": f"cancel_{booking_id}"}
+
+    agent.activity_tool = FakeActivityTool()
+    agent.turn_count = 5
+    agent.tracker.add_constraint("departure_date", "2026-12-04", is_hard=True)
+    agent.tracker.add_constraint("return_date", "2026-12-06", is_hard=True)
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="boat_sat",
+            type="activity",
+            details={"date": "2026-12-05", "time": "08:00", "full_data": {"type": "guided_boat_tour", "tags": ["guided_boat_tour"]}},
+            cost=178.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="beach_sun",
+            type="activity",
+            details={"date": "2026-12-06", "time": "08:00", "full_data": {"type": "beach_activity", "tags": ["beach_activity"]}},
+            cost=130.0,
+        )
+    )
+
+    agent._handle_dynamic_event(
+        {
+            "event_type": "schedule_swap_required",
+            "description": "Saturday operations are cancelled. Move the boat tour to Sunday morning, and shift your Sunday morning beach activities to Saturday.",
+            "affected_components": ["guided_boat_tour", "sunday_beach_activity"],
+            "resolution_requirements": ["Swap the activities"],
+        },
+        "CURRENT ITINERARY",
+        {},
+    )
+
+    assert agent.tracker.get_booking("boat_sat") is None
+    assert agent.tracker.get_booking("beach_sun") is None
+    assert agent.activity_tool.cancelled == ["boat_sat", "beach_sun"]
+
+
+def test_party_size_event_auto_removes_stale_single_person_bookings():
+    agent = make_agent()
+
+    class FakeFlightTool:
+        def __init__(self):
+            self.cancelled = []
+
+        def cancel(self, booking_id):
+            self.cancelled.append(booking_id)
+            return {"status": "success", "cancellation_id": f"cancel_{booking_id}"}
+
+    class FakeHotelTool:
+        def __init__(self):
+            self.cancelled = []
+
+        def cancel(self, booking_id):
+            self.cancelled.append(booking_id)
+            return {"status": "success", "cancellation_id": f"cancel_{booking_id}"}
+
+    class FakeRestaurantTool:
+        def __init__(self):
+            self.cancelled = []
+
+        def cancel(self, booking_id):
+            self.cancelled.append(booking_id)
+            return {"status": "success", "cancellation_id": f"cancel_{booking_id}"}
+
+    agent.flight_tool = FakeFlightTool()
+    agent.hotel_tool = FakeHotelTool()
+    agent.restaurant_tool = FakeRestaurantTool()
+    agent.turn_count = 5
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_flight_out",
+            type="flight",
+            details={"type": "outbound_flight", "party_size": 1},
+            cost=129.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_hotel_1",
+            type="hotel",
+            details={"hotel_name": "Harbor View Hotel", "party_size": 1},
+            cost=378.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_rest_1",
+            type="restaurant",
+            details={"name": "Seafood Loft", "party_size": 1},
+            cost=65.0,
+        )
+    )
+
+    agent._handle_dynamic_event(
+        {
+            "event_type": "party_size_increase",
+            "description": "Your total party size is now 2 adults. Your new combined budget is $2200.",
+            "affected_components": ["outbound_flight", "hotel", "restaurants"],
+            "resolution_requirements": ["Rebook for 2 people"],
+        },
+        "CURRENT ITINERARY",
+        {"success_criteria": {"total_cost_max": 2200}},
+    )
+
+    assert agent.tracker.get_booking("bk_flight_out") is None
+    assert agent.tracker.get_booking("bk_hotel_1") is None
+    assert agent.tracker.get_booking("bk_rest_1") is None
+    assert agent.flight_tool.cancelled == ["bk_flight_out"]
+    assert agent.hotel_tool.cancelled == ["bk_hotel_1"]
+    assert agent.restaurant_tool.cancelled == ["bk_rest_1"]

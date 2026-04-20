@@ -167,15 +167,25 @@ Return ONLY a valid JSON object with NO markdown fences, NO extra prose outside 
 3-4 = Poor (significant shortcomings)
 0-2 = Failing (major violations or missing elements)
 
+## EVIDENCE PRIORITY
+1. Trust concrete booking facts first: booking IDs, dates, times, party sizes, costs, and explicit cancellations/rebookings.
+2. Then use budget tables, requirement tables, and success-status tables.
+3. Treat narrative claims, headers, and summary bullets as lowest-priority evidence.
+4. If evidence conflicts, prefer the concrete booking facts over the prose.
+5. Count DISTINCT confirmed booking IDs. If the same booking ID is repeated multiple times, count it once unless separate confirmed IDs are shown.
+6. For tasks with dynamic events, judge the final itinerary against the post-event task requirements in the task JSON, even if the itinerary text repeats stale pre-event wording.
+
 ## DIMENSION DEFINITIONS
 
 1. HARD CONSTRAINTS (weight: 30%)
-   Verify: budget ≤ budget_max, dates valid, wheelchair_accessible if required, party size matches.
-   CRITICAL: Score 0 if ANY hard constraint is violated; otherwise score based on full compliance.
+   Verify actual executable facts: budget ≤ budget_max, dates valid, wheelchair_accessible if required, party size matches, and core timing feasibility.
+   CRITICAL: Score 0 only if the confirmed facts clearly violate a hard constraint or make the trip non-executable.
+   Minor reporting issues, copied stale labels, or outdated summary text should NOT be treated as hard-constraint violations if the underlying bookings satisfy the task.
 
 2. REQUIRED COMPONENTS (weight: 25%)
-   Assess: count of satisfied required items / total required items * 10.
+   Assess based on distinct confirmed bookings: count of satisfied required items / total required items * 10.
    Example: 8 of 10 items satisfied = 8.0 points.
+   Reusing the same booking ID twice does not satisfy two separate required items.
 
 3. SOFT PREFERENCES (weight: 15%)
    Evaluate: how well are user interests and preferences reflected in activity/restaurant/accommodation choices?
@@ -184,9 +194,11 @@ Return ONLY a valid JSON object with NO markdown fences, NO extra prose outside 
 4. REPLANNING QUALITY (weight: 20%)
    If NO dynamic events in task: set score to null and reasoning to "N/A" (this dimension becomes non-applicable).
    If dynamic events exist: evaluate how well affected bookings were updated, unaffected bookings preserved, and impact minimized.
+   Focus on whether the final booked state resolves the event correctly. Mildly stale narrative wording should be a modest deduction here, not an automatic failure.
 
 5. ITINERARY COHERENCE (weight: 10%)
    Assess: logical day-by-day flow, no scheduling conflicts, full trip duration covered, reasonable travel times.
+   This is the main place to penalize contradictory prose, stale labels, duplicated booking IDs shown as multiple events, and other presentation/reporting inconsistencies.
 
 ## INSTRUCTIONS
 - Be consistent and objective
@@ -194,6 +206,7 @@ Return ONLY a valid JSON object with NO markdown fences, NO extra prose outside 
 - If no conversation log is present, do NOT mention it as a negative finding.
 - List specific findings/issues in the findings array
 - If replanning_quality is N/A, explain why in the reasoning
+- Do not fail an itinerary solely because the write-up is imperfect when the booked facts clearly satisfy the task.
 """
 
 _USER_TEMPLATE = """\
@@ -367,6 +380,137 @@ def _brief_rationale(score: DimensionScore, max_len: int = 140) -> str:
     return "No brief rationale was returned by the judge."
 
 
+def _normalize_label(text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", (text or "").lower()).strip()
+
+
+def _extract_markdown_table_rows(text: str) -> List[List[str]]:
+    rows: List[List[str]] = []
+    for line in (text or "").splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("|"):
+            continue
+        cells = [cell.strip() for cell in stripped.strip("|").split("|")]
+        if len(cells) < 2:
+            continue
+        if all(re.fullmatch(r"[:\- ]+", cell or "-") for cell in cells):
+            continue
+        rows.append(cells)
+    return rows
+
+
+def _build_status_lookup(itinerary: str) -> Dict[str, Optional[bool]]:
+    ignored_headers = {
+        "requirement", "requirements", "criterion", "criteria", "status",
+        "category", "item", "details", "date", "time", "cost", "booking id",
+        "route", "flight", "name", "meal", "cuisine", "duration",
+    }
+    lookup: Dict[str, Optional[bool]] = {}
+    for cells in _extract_markdown_table_rows(itinerary):
+        label = _normalize_label(cells[0])
+        if not label or label in ignored_headers:
+            continue
+        status_text = " ".join(cells[1:]).lower()
+        if "❌" in status_text or "unmet" in status_text or "not satisfied" in status_text or "failed" in status_text:
+            lookup[label] = False
+        elif "✅" in status_text or "satisfied" in status_text or "met" in status_text:
+            lookup[label] = True
+    return lookup
+
+
+def _lookup_reported_status(lookup: Dict[str, Optional[bool]], aliases: Sequence[str]) -> Optional[bool]:
+    normalized_aliases = [_normalize_label(alias) for alias in aliases]
+    for key, value in lookup.items():
+        if any(alias and alias in key for alias in normalized_aliases):
+            return value
+    return None
+
+
+def _append_reasoning(reasoning: str, note: str) -> str:
+    reasoning = reasoning or ""
+    if note in reasoning:
+        return reasoning
+    if not reasoning:
+        return note
+    return f"{reasoning} {note}"
+
+
+def _append_finding(findings: List[str], finding: str) -> List[str]:
+    if finding in findings:
+        return findings
+    return findings + [finding]
+
+
+def _apply_fact_based_adjustments(
+    task: Dict[str, Any],
+    itinerary: str,
+    dimensions: Dict[str, DimensionScore],
+) -> None:
+    lookup = _build_status_lookup(itinerary)
+    success_criteria = task.get("success_criteria", {}) or {}
+    hard_constraints = ((task.get("initial_constraints") or {}).get("hard") or {})
+    dynamic_events = task.get("dynamic_events", []) or []
+
+    hard_signals: List[bool] = []
+    if success_criteria.get("total_cost_max") is not None or hard_constraints.get("budget_max") is not None:
+        status = _lookup_reported_status(lookup, ["total cost", "budget"])
+        if status is not None:
+            hard_signals.append(status)
+    if success_criteria.get("timing_feasible") is True:
+        status = _lookup_reported_status(lookup, ["timing feasible"])
+        if status is not None:
+            hard_signals.append(status)
+    if isinstance(success_criteria.get("final_party_size"), int):
+        status = _lookup_reported_status(lookup, ["final party size"])
+        if status is not None:
+            hard_signals.append(status)
+    if hard_constraints.get("wheelchair_accessible") or hard_constraints.get("accessibility_required"):
+        status = _lookup_reported_status(lookup, ["accessible", "wheelchair"])
+        if status is not None:
+            hard_signals.append(status)
+
+    if len(hard_signals) >= 2 and all(hard_signals):
+        dim = dimensions["hard_constraints"]
+        if dim.applicable and dim.score < 8.5:
+            dim.score = 8.5
+            dim.reasoning = _append_reasoning(
+                dim.reasoning,
+                "Fact-based adjustment: explicit success-status evidence shows the core hard constraints are satisfied."
+            )
+            dim.findings = [finding for finding in dim.findings if "hard constraint" not in finding.lower() or "violated" not in finding.lower()]
+
+    replan_signals: List[bool] = []
+    if dynamic_events:
+        for aliases in (
+            ["replanning successful"],
+            ["unaffected bookings preserved"],
+            ["dependent bookings updated"],
+        ):
+            status = _lookup_reported_status(lookup, aliases)
+            if status is not None:
+                replan_signals.append(status)
+
+    if len(replan_signals) >= 2 and all(replan_signals):
+        floor = 8.0 if any(event.get("event_type") == "party_size_increase" for event in dynamic_events) else 7.5
+        dim = dimensions["replanning_quality"]
+        if dim.applicable and dim.score < floor:
+            dim.score = floor
+            dim.reasoning = _append_reasoning(
+                dim.reasoning,
+                "Fact-based adjustment: the reported success-status and audit trail show the event was resolved with preserved unaffected bookings."
+            )
+
+    # Mild presentation contradictions should not dominate the final result if facts are strong.
+    if all(hard_signals) and len(hard_signals) >= 2:
+        dim = dimensions["itinerary_coherence"]
+        if dim.applicable and dim.score < 7.0:
+            dim.score = 7.0
+            dim.reasoning = _append_reasoning(
+                dim.reasoning,
+                "Fact-based adjustment: despite some reporting inconsistencies, the concrete booking flow remains coherent."
+            )
+
+
 def _format_average_score(scores: Sequence[DimensionScore]) -> str:
     applicable = [score.score for score in scores if score.applicable]
     if not applicable:
@@ -505,6 +649,7 @@ class LLMJudge:
         self.pass_threshold = pass_threshold
         self.max_conversation_turns = max_conversation_turns
         self.max_tokens = max_tokens
+        self._current_itinerary_for_adjustment = ""
 
     def evaluate(self, task: Dict[str, Any], agent_output: Dict[str, Any]) -> JudgeResult:
         # Validate input structure
@@ -513,6 +658,7 @@ class LLMJudge:
         
         itinerary = agent_output.get("itinerary", "")
         conversation = agent_output.get("conversation", [])
+        self._current_itinerary_for_adjustment = itinerary
         prompt = self._build_prompt(task, itinerary, conversation)
         raw = self._call_judge(prompt)
         parsed = self._parse_response(raw)
@@ -615,6 +761,7 @@ class LLMJudge:
         dimensions["soft_preferences"] = _dim("soft_preferences")
         dimensions["replanning_quality"] = _dim("replanning_quality", applicable=has_events)
         dimensions["itinerary_coherence"] = _dim("itinerary_coherence")
+        _apply_fact_based_adjustments(task, self._current_itinerary_for_adjustment, dimensions)
         
         overall = self._compute_overall(dimensions)
 

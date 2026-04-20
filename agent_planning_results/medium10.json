@@ -1,0 +1,16 @@
+{
+  "task_id": "task_015",
+  "task_file": "benchmarks/tasks/medium/medium10.json",
+  "title": "San Diego Family Trip with Major Attraction Closure",
+  "difficulty": "medium",
+  "success": true,
+  "metadata": {
+    "total_tokens": 33742,
+    "api_calls": 24,
+    "tool_calls": 23,
+    "start_time": 1776619469.722324,
+    "end_time": 1776619765.384085,
+    "time_elapsed": 295.66,
+    "wall_time_seconds": 295.67
+  }
+}

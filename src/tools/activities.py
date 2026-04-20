@@ -235,7 +235,7 @@ class ActivitySearchTool:
         
         return {
             "status": "success",
-            "booking_id": f"bk_{activity_id}_{date.replace('-', '')}",
+            "booking_id": f"bk_{activity_id}_{date.replace('-', '')}t{time.replace(':', '')}",
             "cost": total_cost,
             "details": {
                 "activity_id": activity_id,

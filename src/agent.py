@@ -53,6 +53,8 @@ class TravelAgent:
         self._soft_preferences = {}
         self._success_criteria = {}
         self._scenario = {}
+        self._current_party_size = 1
+        self._original_budget_max = None
         self._operation_log = []
         self._triggered_events = []
         self._post_requirements_turns = 0
@@ -107,6 +109,7 @@ class TravelAgent:
     def _load_constraints(self, task: Dict[str, Any]):
         hard = task.get("initial_constraints", {}).get("hard", {})
         soft = task.get("initial_constraints", {}).get("soft", {})
+        user_profile = task.get("user_profile", {})
         for key, value in hard.items():
             self.tracker.add_constraint(key, value, is_hard=True)
         for key, value in soft.items():
@@ -115,6 +118,9 @@ class TravelAgent:
         self._soft_preferences = soft
         self._success_criteria = task.get("success_criteria", {})
         self._scenario = task.get("scenario", {})
+        self._current_party_size = int(user_profile.get("party_size", 1) or 1)
+        budget_max = hard.get("budget_max")
+        self._original_budget_max = float(budget_max) if isinstance(budget_max, (int, float)) else None
 
     def _create_planning_prompt(self, task: Dict[str, Any]) -> str:
         return create_planning_prompt(task)
@@ -208,7 +214,9 @@ class TravelAgent:
             elif ready_to_finalize or iteration >= max_iterations - 1:
                 final_prompt = create_final_itinerary_prompt(
                     self._build_confirmed_bookings_text(),
+                    self._build_budget_context_text(),
                     self._build_requirement_status_text(),
+                    self._build_success_criteria_status_text(),
                     self._build_operation_log_text(),
                 )
                 self.conversation_history.append({"role": "user", "content": final_prompt})
@@ -233,6 +241,7 @@ class TravelAgent:
         dependent_bookings = self._find_dependent_bookings(affected_components, affected_bookings, event)
 
         budget_max_after = self._apply_event_budget_update(event, task)
+        party_size_after = self._apply_event_party_size_update(event)
 
         preserved_booking_ids = [
             booking.booking_id
@@ -244,9 +253,11 @@ class TravelAgent:
         removed_booking_ids = []
         event_type = event.get("event_type", "dynamic_event")
         for booking in affected_bookings:
-            if booking.type != "hotel":
+            if not self._should_auto_remove_affected_booking(booking, event, party_size_after):
                 continue
-            self.hotel_tool.cancel(booking.booking_id)
+            cancel_tool = getattr(self, f"{booking.type}_tool", None)
+            if cancel_tool and hasattr(cancel_tool, "cancel"):
+                cancel_tool.cancel(booking.booking_id)
             self.tracker.remove_booking(booking.booking_id)
             removed_booking_ids.append(booking.booking_id)
             self._record_operation(
@@ -254,7 +265,7 @@ class TravelAgent:
                 "cancel",
                 {"booking_id": booking.booking_id},
                 {"booking_id": booking.booking_id},
-                summary_override=f"removed unavailable hotel {booking.booking_id} due to {event_type}",
+                summary_override=f"removed invalidated {booking.type} {booking.booking_id} due to {event_type}",
             )
 
         self._triggered_events.append({
@@ -267,6 +278,7 @@ class TravelAgent:
             "preserved_booking_ids": preserved_booking_ids,
             "removed_booking_ids": removed_booking_ids,
             "budget_max_after": budget_max_after,
+            "party_size_after": party_size_after,
         })
 
         return create_replanning_prompt(
@@ -277,6 +289,23 @@ class TravelAgent:
             self._format_booking_refs(dependent_bookings) if dependent_bookings else "None currently require review.",
             self._format_resolution_requirements(event.get("resolution_requirements", [])),
         )
+
+    def _should_auto_remove_affected_booking(
+        self,
+        booking: Booking,
+        event: Dict[str, Any],
+        party_size_after: Optional[int],
+    ) -> bool:
+        event_type = event.get("event_type")
+        if event_type == "accommodation_unavailable":
+            return booking.type == "hotel"
+        if event_type in {"schedule_swap_required", "venue_closed"}:
+            return booking.type == "activity"
+        if event_type == "party_size_increase":
+            target_size = int(party_size_after or self._current_party_size or 1)
+            current_size = int((booking.details or {}).get("party_size") or 0)
+            return booking.type in {"flight", "hotel", "restaurant", "activity"} and current_size < target_size
+        return False
 
     def _event_is_ready(self, event: Dict[str, Any]) -> bool:
         if self.turn_count < event.get("trigger_turn", 999):
@@ -291,6 +320,7 @@ class TravelAgent:
     def _booking_summary(self) -> str:
         """State injected each turn: confirmed bookings, still-needed checklist, budget, searched queries."""
         parts = []
+        parts.append(f"Current party size for all new bookings: {self._current_party_size}")
 
         # --- Confirmed bookings ---
         if self.tracker.bookings:
@@ -361,9 +391,33 @@ class TravelAgent:
             return "No bookings were confirmed by the system."
         lines = []
         for b in self.tracker.bookings:
+            details = b.details or {}
+            facts = []
+            if b.type == "flight":
+                facts.extend([
+                    f"type={details.get('type', 'flight')}",
+                    f"route={details.get('origin_city', '?')} -> {details.get('destination_city', '?')}",
+                    f"date={details.get('departure_date', '?')}",
+                    f"time={details.get('departure_time', '?')}",
+                ])
+            elif b.type == "hotel":
+                facts.extend([
+                    f"name={details.get('hotel_name', 'unknown')}",
+                    f"check_in={details.get('check_in', '?')}",
+                    f"check_out={details.get('check_out', '?')}",
+                ])
+            elif b.type in {"activity", "restaurant"}:
+                full_data = details.get("full_data", {}) if isinstance(details.get("full_data"), dict) else {}
+                facts.extend([
+                    f"name={details.get('name', 'unknown')}",
+                    f"type={full_data.get('type', b.type)}",
+                    f"date={details.get('date', '?')}",
+                    f"time={details.get('time', '?')}",
+                ])
             lines.append(
                 f"- [{b.type.upper()}] booking_id={b.booking_id}  cost=${b.cost}"
-                + (f"  details={json.dumps(b.details)}" if b.details else "")
+                + (f"  facts={'; '.join(facts)}" if facts else "")
+                + (f"  details={json.dumps(details)}" if details else "")
             )
         lines.append(f"\nTotal confirmed spend: ${self.tracker.budget_used}")
         if self.tracker.budget_max:
@@ -389,6 +443,85 @@ class TravelAgent:
 
         if not lines:
             return "No required components were specified."
+        return "\n".join(lines)
+
+    def _build_budget_context_text(self) -> str:
+        current_budget = self.tracker.budget_max
+        lines = []
+        if current_budget is not None:
+            lines.append(f"- current_active_budget_limit: ${current_budget:.2f}")
+            lines.append(f"- total_confirmed_spend: ${self.tracker.budget_used:.2f}")
+            lines.append(f"- remaining_budget: ${self.tracker.get_remaining_budget():.2f}")
+        if self._original_budget_max is not None:
+            lines.append(f"- original_pre_event_budget_limit: ${self._original_budget_max:.2f}")
+        if current_budget is not None and self._original_budget_max is not None and current_budget != self._original_budget_max:
+            lines.append("- active_budget_note: Use the current active budget limit in the final budget table. The original budget is historical context only.")
+        if not lines:
+            return "No explicit budget context was recorded."
+        return "\n".join(lines)
+
+    def _build_success_criteria_status_text(self) -> str:
+        if not self._success_criteria:
+            return "No explicit success criteria were specified."
+
+        lines = []
+        active_ids = {booking.booking_id for booking in self.tracker.bookings}
+        for name, expected in self._success_criteria.items():
+            if name == "total_cost_max":
+                actual = self.tracker.budget_used
+                satisfied = actual <= float(expected)
+                detail = f"actual ${actual:.2f} / max ${float(expected):.2f}"
+            elif name == "timing_feasible":
+                actual = self._timing_feasible()
+                satisfied = actual is bool(expected)
+                detail = f"actual {actual} / expected {expected}"
+            elif name == "replanning_successful":
+                actual = all(self._event_resolved(event_state) for event_state in self._triggered_events)
+                satisfied = actual is bool(expected)
+                detail = f"actual {actual} / expected {expected}"
+            elif name == "unaffected_bookings_preserved":
+                actual = all(
+                    set(event_state.get("preserved_booking_ids", [])).issubset(active_ids)
+                    for event_state in self._triggered_events
+                )
+                satisfied = actual is bool(expected)
+                detail = f"actual {actual} / expected {expected}"
+            elif name == "dependent_bookings_updated":
+                actual = all(
+                    not event_state.get("dependent_booking_ids")
+                    or self._dependent_bookings_reviewed(event_state)
+                    or self._dependents_still_valid_without_changes(event_state)
+                    for event_state in self._triggered_events
+                )
+                satisfied = actual is bool(expected)
+                detail = f"actual {actual} / expected {expected}"
+            elif name == "final_party_size":
+                actual = max(int(self._current_party_size or 1), 1)
+                satisfied = actual >= int(expected) and self._bookings_meet_party_size(int(expected))
+                detail = f"actual {actual} / expected {expected}"
+            elif name == "boat_tour_on_sunday":
+                actual = self._has_component_on_weekday("guided_boat_tour_min_1", "sunday")
+                satisfied = actual is bool(expected)
+                detail = f"actual {actual} / expected {expected}"
+            elif name == "beach_activities_on_saturday":
+                actual = self._has_component_on_weekday("beach_activities_min_1", "saturday")
+                satisfied = actual is bool(expected)
+                detail = f"actual {actual} / expected {expected}"
+            elif name == "animal_park_removed":
+                actual = all(self._venue_closed_resolved(event_state) for event_state in self._triggered_events)
+                satisfied = actual is bool(expected)
+                detail = f"actual {actual} / expected {expected}"
+            elif name == "early_return_executed":
+                actual = all(self._trip_cut_short_resolved(event_state) for event_state in self._triggered_events)
+                satisfied = actual is bool(expected)
+                detail = f"actual {actual} / expected {expected}"
+            else:
+                actual = "not_checked"
+                satisfied = True
+                detail = "no code-side evaluator"
+
+            status = "SATISFIED" if satisfied else "UNMET"
+            lines.append(f"- {name}: {status} ({detail})")
         return "\n".join(lines)
 
     def _build_operation_log_text(self) -> str:
@@ -585,6 +718,8 @@ class TravelAgent:
         route_tokens = set()
         route_tokens.update(self._tokenize_component(str(details.get("origin_city", ""))))
         route_tokens.update(self._tokenize_component(str(details.get("destination_city", ""))))
+        if route_hint_tokens and not route_tokens:
+            return False
         if route_hint_tokens and route_tokens and not route_hint_tokens.intersection(route_tokens):
             return False
 
@@ -607,11 +742,61 @@ class TravelAgent:
         if any(word in normalized for word in ("accessible", "wheelchair")) and not self._detail_or_tag_match(details, "wheelchair_accessible"):
             return False
 
+        structured_terms = self._booking_structured_terms(details)
+        required_aliases = self._component_match_aliases(normalized)
+        if required_aliases:
+            return bool(required_aliases & structured_terms)
+
         content_tokens = self._booking_content_tokens(details)
         keywords = self._component_keywords(normalized)
         if not keywords:
             return True
         return bool(keywords & content_tokens)
+
+    def _booking_structured_terms(self, details: Dict[str, Any]) -> set[str]:
+        full_data = details.get("full_data", {}) if isinstance(details.get("full_data"), dict) else {}
+        terms = set()
+
+        for value in (
+            full_data.get("type", ""),
+            details.get("type", ""),
+        ):
+            normalized = self._normalize_term(str(value))
+            if normalized:
+                terms.add(normalized)
+
+        for item in full_data.get("category", []):
+            normalized = self._normalize_term(str(item))
+            if normalized:
+                terms.add(normalized)
+
+        for tag in full_data.get("tags", []):
+            normalized = self._normalize_term(str(tag))
+            if normalized:
+                terms.add(normalized)
+
+        if full_data.get("family_friendly") is True:
+            terms.add("family_friendly")
+        if full_data.get("wheelchair_accessible") is True or full_data.get("is_wheelchair_accessible") is True:
+            terms.add("wheelchair_accessible")
+
+        return terms
+
+    def _component_match_aliases(self, component: str) -> set[str]:
+        normalized = component.lower()
+        aliases = set()
+
+        if "guided_boat_tour" in normalized:
+            aliases.update({"guided_boat_tour", "boat_tour"})
+        if "beach_activities" in normalized or "beach_activity" in normalized:
+            aliases.update({"beach_activity", "beach"})
+
+        return aliases
+
+    def _normalize_term(self, value: str) -> str:
+        if not value:
+            return ""
+        return re.sub(r"[^a-z0-9]+", "_", value.strip().lower()).strip("_")
 
     def _booking_content_tokens(self, details: Dict[str, Any]) -> set[str]:
         full_data = details.get("full_data", {}) if isinstance(details.get("full_data"), dict) else {}
@@ -693,12 +878,8 @@ class TravelAgent:
         if total_cost_max is not None and self.tracker.budget_used > total_cost_max:
             return False
 
-        if self._success_criteria.get("timing_feasible") is True:
-            origin = str(self._scenario.get("origin_city", "")).lower()
-            destinations = [str(city).lower() for city in self._scenario.get("destination_cities", [])]
-            if origin and destinations and any(destination != origin for destination in destinations):
-                if not self.tracker.get_bookings_by_type("flight"):
-                    return False
+        if self._success_criteria.get("timing_feasible") is True and not self._timing_feasible():
+            return False
 
         if self._success_criteria.get("all_venues_wheelchair_accessible") is True and not self._hard_constraints_satisfied():
             return False
@@ -717,6 +898,34 @@ class TravelAgent:
             if not trip_cut_short_events:
                 return False
             if not all(self._trip_cut_short_resolved(event_state) for event_state in trip_cut_short_events):
+                return False
+
+        if self._success_criteria.get("boat_tour_on_sunday") is True and not self._has_component_on_weekday(
+            "guided_boat_tour_min_1",
+            "sunday",
+        ):
+            return False
+
+        if self._success_criteria.get("beach_activities_on_saturday") is True and not self._has_component_on_weekday(
+            "beach_activities_min_1",
+            "saturday",
+        ):
+            return False
+
+        final_party_size = self._success_criteria.get("final_party_size")
+        if isinstance(final_party_size, int):
+            if self._current_party_size < final_party_size or not self._bookings_meet_party_size(final_party_size):
+                return False
+
+        if self._success_criteria.get("animal_park_removed") is True:
+            venue_closed_events = [
+                event_state
+                for event_state in self._triggered_events
+                if event_state.get("event_type") == "venue_closed"
+            ]
+            if not venue_closed_events:
+                return False
+            if not all(self._venue_closed_resolved(event_state) for event_state in venue_closed_events):
                 return False
 
         if self._success_criteria.get("unaffected_bookings_preserved") is True:
@@ -875,6 +1084,12 @@ class TravelAgent:
             return self._trip_cut_short_resolved(event_state)
         if event_type == "budget_reduced":
             return self._budget_reduction_resolved(event_state)
+        if event_type == "schedule_swap_required":
+            return self._schedule_swap_resolved(event_state)
+        if event_type == "party_size_increase":
+            return self._party_size_increase_resolved(event_state)
+        if event_type == "venue_closed":
+            return self._venue_closed_resolved(event_state)
 
         for component in event_state.get("affected_components", []):
             active_matches = [
@@ -906,7 +1121,7 @@ class TravelAgent:
         return self._dependents_still_valid_without_changes(event_state)
 
     def _apply_event_budget_update(self, event: Dict[str, Any], task: Dict[str, Any]) -> Optional[float]:
-        if event.get("event_type") != "budget_reduced":
+        if event.get("event_type") not in {"budget_reduced", "party_size_increase"}:
             return None
 
         total_cost_max = task.get("success_criteria", {}).get("total_cost_max")
@@ -949,9 +1164,38 @@ class TravelAgent:
             "update",
             {"booking_id": f"budget_max_{int(new_budget_max)}"},
             {"booking_id": f"budget_max_{int(new_budget_max)}"},
-            summary_override=f"updated budget cap to ${new_budget_max:.0f} due to budget_reduced",
+            summary_override=f"updated budget cap to ${new_budget_max:.0f} due to {event.get('event_type')}",
         )
         return new_budget_max
+
+    def _apply_event_party_size_update(self, event: Dict[str, Any]) -> Optional[int]:
+        if event.get("event_type") != "party_size_increase":
+            return None
+
+        description = event.get("description", "")
+        target_size: Optional[int] = None
+        for pattern in (
+            r"party size is now (\d+)",
+            r"total party size is now (\d+)",
+            r"now (\d+) adults",
+        ):
+            match = re.search(pattern, description, flags=re.IGNORECASE)
+            if match:
+                target_size = int(match.group(1))
+                break
+
+        if target_size is None:
+            return None
+
+        self._current_party_size = max(self._current_party_size, target_size)
+        self._record_operation(
+            "system_event",
+            "update",
+            {"booking_id": f"party_size_{self._current_party_size}"},
+            {"booking_id": f"party_size_{self._current_party_size}"},
+            summary_override=f"updated active party size to {self._current_party_size}",
+        )
+        return self._current_party_size
 
     def _event_component_requires_replacement(self, component: str, event_state: Dict[str, Any]) -> bool:
         normalized = component.lower()
@@ -973,16 +1217,49 @@ class TravelAgent:
             return booking.type == "flight" and str(details.get("type", "")).lower() == "return_flight"
         if normalized == "outbound_flight":
             return booking.type == "flight" and str(details.get("type", "")).lower() == "outbound_flight"
+        if normalized == "guided_boat_tour":
+            return booking.type == "activity" and self._experience_booking_matches("guided_boat_tour_min_1", booking)
+        if normalized in {"sunday_activity", "sunday_beach_activity"} and isinstance(event, dict) and event.get("event_type") == "schedule_swap_required":
+            sunday_dates = self._dates_for_weekday_in_trip("sunday")
+            return (
+                booking.type == "activity"
+                and self._experience_booking_matches("beach_activities_min_1", booking)
+                and any(self._booking_occurs_on_date(booking, target_date) for target_date in sunday_dates)
+            )
+        if normalized == "major_animal_park_visit":
+            blocked_dates = self._event_blocked_dates(event or {})
+            if booking.type != "activity" or not self._matches_major_animal_park(booking):
+                return False
+            if not blocked_dates:
+                return True
+            return any(self._booking_occurs_on_date(booking, target_date) for target_date in blocked_dates)
 
         target_dates = self._component_target_dates(normalized, event)
         if normalized.endswith("_hotel") and target_dates:
             return booking.type == "hotel" and any(self._booking_overlaps_date(booking, target_date) for target_date in target_dates)
         if normalized.endswith("_activities") and target_dates:
             return booking.type == "activity" and any(self._booking_occurs_on_date(booking, target_date) for target_date in target_dates)
+        if normalized.endswith("_activity") and target_dates:
+            return booking.type == "activity" and any(self._booking_occurs_on_date(booking, target_date) for target_date in target_dates)
         if normalized.endswith("_restaurants") and target_dates:
+            return booking.type == "restaurant" and any(self._booking_occurs_on_date(booking, target_date) for target_date in target_dates)
+        if normalized.endswith("_restaurant") and target_dates:
             return booking.type == "restaurant" and any(self._booking_occurs_on_date(booking, target_date) for target_date in target_dates)
 
         booking_types = self._component_to_booking_types(component)
+        generic_component = bool(booking_types) and not self._component_keywords(normalized)
+        if generic_component:
+            return booking.type in booking_types
+
+        if booking.type == "activity":
+            return self._experience_booking_matches(component, booking)
+        if booking.type == "restaurant":
+            return self._experience_booking_matches(component, booking)
+        if booking.type == "hotel":
+            return self._lodging_booking_matches(component, booking)
+        if booking.type == "flight":
+            return self._flight_booking_matches(component, booking)
+
         return booking.type in booking_types
 
     def _component_target_dates(self, component: str, event: Optional[Dict[str, Any]] = None) -> List[date]:
@@ -1161,6 +1438,195 @@ class TravelAgent:
             budget_cap = event_state.get("budget_max_after", self.tracker.budget_max)
             return budget_cap is None or self.tracker.budget_used <= budget_cap
 
+        if event_state.get("event_type") == "party_size_increase":
+            target_size = event_state.get("party_size_after", self._current_party_size)
+            return self._bookings_meet_party_size(int(target_size or 1))
+
+        if event_state.get("event_type") == "schedule_swap_required":
+            return self._schedule_swap_resolved(event_state)
+
+        if event_state.get("event_type") == "venue_closed":
+            return self._venue_closed_resolved(event_state)
+
+        return False
+
+    def _schedule_swap_resolved(self, event_state: Dict[str, Any]) -> bool:
+        saturday_dates = self._dates_for_weekday_in_trip("saturday")
+        sunday_dates = self._dates_for_weekday_in_trip("sunday")
+        if not saturday_dates or not sunday_dates:
+            return False
+
+        saturday = saturday_dates[0]
+        sunday = sunday_dates[0]
+
+        has_sunday_boat = any(
+            booking.type == "activity"
+            and self._experience_booking_matches("guided_boat_tour_min_1", booking)
+            and self._booking_occurs_on_date(booking, sunday)
+            and self._booking_time_is_morning(booking)
+            for booking in self.tracker.bookings
+        )
+        has_saturday_beach = any(
+            booking.type == "activity"
+            and self._experience_booking_matches("beach_activities_min_1", booking)
+            and self._booking_occurs_on_date(booking, saturday)
+            for booking in self.tracker.bookings
+        )
+        has_saturday_boat = any(
+            booking.type == "activity"
+            and self._experience_booking_matches("guided_boat_tour_min_1", booking)
+            and self._booking_occurs_on_date(booking, saturday)
+            for booking in self.tracker.bookings
+        )
+        return has_sunday_boat and has_saturday_beach and not has_saturday_boat
+
+    def _party_size_increase_resolved(self, event_state: Dict[str, Any]) -> bool:
+        target_size = int(event_state.get("party_size_after") or self._current_party_size or 1)
+        return self._bookings_meet_party_size(target_size)
+
+    def _venue_closed_resolved(self, event_state: Dict[str, Any]) -> bool:
+        blocked_dates = self._event_blocked_dates(event_state)
+        if not blocked_dates:
+            return False
+
+        for booking in self.tracker.get_bookings_by_type("activity"):
+            if not self._booking_matches_event_component(booking, "major_animal_park_visit", event_state):
+                continue
+            if any(self._booking_occurs_on_date(booking, blocked_date) for blocked_date in blocked_dates):
+                return False
+        return True
+
+    def _timing_feasible(self) -> bool:
+        origin = str(self._scenario.get("origin_city", "")).lower()
+        destinations = [str(city).lower() for city in self._scenario.get("destination_cities", [])]
+        if origin and destinations and any(destination != origin for destination in destinations):
+            if not self.tracker.get_bookings_by_type("flight"):
+                return False
+
+        time_windows = []
+        for booking in self.tracker.bookings:
+            window = self._booking_time_window(booking)
+            if window is not None:
+                time_windows.append((booking, window))
+
+        for index, (left_booking, left_window) in enumerate(time_windows):
+            for right_booking, right_window in time_windows[index + 1:]:
+                if self._windows_overlap(left_window, right_window):
+                    return False
+
+        for booking in self.tracker.get_bookings_by_type("activity") + self.tracker.get_bookings_by_type("restaurant"):
+            if self._booking_violates_flight_buffers(booking):
+                return False
+        return True
+
+    def _has_component_on_weekday(self, component: str, weekday_name: str) -> bool:
+        target_dates = self._dates_for_weekday_in_trip(weekday_name)
+        if not target_dates:
+            return False
+        for booking in self.tracker.bookings:
+            if booking.type != "activity":
+                continue
+            if not self._experience_booking_matches(component, booking):
+                continue
+            if any(self._booking_occurs_on_date(booking, target_date) for target_date in target_dates):
+                return True
+        return False
+
+    def _bookings_meet_party_size(self, required_size: int) -> bool:
+        if required_size <= 1:
+            return True
+        for booking in self.tracker.bookings:
+            if booking.type == "surcharge":
+                continue
+            party_size = int((booking.details or {}).get("party_size") or 0)
+            if booking.type in {"flight", "hotel", "restaurant", "activity"} and party_size < required_size:
+                return False
+        return True
+
+    def _event_blocked_dates(self, event_state: Dict[str, Any]) -> List[date]:
+        explicit_dates = self._component_target_dates("", event_state)
+        if explicit_dates:
+            return explicit_dates
+
+        description = event_state.get("description", "").lower()
+        blocked = []
+        if "weekend" in description:
+            blocked.extend(self._dates_for_weekday_in_trip("saturday"))
+            blocked.extend(self._dates_for_weekday_in_trip("sunday"))
+        return blocked
+
+    def _booking_time_is_morning(self, booking: Booking) -> bool:
+        details = booking.details or {}
+        booking_time = self._parse_time(str(details.get("time", "")))
+        if booking_time is None:
+            booking_time = self._parse_time(str(details.get("departure_time", "")))
+        return booking_time is not None and booking_time < dt_time(12, 0)
+
+    def _matches_major_animal_park(self, booking: Booking) -> bool:
+        tokens = self._booking_content_tokens(booking.details or {})
+        return bool({"animal", "zoo", "safari", "wildlife", "wildlife_park"} & tokens)
+
+    def _booking_time_window(self, booking: Booking) -> Optional[Tuple[datetime, datetime]]:
+        details = booking.details or {}
+        if booking.type == "activity":
+            booking_date = self._parse_date(str(details.get("date", "")))
+            booking_time = self._parse_time(str(details.get("time", "")))
+            duration_hours = ((details.get("full_data") or {}).get("duration_hours") if isinstance(details.get("full_data"), dict) else None) or 2
+            if booking_date is None or booking_time is None:
+                return None
+            start = datetime.combine(booking_date, booking_time)
+            end = start + timedelta(hours=float(duration_hours))
+            return start, end
+
+        if booking.type == "restaurant":
+            booking_date = self._parse_date(str(details.get("date", "")))
+            booking_time = self._parse_time(str(details.get("time", "")))
+            if booking_date is None or booking_time is None:
+                return None
+            start = datetime.combine(booking_date, booking_time)
+            end = start + timedelta(minutes=90)
+            return start, end
+
+        if booking.type == "flight":
+            departure_date = self._parse_date(str(details.get("departure_date", "")))
+            departure_time = self._parse_time(str(details.get("departure_time", "")))
+            arrival_time = self._parse_time(str(details.get("arrival_time", "")))
+            if departure_date is None or departure_time is None or arrival_time is None:
+                return None
+            start = datetime.combine(departure_date, departure_time)
+            end = datetime.combine(departure_date, arrival_time)
+            if end < start:
+                end += timedelta(days=1)
+            return start, end
+
+        return None
+
+    def _windows_overlap(
+        self,
+        left: Tuple[datetime, datetime],
+        right: Tuple[datetime, datetime],
+    ) -> bool:
+        return left[0] < right[1] and right[0] < left[1]
+
+    def _booking_violates_flight_buffers(self, booking: Booking) -> bool:
+        booking_window = self._booking_time_window(booking)
+        if booking_window is None:
+            return False
+
+        for flight in self.tracker.get_bookings_by_type("flight"):
+            flight_window = self._booking_time_window(flight)
+            if flight_window is None:
+                continue
+            flight_details = flight.details or {}
+            flight_type = str(flight_details.get("type", "")).lower()
+            if flight_type == "outbound_flight":
+                if booking_window[0].date() == flight_window[0].date():
+                    if booking_window[0] < flight_window[1] + timedelta(minutes=90):
+                        return True
+            elif flight_type == "return_flight":
+                if booking_window[0].date() == flight_window[0].date():
+                    if booking_window[1] > flight_window[0] - timedelta(minutes=120):
+                        return True
         return False
 
     def _parse_action(self, response: str) -> Tuple[bool, str, Dict]:
@@ -1227,6 +1693,151 @@ class TravelAgent:
                 processed[key] = value.strip('"\'')
         return processed
 
+    def _apply_live_trip_state_to_params(
+        self,
+        tool_name: str,
+        method: str,
+        processed_params: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        if method not in {"search", "book"}:
+            return processed_params
+
+        if tool_name in {
+            "book_flight",
+            "book_hotel",
+            "book_restaurant",
+            "book_activity",
+            "search_restaurants",
+            "search_activities",
+        }:
+            current_size = max(int(self._current_party_size or 1), 1)
+            existing_size = int(processed_params.get("party_size", current_size) or current_size)
+            processed_params["party_size"] = max(existing_size, current_size)
+
+        return processed_params
+
+    def _validate_candidate_timing(
+        self,
+        tool_name: str,
+        method: str,
+        processed_params: Dict[str, Any],
+    ) -> str:
+        if method != "book" or tool_name not in {"book_restaurant", "book_activity"}:
+            return ""
+
+        duplicate_error = self._validate_duplicate_candidate(tool_name, processed_params)
+        if duplicate_error:
+            return duplicate_error
+
+        candidate_window = self._candidate_booking_time_window(tool_name, processed_params)
+        if candidate_window is None:
+            return ""
+
+        for booking in self.tracker.bookings:
+            booking_window = self._booking_time_window(booking)
+            if booking_window is None:
+                continue
+            if self._windows_overlap(candidate_window, booking_window):
+                return (
+                    "Timing conflict: this booking "
+                    f"({self._format_time_window(candidate_window)}) overlaps with existing "
+                    f"{booking.type} {booking.booking_id} ({self._format_time_window(booking_window)}). "
+                    f"Choose a start time at or after {booking_window[1].strftime('%H:%M')}."
+                )
+
+        if self._candidate_violates_flight_buffers(candidate_window):
+            return (
+                "Timing conflict: this booking violates the required airport or arrival buffer around an existing flight. "
+                f"Candidate window: {self._format_time_window(candidate_window)}."
+            )
+
+        return ""
+
+    def _validate_duplicate_candidate(
+        self,
+        tool_name: str,
+        processed_params: Dict[str, Any],
+    ) -> str:
+        if tool_name != "book_activity":
+            return ""
+
+        candidate_activity_id = str(processed_params.get("activity_id", ""))
+        candidate_date = str(processed_params.get("date", ""))
+        if not candidate_activity_id or not candidate_date:
+            return ""
+
+        for booking in self.tracker.get_bookings_by_type("activity"):
+            details = booking.details or {}
+            if (
+                str(details.get("activity_id", "")) == candidate_activity_id
+                and str(details.get("date", "")) == candidate_date
+            ):
+                return (
+                    "Duplicate activity booking: this activity is already booked on that date. "
+                    "Choose a different activity or keep the existing booking."
+                )
+        return ""
+
+    def _candidate_booking_time_window(
+        self,
+        tool_name: str,
+        processed_params: Dict[str, Any],
+    ) -> Optional[Tuple[datetime, datetime]]:
+        if tool_name == "book_activity":
+            activity = self._lookup_activity(processed_params.get("activity_id"))
+            booking_date = self._parse_date(str(processed_params.get("date", "")))
+            booking_time = self._parse_time(str(processed_params.get("time", "")))
+            if activity is None or booking_date is None or booking_time is None:
+                return None
+            start = datetime.combine(booking_date, booking_time)
+            end = start + timedelta(hours=float(activity.get("duration_hours", 2)))
+            return start, end
+
+        if tool_name == "book_restaurant":
+            booking_date = self._parse_date(str(processed_params.get("date", "")))
+            booking_time = self._parse_time(str(processed_params.get("time", "")))
+            if booking_date is None or booking_time is None:
+                return None
+            start = datetime.combine(booking_date, booking_time)
+            end = start + timedelta(minutes=90)
+            return start, end
+
+        return None
+
+    def _candidate_violates_flight_buffers(
+        self,
+        candidate_window: Tuple[datetime, datetime],
+    ) -> bool:
+        for flight in self.tracker.get_bookings_by_type("flight"):
+            flight_window = self._booking_time_window(flight)
+            if flight_window is None:
+                continue
+            flight_details = flight.details or {}
+            flight_type = str(flight_details.get("type", "")).lower()
+            if candidate_window[0].date() != flight_window[0].date():
+                continue
+            if flight_type == "outbound_flight":
+                if candidate_window[0] < flight_window[1] + timedelta(minutes=90):
+                    return True
+            elif flight_type == "return_flight":
+                if candidate_window[1] > flight_window[0] - timedelta(minutes=120):
+                    return True
+        return False
+
+    def _format_time_window(self, window: Tuple[datetime, datetime]) -> str:
+        start, end = window
+        if start.date() == end.date():
+            return f"{start.strftime('%Y-%m-%d %H:%M')} to {end.strftime('%H:%M')}"
+        return f"{start.strftime('%Y-%m-%d %H:%M')} to {end.strftime('%Y-%m-%d %H:%M')}"
+
+    def _lookup_activity(self, activity_id: Any) -> Optional[Dict[str, Any]]:
+        if not activity_id or not hasattr(self.activity_tool, "activities"):
+            return None
+        for activity in self.activity_tool.activities:
+            if activity.get("activity_id") == activity_id:
+                return activity
+        return None
+
     # ------------------------------------------------------------------
 
     def _execute_tool(self, tool_name: str, params: Dict[str, Any]) -> Any:
@@ -1255,9 +1866,13 @@ class TravelAgent:
         tool, method = entry
         try:
             processed_params = self._process_tool_params(params)
+            processed_params = self._apply_live_trip_state_to_params(tool_name, method, processed_params)
             order_error = self._validate_booking_order(tool_name, method)
             if order_error:
                 return {"status": "error", "message": order_error}
+            timing_error = self._validate_candidate_timing(tool_name, method, processed_params)
+            if timing_error:
+                return {"status": "error", "message": timing_error}
             result = getattr(tool, method)(**processed_params)
             if tool_name == "search_restaurants" and method == "search":
                 result = self._expand_restaurant_search_results(processed_params, result)

@@ -186,7 +186,9 @@ Think about how to proceed given this issue."""
  
 def create_final_itinerary_prompt(
     confirmed_bookings_text: str,
+    budget_context_text: str,
     requirement_status_text: str,
+    success_criteria_status_text: str,
     operation_log_text: str,
 ) -> str:
     """
@@ -199,9 +201,17 @@ The following bookings were ACTUALLY confirmed by the system. Use ONLY these —
 
 {confirmed_bookings_text}
 
+The following budget context was computed by the system. Treat it as ground truth.
+
+{budget_context_text}
+
 The following requirement status was computed by the system. Treat it as ground truth.
 
 {requirement_status_text}
+
+The following success-criteria status was computed by the system. Treat it as ground truth.
+
+{success_criteria_status_text}
 
 The following replanning action log was recorded by the system. Use it as the audit trail.
 
@@ -212,15 +222,29 @@ Write a FINAL ITINERARY using the confirmed bookings above.
 - Do NOT write THOUGHT or ACTION lines.
 - For any missing components (e.g. no hotel booked), explicitly state "not booked" — do not fabricate a booking.
 - Do NOT claim unmet requirements are satisfied.
+- Do NOT claim unmet success criteria are satisfied.
+- Use the exact booked dates and times from the confirmed booking details. Do not replace them with vague phrases like "morning" or "afternoon" when an exact time exists.
+- For flights, hotels, activities, and restaurants, use the exact booked name/type from the confirmed booking facts. Do not relabel a booking based on earlier reasoning.
+- In the budget summary, use the system's current active budget limit. If the budget changed during replanning, do not present the original budget as the active limit.
+- Under "Requirement status" and "Success criteria status", copy the system-computed status faithfully instead of paraphrasing it.
+- Do NOT add a separate "All Hard Constraints Met" summary section.
 
-Format:
-- Flights (booking ID, route, date, cost)
-- Hotel (booking ID, name, dates, cost — or "not booked")
-- Activities (booking ID, name, date, cost — or "none booked")
-- Restaurants (booking ID, name, date, cost — or "none booked")
-- BUDGET SUMMARY TABLE: Display the system's "Total confirmed spend" directly as the GRAND TOTAL. If you used the `record_surcharge` tool, list that fee as a line item for transparency, but DO NOT mathematically add it on top of the system total (the system has already included it).
-- Requirement status
-- Replanning audit trail
+Required headings and order:
+1. Flights
+2. Hotel
+3. Activities
+4. Restaurants
+5. Budget Summary
+6. Requirement Status
+7. Success Criteria Status
+8. Replanning Audit Trail
+
+Formatting rules:
+- Flights: include booking ID, route, exact date, exact time, and cost
+- Hotel: include booking ID, name, dates, and cost — or "not booked"
+- Activities: include booking ID, exact date, exact time, and cost — or "none booked"
+- Restaurants: include booking ID, exact date, exact time, and cost — or "none booked"
+- BUDGET SUMMARY TABLE: Display the system's "Total confirmed spend" directly as the GRAND TOTAL and the system's "current_active_budget_limit" as the active budget cap. If you mention the original budget at all, label it as historical context only. If you used the `record_surcharge` tool, list that fee as a line item for transparency, but DO NOT mathematically add it on top of the system total (the system has already included it).
 
 Begin your response with: FINAL ITINERARY"""
  

@@ -1,0 +1,16 @@
+{
+  "task_id": "task_014",
+  "task_file": "benchmarks/tasks/medium/medium9.json",
+  "title": "San Francisco Weekend with Unexpected Plus-One",
+  "difficulty": "medium",
+  "success": true,
+  "metadata": {
+    "total_tokens": 32299,
+    "api_calls": 23,
+    "tool_calls": 22,
+    "start_time": 1776619229.4039779,
+    "end_time": 1776619469.7169962,
+    "time_elapsed": 240.31,
+    "wall_time_seconds": 240.31
+  }
+}

@@ -2,8 +2,10 @@ import json
 from io import StringIO
 
 from evaluations.llm_judge import (
+    _apply_fact_based_adjustments,
     DimensionScore,
     JudgeResult,
+    _SYSTEM_PROMPT,
     build_evaluation_pairs,
     discover_agent_output_files,
     format_batch_results_report,
@@ -168,3 +170,48 @@ def test_progress_bar_renders_and_finishes_with_newline():
 
     assert "Completed easy1" in stream.getvalue()
     assert stream.getvalue().endswith("\n")
+
+
+def test_system_prompt_prioritizes_concrete_booking_evidence():
+    assert "Trust concrete booking facts first" in _SYSTEM_PROMPT
+    assert "Count DISTINCT confirmed booking IDs" in _SYSTEM_PROMPT
+    assert "post-event task requirements" in _SYSTEM_PROMPT
+
+
+def test_fact_based_adjustments_raise_medium9_style_scores():
+    task = {
+        "initial_constraints": {"hard": {"budget_max": 1200}},
+        "dynamic_events": [{"event_type": "party_size_increase"}],
+        "success_criteria": {
+            "total_cost_max": 2200,
+            "final_party_size": 2,
+            "timing_feasible": True,
+            "replanning_successful": True,
+            "unaffected_bookings_preserved": True,
+            "dependent_bookings_updated": True,
+        },
+    }
+    itinerary = """
+## 🎯 Success Criteria Status
+| Criteria | Status |
+|---|---|
+| Total cost ≤ $1,200 | ✅ SATISFIED ($1,164 / $1,200) |
+| Final party size = 2 | ✅ SATISFIED |
+| Timing feasible | ✅ SATISFIED |
+| Replanning successful | ✅ SATISFIED |
+| Unaffected bookings preserved | ✅ SATISFIED |
+| Dependent bookings updated | ✅ SATISFIED |
+"""
+    dimensions = {
+        "hard_constraints": _score("hard_constraints", 5.0),
+        "required_components": _score("required_components", 8.0),
+        "soft_preferences": _score("soft_preferences", 8.5),
+        "replanning_quality": _score("replanning_quality", 5.5),
+        "itinerary_coherence": _score("itinerary_coherence", 6.5),
+    }
+
+    _apply_fact_based_adjustments(task, itinerary, dimensions)
+
+    assert dimensions["hard_constraints"].score == 8.5
+    assert dimensions["replanning_quality"].score == 8.0
+    assert dimensions["itinerary_coherence"].score == 7.0

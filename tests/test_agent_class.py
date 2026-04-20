@@ -17,7 +17,10 @@ TASKS = [
     #"benchmarks/tasks/easy/easy4.json",
     #"benchmarks/tasks/easy/easy5.json",
     "benchmarks/tasks/medium/medium6.json",
-    #"benchmarks/tasks/medium/medium7.json"
+    #"benchmarks/tasks/medium/medium7.json",
+    #"benchmarks/tasks/medium/medium8.json",
+    #"benchmarks/tasks/medium/medium9.json",
+    #"benchmarks/tasks/medium/medium10.json"
 ]
 
 OUTPUT_DIR = PROJECT_ROOT / "agent_planning_results"
