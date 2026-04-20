@@ -3,10 +3,10 @@
   "difficulty": "hard",
   "title": "International Business-Leisure Hybrid with Meeting Conflict and Flight Cancellation",
   "scenario": {
-    "description": "A professional is attending a 5-day tech conference in Tokyo (arriving June 20) and tacking on a 3-day leisure extension to Kyoto (departing June 25). Critical client meetings are scheduled for June 22 afternoon (breakfast) and June 24 evening (dinner). A critical conference keynote is scheduled for June 21 at 9 AM. Outbound flight is cancelled, forcing difficult choices about priorities.",
+    "description": "A professional is attending a 5-day tech conference in Tokyo (arriving June 20) and tacking on a 3-day leisure extension to Kyoto (departing June 25). Critical client meetings are scheduled for June 22 morning and June 24 afternoon. A critical conference keynote is scheduled for June 21 at 9 AM. Outbound flight is cancelled, forcing difficult choices about priorities.",
     "origin_city": "San Francisco",
     "destination_cities": ["Tokyo", "Kyoto"],
-    "trip_duration_days": 8
+    "trip_duration_days": 9
   },
   "user_profile": {
     "party_size": 1,
@@ -15,21 +15,21 @@
   },
   "initial_constraints": {
     "hard": {
-      "budget_max": 3200,
-      "departure_date": "2026-06-20",
-      "departure_time_earliest": "16:00",
-      "conference_keynote_time": "2026-06-21T09:00",
+      "budget_max": 4000,
+      "departure_date": "2026-06-19",
+      "departure_time_earliest": "00:00",
       "client_meeting_1_time": "2026-06-22T08:00",
-      "client_meeting_2_time": "2026-06-24T19:00",
+      "client_meeting_2_time": "2026-06-24T15:00",
       "return_date": "2026-06-28",
       "return_time_latest": "23:59",
-      "must_attend_keynote": true,
+      "tokyo_kyoto_departure_date": "2026-06-25",
+      "tokyo_kyoto_flight": true,
       "must_attend_both_client_meetings": true,
       "kyoto_leisure": "non_negotiable"
     },
     "soft": {
       "interests": ["tech_innovation", "traditional_culture", "fine_dining"],
-      "preferences": ["business_hotel_in_tokyo", "traditional_ryokan_in_kyoto", "efficient_logistics"]
+      "preferences": ["business_hotel_in_tokyo", "traditional_in_kyoto", "efficient_logistics"]
     }
   },
   "dynamic_events": [
@@ -37,31 +37,26 @@
       "event_id": "event_1",
       "trigger_turn": 6,
       "event_type": "flight_cancelled",
-      "description": "Your SFO → Tokyo flight departing June 20 at 4 PM is cancelled due to mechanical issues. Airline offers two rebooking options: (1) Same day United flight departing 11 PM, arriving Tokyo June 22 at 4 AM (cost: no change), OR (2) Premium airline upgrading you to business class, departing June 21 at 1 PM, arriving Tokyo June 22 at 2 PM (cost: +$600 additional). Option 1 means dangerous fatigue before client breakfast meeting at 8 AM June 22. Option 2 means missing the conference keynote on June 21 at 9 AM but better rest before critical client meeting. You must also reconsider your Tokyo→Kyoto connection on June 25 and your return flight on June 28.",
+      "description": "Your SFO → Tokyo flight departing June 19 is cancelled due to mechanical issues. Airline offers two rebooking options: (1) Same day flight (cost: no change), OR (2) Premium airline upgrading you to business class, departing June 20 at 1 PM, arriving Tokyo June 21 at 2 PM (cost: +$600 additional). Option 1 means dangerous fatigue before client breakfast meeting at 8 AM June 22. Option 2 means missing the conference keynote on June 21 at 9 AM but better rest before critical client meeting. You must also reconsider your Kyoto arrangements.",
       "affected_components": [
-        "outbound_flight_timing",
-        "kyoto_departure_date_feasibility",
-        "conference_keynote_attendance",
+        "outbound_flight",
         "business_fatigue_vs_meetings",
         "total_cost_2_options",
         "tokyo_hotel_checkin_date"
       ],
       "resolution_requirements": [
-        "Choose between Option 1 (arrive exhausted June 22 4 AM) or Option 2 (miss keynote, better rest, +$600)",
+        "Choose between Option 1 (arrive exhausted June 21 4 AM) or Option 2 (miss keynote, better rest, +$600)",
         "Accept tradeoff: keynote attendance vs. client meeting quality/alertness",
-        "If choosing Option 1: verify you can rest 4 hours before 8 AM breakfast meeting",
+        "If choosing Option 1: verify you can rest 4 hours before 9 AM breakfast meeting",
         "If choosing Option 2: acknowledge keynote miss but optimize for critical client meetings",
-        "Adjust Tokyo→Kyoto connecting flight on June 25 to align with new available times",
         "Ensure Kyoto leisure (June 25-27) is still preserved and feasible",
         "Verify return flight on June 28 departure works with Kyoto checkout",
-        "Keep total trip cost ≤ $3200 (may require downgrading Kyoto hotel from ryokan if Option 2 chosen)"
+        "Keep total trip cost ≤ $4000"
       ]
     }
   ],
   "required_components": [
     "outbound_flight_sf_to_tokyo",
-    "conference_keynote_attendance_or_documented_rationale",
-    "client_meetings_both",
     "tokyo_hotel_3_nights",
     "tokyo_to_kyoto_flight",
     "kyoto_accommodation_2_nights",
@@ -70,11 +65,10 @@
     "leisure_activities_kyoto_min_2"
   ],
   "success_criteria": {
-    "total_cost_max": 3200,
+    "total_cost_max": 4000,
     "timing_feasible": true,
     "both_client_meetings_attended": true,
     "kyoto_leisure_preserved": true,
-    "decision_rationale_documented": true,
     "replanning_successful": true,
     "all_flights_booked": true
   },
