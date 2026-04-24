@@ -71,6 +71,29 @@ def test_required_component_accessibility_and_counts_work():
     assert agent._component_satisfied("accessible_restaurants_min_2") is True
 
 
+def test_live_jazz_required_components_count_activity_bookings():
+    agent = make_agent()
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_jazz_1",
+            type="activity",
+            details={"name": "Preservation Hall Jazz Nightly Concert", "full_data": {"type": "live_jazz", "tags": ["live_jazz", "jazz", "live_music"]}},
+            cost=60.0,
+        )
+    )
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_jazz_2",
+            type="activity",
+            details={"name": "Frenchmen Street Jazz Club Crawl", "full_data": {"type": "live_jazz", "tags": ["live_jazz", "jazz", "live_music"]}},
+            cost=40.0,
+        )
+    )
+
+    assert agent._matched_component_count("live_jazz_min_2") == 2
+    assert agent._component_satisfied("live_jazz_min_2") is True
+
+
 def test_booking_order_blocks_optional_activities_until_required_hotel_done():
     agent = make_agent()
     agent._required_components = ["hotel_2_nights"]
@@ -187,7 +210,7 @@ def test_requirement_status_and_operation_log_text_are_built_from_state():
     requirement_text = agent._build_requirement_status_text()
     operation_text = agent._build_operation_log_text()
 
-    assert "- hotel_2_nights: SATISFIED (matched 1 / required 1)" in requirement_text
+    assert "- hotel_2_nights: SATISFIED (matched 2 / required 2)" in requirement_text
     assert "- beach_activities_min_2: UNMET (matched 1 / required 2)" in requirement_text
     assert operation_text == "- turn 5: book book_hotel -> confirmed bk_hotel_1"
 
@@ -231,6 +254,188 @@ def test_success_criteria_fail_when_trip_has_no_transport():
     agent._success_criteria = {"timing_feasible": True}
 
     assert agent._success_criteria_satisfied() is False
+
+
+def test_success_criteria_require_two_beach_activity_bookings_for_easy2():
+    agent = make_agent()
+    agent._success_criteria = {"beach_activities_min": 2}
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_MIA_001_20260314t1000",
+            type="activity",
+            details={
+                "name": "South Beach Guided Water Sports Package",
+                "date": "2026-03-14",
+                "time": "10:00",
+                "full_data": {"type": "beach_activity", "tags": ["beach_activity"]},
+            },
+            cost=65.0,
+        )
+    )
+
+    assert agent._success_criteria_satisfied() is False
+
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_MIA_001_20260315t1000",
+            type="activity",
+            details={
+                "name": "South Beach Guided Water Sports Package",
+                "date": "2026-03-15",
+                "time": "10:00",
+                "full_data": {"type": "beach_activity", "tags": ["beach_activity"]},
+            },
+            cost=65.0,
+        )
+    )
+
+    assert agent._success_criteria_satisfied() is True
+    assert agent._get_unmet_success_criteria() == []
+
+
+def test_miami_data_supports_two_true_beach_activities_for_easy2():
+    data = json.load(open("benchmarks/mock_data/activities.json", encoding="utf-8"))
+    activities = [
+        activity for activity in data["activities"]
+        if activity["city"] == "Miami"
+        and (
+            activity["type"] == "beach_activity"
+            or "beach_activity" in activity.get("tags", [])
+        )
+    ]
+
+    assert len(activities) >= 2
+
+
+def test_booking_summary_surfaces_unmet_beach_success_criterion_for_easy2():
+    agent = make_agent()
+    agent.tracker.add_constraint("budget_max", 800, is_hard=True)
+    agent._success_criteria = {"beach_activities_min": 2}
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_MIA_001_20260314t1000",
+            type="activity",
+            details={
+                "name": "South Beach Guided Water Sports Package",
+                "date": "2026-03-14",
+                "time": "10:00",
+                "full_data": {"type": "beach_activity", "tags": ["beach_activity"]},
+            },
+            cost=65.0,
+        )
+    )
+
+    summary = agent._booking_summary()
+
+    assert "Still need to spend on: required activities" in summary
+    assert "STILL NEEDED FOR SUCCESS CRITERIA:" in summary
+    assert "beach_activities_min (actual 1 / expected at least 2)" in summary
+
+
+def test_success_criteria_require_three_museum_bookings_for_easy4():
+    agent = make_agent()
+    agent._success_criteria = {"museums_included_min": 3}
+
+    for booking_id in ("bk_act_1", "bk_act_2"):
+        agent.tracker.add_booking(
+            Booking(
+                booking_id=booking_id,
+                type="activity",
+                details={
+                    "name": "Museum Visit",
+                    "full_data": {"type": "museum", "tags": ["museum", "art"]},
+                },
+                cost=25.0,
+            )
+        )
+
+    assert agent._success_criteria_satisfied() is False
+
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_act_3",
+            type="activity",
+            details={
+                "name": "Photography Museum Visit",
+                "full_data": {"type": "museum", "tags": ["museum", "photography"]},
+            },
+            cost=25.0,
+        )
+    )
+
+    assert agent._success_criteria_satisfied() is True
+
+
+def test_success_criteria_status_tracks_museum_proximity_for_easy4():
+    agent = make_agent()
+    agent._success_criteria = {"hotel_proximity_to_museums": "within_30min"}
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_hotel_NYC_004_20260502",
+            type="hotel",
+            details={
+                "hotel_name": "Brooklyn Budget Hostel",
+                "full_data": {
+                    "proximity_to_attractions": {
+                        "brooklyn_bridge": "3 miles",
+                        "williamsburg_restaurants": "steps",
+                        "subway_to_manhattan": "0.2 miles",
+                    }
+                },
+            },
+            cost=258.0,
+        )
+    )
+
+    status_text = agent._build_success_criteria_status_text()
+
+    assert agent._success_criteria_satisfied() is True
+    assert "hotel_proximity_to_museums: SATISFIED" in status_text
+
+
+def test_budget_context_uses_active_budget_only_after_reduction():
+    agent = make_agent()
+    agent.tracker.add_constraint("budget_max", 2200, is_hard=True)
+    agent._original_budget_max = 2200.0
+    agent.tracker.budget_max = 1700.0
+    agent.tracker.budget_used = 1250.0
+
+    budget_text = agent._build_budget_context_text()
+
+    assert "current_active_budget_limit: $1700.00" in budget_text
+    assert "total_confirmed_spend: $1250.00" in budget_text
+    assert "original_pre_event_budget_limit" not in budget_text
+    assert "budget_changed_during_replanning: yes" in budget_text
+
+
+def test_render_final_itinerary_uses_actual_booking_facts_and_active_budget():
+    agent = make_agent()
+    agent._scenario = {"origin_city": "Boston", "destination_cities": ["Miami"], "trip_duration_days": 3}
+    agent._required_components = ["outbound_flight", "return_flight", "hotel_3_nights"]
+    agent._success_criteria = {"total_cost_max": 1700}
+    agent._current_party_size = 1
+    agent.tracker.budget_max = 1700.0
+    agent._original_budget_max = 2200.0
+    agent.tracker.add_booking(
+        Booking(
+            booking_id="bk_hotel_MIA_004_20260313",
+            type="hotel",
+            details={
+                "hotel_name": "Cubanito Hostel & Inn",
+                "check_in": "2026-03-13",
+                "check_out": "2026-03-16",
+                "nights": 3,
+            },
+            cost=267.0,
+        )
+    )
+    agent.tracker.budget_used = 605.0
+
+    itinerary = agent._render_final_itinerary()
+
+    assert "Cubanito Hostel & Inn" in itinerary
+    assert "Original Budget" not in itinerary
+    assert "Active Budget Cap" in itinerary
 
 
 def test_hard_constraints_fail_on_accessibility_violation():
@@ -724,7 +929,8 @@ def test_budget_context_uses_current_active_cap_after_budget_reduction():
     budget_text = agent._build_budget_context_text()
 
     assert "current_active_budget_limit: $1700.00" in budget_text
-    assert "original_pre_event_budget_limit: $2200.00" in budget_text
+    assert "original_pre_event_budget_limit" not in budget_text
+    assert "budget_changed_during_replanning: yes" in budget_text
     assert "active_budget_note" in budget_text
 
 

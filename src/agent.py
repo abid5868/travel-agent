@@ -186,8 +186,7 @@ class TravelAgent:
                 if not due:
                     if "FINAL ITINERARY" in response:
                         self._use_full_model = True
-                        idx = response.find("FINAL ITINERARY")
-                        return "# " + response[idx:].strip() if idx != -1 else response
+                        return self._render_final_itinerary()
 
             # Nudge to wrap up when nearing the iteration limit.
             all_required_done = self._all_planning_requirements_satisfied()
@@ -212,27 +211,12 @@ class TravelAgent:
                 self._post_requirements_turns += 1
                 user_message_added = True
             elif ready_to_finalize or iteration >= max_iterations - 1:
-                final_prompt = create_final_itinerary_prompt(
-                    self._build_confirmed_bookings_text(),
-                    self._build_budget_context_text(),
-                    self._build_requirement_status_text(),
-                    self._build_success_criteria_status_text(),
-                    self._build_operation_log_text(),
-                )
-                self.conversation_history.append({"role": "user", "content": final_prompt})
-                self._use_full_model = True
-                user_message_added = True
+                return self._render_final_itinerary()
 
             if not user_message_added:
                 self.conversation_history.append({"role": "user", "content": "Continue planning."})
 
-        # Final call — always Sonnet, full tokens
-        if self.conversation_history and self.conversation_history[-1]["role"] == "user":
-            print("  [final] requesting itinerary...", flush=True)
-            self._use_full_model = True
-            return self._get_agent_response()
-
-        return self.conversation_history[-1]["content"] if self.conversation_history else ""
+        return self._render_final_itinerary()
 
     def _handle_dynamic_event(self, event: Dict[str, Any], itinerary: str, task: Dict[str, Any]) -> str:
         """Build and return a replanning prompt for a dynamic event."""
@@ -337,6 +321,9 @@ class TravelAgent:
         if self.tracker.budget_max:
             remaining = self.tracker.get_remaining_budget()
             still_needed_types = self._remaining_required_categories()
+            for category in self._remaining_success_criteria_categories():
+                if category not in still_needed_types:
+                    still_needed_types.append(category)
             budget_lines = [f"Budget remaining: ${remaining:.0f} of ${self.tracker.budget_max:.0f}"]
             if remaining < 0:
                 budget_lines.append(f"Do not finalize yet. Current plan is over budget by ${abs(remaining):.0f}.")
@@ -353,6 +340,11 @@ class TravelAgent:
                     budget_lines.append(
                         f"- {item['component']} (need {item['required']}, have {item['matched']})"
                     )
+            unmet_success_criteria = self._get_unmet_success_criteria()
+            if unmet_success_criteria:
+                budget_lines.append("Do not finalize yet. Unmet success criteria:")
+                for item in unmet_success_criteria:
+                    budget_lines.append(f"- {item}")
             elif self._should_optimize_soft_preferences():
                 budget_lines.append(
                     "All required components are satisfied. Use remaining budget to improve soft preferences before finalizing."
@@ -377,6 +369,13 @@ class TravelAgent:
                     done = self._component_satisfied(component)
                 checklist.append(f"  [{'x' if done else ' '}] {component}")
             parts.append("STILL NEEDED (book these before finalizing):\n" + "\n".join(checklist))
+
+        unmet_success_criteria = self._get_unmet_success_criteria()
+        if unmet_success_criteria:
+            parts.append(
+                "STILL NEEDED FOR SUCCESS CRITERIA:\n" +
+                "\n".join(f"  [ ] {item}" for item in unmet_success_criteria)
+            )
 
         # --- Already-searched queries ---
         if self._searched:
@@ -452,10 +451,9 @@ class TravelAgent:
             lines.append(f"- current_active_budget_limit: ${current_budget:.2f}")
             lines.append(f"- total_confirmed_spend: ${self.tracker.budget_used:.2f}")
             lines.append(f"- remaining_budget: ${self.tracker.get_remaining_budget():.2f}")
-        if self._original_budget_max is not None:
-            lines.append(f"- original_pre_event_budget_limit: ${self._original_budget_max:.2f}")
         if current_budget is not None and self._original_budget_max is not None and current_budget != self._original_budget_max:
-            lines.append("- active_budget_note: Use the current active budget limit in the final budget table. The original budget is historical context only.")
+            lines.append("- budget_changed_during_replanning: yes")
+            lines.append("- active_budget_note: Use only the current active budget limit in the final budget table. Mention any earlier budget only in the replanning audit trail if needed.")
         if not lines:
             return "No explicit budget context was recorded."
         return "\n".join(lines)
@@ -465,64 +463,19 @@ class TravelAgent:
             return "No explicit success criteria were specified."
 
         lines = []
-        active_ids = {booking.booking_id for booking in self.tracker.bookings}
         for name, expected in self._success_criteria.items():
-            if name == "total_cost_max":
-                actual = self.tracker.budget_used
-                satisfied = actual <= float(expected)
-                detail = f"actual ${actual:.2f} / max ${float(expected):.2f}"
-            elif name == "timing_feasible":
-                actual = self._timing_feasible()
-                satisfied = actual is bool(expected)
-                detail = f"actual {actual} / expected {expected}"
-            elif name == "replanning_successful":
-                actual = all(self._event_resolved(event_state) for event_state in self._triggered_events)
-                satisfied = actual is bool(expected)
-                detail = f"actual {actual} / expected {expected}"
-            elif name == "unaffected_bookings_preserved":
-                actual = all(
-                    set(event_state.get("preserved_booking_ids", [])).issubset(active_ids)
-                    for event_state in self._triggered_events
-                )
-                satisfied = actual is bool(expected)
-                detail = f"actual {actual} / expected {expected}"
-            elif name == "dependent_bookings_updated":
-                actual = all(
-                    not event_state.get("dependent_booking_ids")
-                    or self._dependent_bookings_reviewed(event_state)
-                    or self._dependents_still_valid_without_changes(event_state)
-                    for event_state in self._triggered_events
-                )
-                satisfied = actual is bool(expected)
-                detail = f"actual {actual} / expected {expected}"
-            elif name == "final_party_size":
-                actual = max(int(self._current_party_size or 1), 1)
-                satisfied = actual >= int(expected) and self._bookings_meet_party_size(int(expected))
-                detail = f"actual {actual} / expected {expected}"
-            elif name == "boat_tour_on_sunday":
-                actual = self._has_component_on_weekday("guided_boat_tour_min_1", "sunday")
-                satisfied = actual is bool(expected)
-                detail = f"actual {actual} / expected {expected}"
-            elif name == "beach_activities_on_saturday":
-                actual = self._has_component_on_weekday("beach_activities_min_1", "saturday")
-                satisfied = actual is bool(expected)
-                detail = f"actual {actual} / expected {expected}"
-            elif name == "animal_park_removed":
-                actual = all(self._venue_closed_resolved(event_state) for event_state in self._triggered_events)
-                satisfied = actual is bool(expected)
-                detail = f"actual {actual} / expected {expected}"
-            elif name == "early_return_executed":
-                actual = all(self._trip_cut_short_resolved(event_state) for event_state in self._triggered_events)
-                satisfied = actual is bool(expected)
-                detail = f"actual {actual} / expected {expected}"
-            else:
-                actual = "not_checked"
-                satisfied = True
-                detail = "no code-side evaluator"
-
+            _, satisfied, detail = self._evaluate_success_criterion(name, expected)
             status = "SATISFIED" if satisfied else "UNMET"
             lines.append(f"- {name}: {status} ({detail})")
         return "\n".join(lines)
+
+    def _get_unmet_success_criteria(self) -> List[str]:
+        unmet = []
+        for name, expected in self._success_criteria.items():
+            _, satisfied, detail = self._evaluate_success_criterion(name, expected)
+            if not satisfied:
+                unmet.append(f"{name} ({detail})")
+        return unmet
 
     def _build_operation_log_text(self) -> str:
         if not self._operation_log:
@@ -531,6 +484,263 @@ class TravelAgent:
             f"- turn {entry['turn']}: {entry['action']} {entry['tool']} -> {entry['summary']}"
             for entry in self._operation_log
         )
+
+    def _render_final_itinerary(self) -> str:
+        lines = ["# FINAL ITINERARY", ""]
+
+        overview_parts = []
+        origin = str(self._scenario.get("origin_city", "")).strip()
+        destinations = [str(city).strip() for city in self._scenario.get("destination_cities", []) if str(city).strip()]
+        if origin:
+            overview_parts.append(f"**Origin:** {origin}")
+        if destinations:
+            overview_parts.append(f"**Destination(s):** {', '.join(destinations)}")
+        trip_days = self._scenario.get("trip_duration_days")
+        if trip_days:
+            overview_parts.append(f"**Trip Length:** {trip_days} days")
+        overview_parts.append(f"**Party Size:** {max(int(self._current_party_size or 1), 1)}")
+        if overview_parts:
+            lines.append(" | ".join(overview_parts))
+            lines.append("")
+
+        lines.extend(self._render_final_flights_section())
+        lines.append("")
+        lines.extend(self._render_final_hotels_section())
+        lines.append("")
+        lines.extend(self._render_final_activities_section())
+        lines.append("")
+        lines.extend(self._render_final_restaurants_section())
+        lines.append("")
+        lines.extend(self._render_final_budget_section())
+        lines.append("")
+        lines.extend(self._render_final_requirement_section())
+        lines.append("")
+        lines.extend(self._render_final_success_criteria_section())
+        lines.append("")
+        lines.extend(self._render_final_audit_section())
+
+        return "\n".join(lines).rstrip() + "\n"
+
+    def _render_final_flights_section(self) -> List[str]:
+        flights = sorted(self.tracker.get_bookings_by_type("flight"), key=self._booking_sort_key)
+        lines = ["## 1. Flights", ""]
+        if not flights:
+            lines.append("No flights booked.")
+            return lines
+
+        rows = []
+        for booking in flights:
+            details = booking.details or {}
+            route = f"{details.get('origin_city', '?')} -> {details.get('destination_city', '?')}"
+            rows.append([
+                booking.booking_id,
+                str(details.get("type", "flight")).replace("_", " "),
+                route,
+                str(details.get("departure_date", "?")),
+                str(details.get("departure_time", "?")),
+                str(details.get("arrival_time", "?")),
+                self._format_currency(booking.cost),
+            ])
+        lines.extend(self._markdown_table(
+            ["Booking ID", "Type", "Route", "Date", "Departure", "Arrival", "Cost"],
+            rows,
+        ))
+        return lines
+
+    def _render_final_hotels_section(self) -> List[str]:
+        hotels = sorted(self.tracker.get_bookings_by_type("hotel"), key=self._booking_sort_key)
+        lines = ["## 2. Hotel", ""]
+        if not hotels:
+            lines.append("not booked")
+            return lines
+
+        rows = []
+        for booking in hotels:
+            details = booking.details or {}
+            rows.append([
+                booking.booking_id,
+                str(details.get("hotel_name", "unknown")),
+                str(details.get("check_in", "?")),
+                str(details.get("check_out", "?")),
+                str(details.get("nights", "?")),
+                self._format_currency(booking.cost),
+            ])
+        lines.extend(self._markdown_table(
+            ["Booking ID", "Name", "Check-In", "Check-Out", "Nights", "Cost"],
+            rows,
+        ))
+        return lines
+
+    def _render_final_activities_section(self) -> List[str]:
+        activities = sorted(self.tracker.get_bookings_by_type("activity"), key=self._booking_sort_key)
+        lines = ["## 3. Activities", ""]
+        if not activities:
+            lines.append("none booked")
+            return lines
+
+        rows = []
+        for booking in activities:
+            details = booking.details or {}
+            full_data = details.get("full_data", {}) if isinstance(details.get("full_data"), dict) else {}
+            activity_type = full_data.get("type") or details.get("type") or "activity"
+            rows.append([
+                booking.booking_id,
+                str(details.get("name", "unknown")),
+                str(activity_type).replace("_", " "),
+                str(details.get("date", "?")),
+                str(details.get("time", "?")),
+                self._format_currency(booking.cost),
+            ])
+        lines.extend(self._markdown_table(
+            ["Booking ID", "Name", "Type", "Date", "Time", "Cost"],
+            rows,
+        ))
+        return lines
+
+    def _render_final_restaurants_section(self) -> List[str]:
+        restaurants = sorted(self.tracker.get_bookings_by_type("restaurant"), key=self._booking_sort_key)
+        lines = ["## 4. Restaurants", ""]
+        if not restaurants:
+            lines.append("none booked")
+            return lines
+
+        rows = []
+        for booking in restaurants:
+            details = booking.details or {}
+            rows.append([
+                booking.booking_id,
+                str(details.get("name", "unknown")),
+                str(details.get("date", "?")),
+                str(details.get("time", "?")),
+                self._format_currency(booking.cost),
+            ])
+        lines.extend(self._markdown_table(
+            ["Booking ID", "Name", "Date", "Time", "Cost"],
+            rows,
+        ))
+        return lines
+
+    def _render_final_budget_section(self) -> List[str]:
+        lines = ["## 5. Budget Summary", ""]
+        rows = []
+        category_labels = {
+            "flight": "Flights",
+            "hotel": "Hotel",
+            "activity": "Activities",
+            "restaurant": "Restaurants",
+            "surcharge": "Surcharges",
+        }
+
+        for booking_type in ("flight", "hotel", "activity", "restaurant", "surcharge"):
+            bookings = self.tracker.get_bookings_by_type(booking_type)
+            if not bookings:
+                continue
+            rows.append([
+                category_labels[booking_type],
+                f"{len(bookings)} booking(s)",
+                self._format_currency(sum(booking.cost for booking in bookings)),
+            ])
+
+        rows.append(["", "**GRAND TOTAL**", f"**{self._format_currency(self.tracker.budget_used)}**"])
+        if self.tracker.budget_max is not None:
+            rows.append(["", "**Active Budget Cap**", f"**{self._format_currency(self.tracker.budget_max)}**"])
+            rows.append(["", "**Remaining Budget**", f"**{self._format_currency(self.tracker.get_remaining_budget())}**"])
+
+        lines.extend(self._markdown_table(["Category", "Item", "Cost"], rows))
+        return lines
+
+    def _render_final_requirement_section(self) -> List[str]:
+        lines = ["## 6. Requirement Status", ""]
+        rows = []
+        for component in self._required_components:
+            matched = self._matched_component_count(component)
+            required = self._required_component_target(component)
+            status = "SATISFIED" if matched >= required else "UNMET"
+            rows.append([component, f"{status} (matched {matched} / required {required})"])
+
+        if self._implicit_flight_requirement_enabled():
+            outbound_matched = 1 if self._has_matching_transport_flight("outbound") else 0
+            outbound_status = "SATISFIED" if outbound_matched else "UNMET"
+            rows.append(["intercity_outbound_flight", f"{outbound_status} (matched {outbound_matched} / required 1)"])
+            if self._return_transport_required():
+                return_matched = 1 if self._has_matching_transport_flight("return") else 0
+                return_status = "SATISFIED" if return_matched else "UNMET"
+                rows.append(["intercity_return_flight", f"{return_status} (matched {return_matched} / required 1)"])
+
+        if not rows:
+            lines.append("No required components were specified.")
+            return lines
+
+        lines.extend(self._markdown_table(["Requirement", "Status"], rows))
+        return lines
+
+    def _render_final_success_criteria_section(self) -> List[str]:
+        lines = ["## 7. Success Criteria Status", ""]
+        if not self._success_criteria:
+            lines.append("No explicit success criteria were specified.")
+            return lines
+
+        rows = []
+        for name, expected in self._success_criteria.items():
+            _, satisfied, detail = self._evaluate_success_criterion(name, expected)
+            status = "SATISFIED" if satisfied else "UNMET"
+            rows.append([name, f"{status} ({detail})"])
+
+        lines.extend(self._markdown_table(["Criterion", "Status"], rows))
+        return lines
+
+    def _render_final_audit_section(self) -> List[str]:
+        lines = ["## 8. Replanning Audit Trail", ""]
+        if not self._operation_log:
+            lines.append("No booking or cancellation operations were recorded.")
+            return lines
+
+        rows = []
+        for entry in self._operation_log:
+            rows.append([
+                str(entry.get("turn", "?")),
+                f"{entry.get('action', '')} {entry.get('tool', '')}".strip(),
+                str(entry.get("summary", "")),
+            ])
+        lines.extend(self._markdown_table(["Turn", "Action", "Result"], rows))
+        return lines
+
+    def _booking_sort_key(self, booking: Booking) -> Tuple[str, str, str, str]:
+        details = booking.details or {}
+        if booking.type == "flight":
+            return (
+                str(details.get("departure_date", "")),
+                str(details.get("departure_time", "")),
+                booking.type,
+                booking.booking_id,
+            )
+        if booking.type == "hotel":
+            return (
+                str(details.get("check_in", "")),
+                "00:00",
+                booking.type,
+                booking.booking_id,
+            )
+        if booking.type in {"activity", "restaurant"}:
+            return (
+                str(details.get("date", "")),
+                str(details.get("time", "")),
+                booking.type,
+                booking.booking_id,
+            )
+        return ("", "", booking.type, booking.booking_id)
+
+    def _markdown_table(self, headers: List[str], rows: List[List[str]]) -> List[str]:
+        lines = [
+            "| " + " | ".join(headers) + " |",
+            "|" + "|".join(["---"] * len(headers)) + "|",
+        ]
+        for row in rows:
+            lines.append("| " + " | ".join(str(cell) for cell in row) + " |")
+        return lines
+
+    def _format_currency(self, amount: float) -> str:
+        return f"${amount:.2f}"
 
     def _build_soft_optimization_prompt(self) -> str:
         interests = ", ".join(self._soft_preferences.get("interests", [])) or "none"
@@ -592,11 +802,29 @@ class TravelAgent:
                 categories.append("required flights")
         if any(any(word in component.lower() for word in ("hotel", "hotels", "accommodation", "accommodations", "lodge", "lodges")) and not self._component_satisfied(component) for component in self._required_components):
             categories.append("required lodging")
-        if any(any(word in component.lower() for word in ("activity", "activities", "tour", "tours", "museum", "museums", "visit", "visits", "experience", "experiences", "park", "parks", "attraction", "attractions", "venue", "venues")) and not self._component_satisfied(component) for component in self._required_components):
+        if any(any(word in component.lower() for word in ("activity", "activities", "tour", "tours", "museum", "museums", "visit", "visits", "experience", "experiences", "park", "parks", "attraction", "attractions", "venue", "venues", "entertainment", "show", "concert", "music", "jazz", "live")) and not self._component_satisfied(component) for component in self._required_components):
             categories.append("required activities")
         if any(any(word in component.lower() for word in ("restaurant", "restaurants", "dining", "meal", "meals", "brunch", "dinner")) and not self._component_satisfied(component) for component in self._required_components):
             categories.append("required restaurants")
         return categories
+
+    def _remaining_success_criteria_categories(self) -> List[str]:
+        categories = []
+        for name, expected in self._success_criteria.items():
+            _, satisfied, _ = self._evaluate_success_criterion(name, expected)
+            if satisfied:
+                continue
+
+            if name in {"beach_activities_min", "museums_included_min"}:
+                categories.append("required activities")
+            elif name == "hotel_proximity_to_museums":
+                categories.append("required lodging")
+
+        deduped = []
+        for category in categories:
+            if category not in deduped:
+                deduped.append(category)
+        return deduped
 
     def _component_satisfied(self, component: str) -> bool:
         return self._matched_component_count(component) >= self._required_component_target(component)
@@ -631,7 +859,8 @@ class TravelAgent:
         if any(word in normalized for word in (
             "activity", "activities", "tour", "tours", "museum", "museums", "visit",
             "visits", "experience", "experiences", "park", "parks", "attraction",
-            "attractions", "venue", "venues", "entertainment", "show", "transportation", "transport", "wedding", "ceremony"
+            "attractions", "venue", "venues", "entertainment", "show", "concert",
+            "music", "jazz", "live", "transportation", "transport", "wedding", "ceremony"
         )):
             return sum(
                 1 for booking in self.tracker.get_bookings_by_type("activity")
@@ -640,6 +869,13 @@ class TravelAgent:
         return 0
 
     def _required_component_target(self, component: str) -> int:
+        normalized = component.lower()
+        required_nights = self._extract_nights(component)
+        if required_nights and any(
+            word in normalized
+            for word in ("hotel", "hotels", "accommodation", "accommodations", "lodge", "lodges")
+        ):
+            return required_nights
         return self._extract_min_count(component) or 1
 
     def _intercity_trip(self) -> bool:
@@ -882,73 +1118,119 @@ class TravelAgent:
     def _success_criteria_satisfied(self) -> bool:
         if not self._success_criteria:
             return True
+        return all(
+            self._evaluate_success_criterion(name, expected)[1]
+            for name, expected in self._success_criteria.items()
+        )
 
-        total_cost_max = self._success_criteria.get("total_cost_max")
-        if total_cost_max is not None and self.tracker.budget_used > total_cost_max:
-            return False
+    def _evaluate_success_criterion(self, name: str, expected: Any) -> Tuple[Any, bool, str]:
+        active_ids = {booking.booking_id for booking in self.tracker.bookings}
 
-        if self._success_criteria.get("timing_feasible") is True and not self._timing_feasible():
-            return False
+        if name == "total_cost_max":
+            actual = self.tracker.budget_used
+            return actual, actual <= float(expected), f"actual ${actual:.2f} / max ${float(expected):.2f}"
 
-        if self._success_criteria.get("all_venues_wheelchair_accessible") is True and not self._hard_constraints_satisfied():
-            return False
+        if name == "timing_feasible":
+            actual = self._timing_feasible()
+            return actual, actual is bool(expected), f"actual {actual} / expected {expected}"
 
-        if self._success_criteria.get("replanning_successful") is True:
-            for event_state in self._triggered_events:
-                if not self._event_resolved(event_state):
-                    return False
+        if name == "all_venues_wheelchair_accessible":
+            actual = self._hard_constraints_satisfied()
+            return actual, actual is bool(expected), f"actual {actual} / expected {expected}"
 
-        if self._success_criteria.get("early_return_executed") is True:
-            trip_cut_short_events = [
-                event_state
+        if name == "replanning_successful":
+            actual = all(self._event_resolved(event_state) for event_state in self._triggered_events)
+            return actual, actual is bool(expected), f"actual {actual} / expected {expected}"
+
+        if name == "unaffected_bookings_preserved":
+            actual = all(
+                set(event_state.get("preserved_booking_ids", [])).issubset(active_ids)
                 for event_state in self._triggered_events
-                if event_state.get("event_type") == "trip_cut_short"
-            ]
-            if not trip_cut_short_events:
-                return False
-            if not all(self._trip_cut_short_resolved(event_state) for event_state in trip_cut_short_events):
-                return False
+            )
+            return actual, actual is bool(expected), f"actual {actual} / expected {expected}"
 
-        if self._success_criteria.get("boat_tour_on_sunday") is True and not self._has_component_on_weekday(
-            "guided_boat_tour_min_1",
-            "sunday",
-        ):
-            return False
-
-        if self._success_criteria.get("beach_activities_on_saturday") is True and not self._has_component_on_weekday(
-            "beach_activities_min_1",
-            "saturday",
-        ):
-            return False
-
-        final_party_size = self._success_criteria.get("final_party_size")
-        if isinstance(final_party_size, int):
-            if self._current_party_size < final_party_size or not self._bookings_meet_party_size(final_party_size):
-                return False
-
-        if self._success_criteria.get("animal_park_removed") is True:
-            venue_closed_events = [
-                event_state
+        if name == "dependent_bookings_updated":
+            actual = all(
+                not event_state.get("dependent_booking_ids")
+                or self._dependent_bookings_reviewed(event_state)
+                or self._dependents_still_valid_without_changes(event_state)
                 for event_state in self._triggered_events
-                if event_state.get("event_type") == "venue_closed"
-            ]
-            if not venue_closed_events:
-                return False
-            if not all(self._venue_closed_resolved(event_state) for event_state in venue_closed_events):
-                return False
+            )
+            return actual, actual is bool(expected), f"actual {actual} / expected {expected}"
 
-        if self._success_criteria.get("unaffected_bookings_preserved") is True:
-            active_ids = {booking.booking_id for booking in self.tracker.bookings}
-            for event_state in self._triggered_events:
-                if not set(event_state["preserved_booking_ids"]).issubset(active_ids):
-                    return False
+        if name == "final_party_size":
+            actual = max(int(self._current_party_size or 1), 1)
+            satisfied = actual >= int(expected) and self._bookings_meet_party_size(int(expected))
+            return actual, satisfied, f"actual {actual} / expected {expected}"
 
-        if self._success_criteria.get("dependent_bookings_updated") is True:
-            for event_state in self._triggered_events:
-                if event_state["dependent_booking_ids"] and not self._dependent_bookings_reviewed(event_state):
-                    return False
+        if name == "boat_tour_on_sunday":
+            actual = self._has_component_on_weekday("guided_boat_tour_min_1", "sunday")
+            return actual, actual is bool(expected), f"actual {actual} / expected {expected}"
 
-        return True
+        if name == "beach_activities_on_saturday":
+            actual = self._has_component_on_weekday("beach_activities_min_1", "saturday")
+            return actual, actual is bool(expected), f"actual {actual} / expected {expected}"
+
+        if name == "animal_park_removed":
+            actual = all(self._venue_closed_resolved(event_state) for event_state in self._triggered_events)
+            return actual, actual is bool(expected), f"actual {actual} / expected {expected}"
+
+        if name == "early_return_executed":
+            actual = all(self._trip_cut_short_resolved(event_state) for event_state in self._triggered_events)
+            return actual, actual is bool(expected), f"actual {actual} / expected {expected}"
+
+        if name == "beach_activities_min" and isinstance(expected, int):
+            actual = self._matched_component_count(f"beach_activities_min_{expected}")
+            return actual, actual >= expected, f"actual {actual} / expected at least {expected}"
+
+        if name == "museums_included_min" and isinstance(expected, int):
+            actual = self._matched_component_count(f"museum_visits_min_{expected}")
+            return actual, actual >= expected, f"actual {actual} / expected at least {expected}"
+
+        if name == "hotel_proximity_to_museums":
+            actual = self._hotel_proximity_requirement_satisfied("museums", str(expected))
+            return actual, actual is True, f"actual {actual} / expected {expected}"
+
+        return "not_checked", True, "no code-side evaluator"
+
+    def _hotel_proximity_requirement_satisfied(self, topic: str, expected: str) -> bool:
+        hotels = self.tracker.get_bookings_by_type("hotel")
+        if not hotels:
+            return False
+        return any(self._hotel_matches_proximity_topic(booking, topic, expected) for booking in hotels)
+
+    def _hotel_matches_proximity_topic(self, booking: Booking, topic: str, expected: str) -> bool:
+        details = booking.details or {}
+        full_data = details.get("full_data", {}) if isinstance(details.get("full_data"), dict) else {}
+        proximity = full_data.get("proximity_to_attractions", {})
+        if not isinstance(proximity, dict):
+            return False
+
+        max_miles = 2.0 if expected == "within_30min" else 1.0
+        topic_keys = {
+            "museums": {"museum", "museums", "moma", "met", "whitney", "natural_history"},
+        }.get(topic, {topic})
+
+        for key, value in proximity.items():
+            key_tokens = self._tokenize_component(str(key))
+            if topic_keys & key_tokens and self._distance_within_limit(str(value), max_miles):
+                return True
+
+        if topic == "museums":
+            for key, value in proximity.items():
+                if "subway" in self._tokenize_component(str(key)) and self._distance_within_limit(str(value), 0.5):
+                    return True
+
+        return False
+
+    def _distance_within_limit(self, value: str, max_miles: float) -> bool:
+        normalized = value.strip().lower()
+        if normalized in {"steps", "on_site", "onsite"}:
+            return True
+        match = re.search(r"([0-9]+(?:\.[0-9]+)?)\s*miles?", normalized)
+        if not match:
+            return False
+        return float(match.group(1)) <= max_miles
 
     def _should_optimize_soft_preferences(self) -> bool:
         if not (self._soft_preferences.get("interests") or self._soft_preferences.get("preferences")):
@@ -1034,7 +1316,8 @@ class TravelAgent:
         if any(word in normalized for word in (
             "activity", "activities", "tour", "tours", "museum", "museums", "visit",
             "visits", "experience", "experiences", "park", "parks", "attraction",
-            "attractions", "venue", "venues", "transportation", "transport", "wedding", "ceremony"
+            "attractions", "venue", "venues", "entertainment", "show", "concert",
+            "music", "jazz", "live", "transportation", "transport", "wedding", "ceremony"
         )):
             return {"activity"}
         return set()

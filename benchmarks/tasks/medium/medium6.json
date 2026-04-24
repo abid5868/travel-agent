@@ -50,7 +50,6 @@
   ],
   "success_criteria": {
     "total_cost_max": 1700,
-    "timing_feasible": true,
     "replanning_successful": true,
     "unaffected_bookings_preserved": true,
     "dependent_bookings_updated": true

@@ -110,6 +110,9 @@ HARD CONSTRAINTS (MUST satisfy ALL of these):
  
 PREFERENCES (Optimize for these when possible):
 {soft_preferences}
+
+SUCCESS CRITERIA (must also be true before finishing):
+{success_criteria}
  
 START PLANNING:
 Think step-by-step about what you need to book:
@@ -232,6 +235,7 @@ Write a FINAL ITINERARY using the confirmed bookings above.
 - Use the exact booked dates and times from the confirmed booking details. Do not replace them with vague phrases like "morning" or "afternoon" when an exact time exists.
 - For flights, hotels, activities, and restaurants, use the exact booked name/type from the confirmed booking facts. Do not relabel a booking based on earlier reasoning.
 - In the budget summary, use the system's current active budget limit. If the budget changed during replanning, do not present the original budget as the active limit.
+- Do NOT include an "Original Budget" row in the budget summary table. If the budget changed, mention that change only in the replanning audit trail.
 - Under "Requirement status" and "Success criteria status", copy the system-computed status faithfully instead of paraphrasing it.
 - Do NOT add a separate "All Hard Constraints Met" summary section.
 
@@ -294,6 +298,13 @@ def create_planning_prompt(task: dict) -> str:
         soft_list.append(f"  • Preferences: {', '.join(soft['preferences'])}")
     
     soft_preferences = "\n".join(soft_list) if soft_list else "  • None specified"
+
+    success = task.get("success_criteria", {})
+    success_list = []
+    for key, value in success.items():
+        if value not in [None, "", []]:
+            success_list.append(f"  • {key}: {value}")
+    success_criteria = "\n".join(success_list) if success_list else "  • None specified"
     
     return PLANNING_PROMPT_TEMPLATE.format(
         origin_city=scenario.get("origin_city", "Unknown"),
@@ -302,7 +313,8 @@ def create_planning_prompt(task: dict) -> str:
         party_size=user_profile.get("party_size", 1),
         traveler_types=", ".join(user_profile.get("traveler_types", ["leisure"])),
         hard_constraints=hard_constraints,
-        soft_preferences=soft_preferences
+        soft_preferences=soft_preferences,
+        success_criteria=success_criteria,
     )
  
  

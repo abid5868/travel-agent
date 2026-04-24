@@ -12,7 +12,7 @@ from src.agent import TravelAgent
 
 TASKS = [
     #"benchmarks/tasks/easy/easy1.json",
-    #"benchmarks/tasks/easy/easy2.json",
+    "benchmarks/tasks/easy/easy2.json",
     #"benchmarks/tasks/easy/easy3.json",
     #"benchmarks/tasks/easy/easy4.json",
     #"benchmarks/tasks/easy/easy5.json",

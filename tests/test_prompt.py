@@ -17,3 +17,5 @@ def test_create_planning_prompt_includes_key_trip_details():
     assert "Origin: Detroit" in prompt
     assert "Destination(s): Chicago" in prompt
     assert "live music" in prompt
+    assert "SUCCESS CRITERIA" in prompt
+    assert "timing_feasible" in prompt

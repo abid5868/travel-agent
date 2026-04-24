@@ -1,109 +1,68 @@
 # FINAL ITINERARY
-## 🌴 Boston → Miami | March 13–16, 2026 | Party of 1
 
----
+**Origin:** Boston | **Destination(s):** Miami | **Trip Length:** 3 days | **Party Size:** 1
 
-## 💰 BUDGET SUMMARY (Up Front)
+## 1. Flights
 
-| Category | Booking ID | Cost |
-|---|---|---|
-| Outbound Flight | bk_flight_BOS_MIA_001_20260313 | $169.00 |
-| Return Flight | bk_flight_MIA_BOS_001_20260316 | $169.00 |
-| Hotel (3 nights) | bk_hotel_MIA_004_20260313 | $267.00 |
-| Activity | bk_act_MIA_001_20260314 | $65.00 |
-| **GRAND TOTAL** | | **$670.00 / $800.00** |
-| **Budget Remaining** | | **$130.00** |
-
----
-
-## ✈️ FLIGHTS
-
-| Booking ID | Route | Flight # | Date | Departure | Arrival | Cost |
+| Booking ID | Type | Route | Date | Departure | Arrival | Cost |
 |---|---|---|---|---|---|---|
-| bk_flight_BOS_MIA_001_20260313 | Boston → Miami | HE507 (Horizon Express) | Mar 13, 2026 | 07:00 | 11:30 | $169.00 |
-| bk_flight_MIA_BOS_001_20260316 | Miami → Boston | CA605 (Continental Air) | Mar 16, 2026 | 16:00 | 21:00 | $169.00 |
+| bk_flight_BOS_MIA_001_20260313 | outbound flight | Boston -> Miami | 2026-03-13 | 07:00 | 11:30 | $169.00 |
+| bk_flight_MIA_BOS_001_20260316 | return flight | Miami -> Boston | 2026-03-16 | 16:00 | 21:00 | $169.00 |
 
----
+## 2. Hotel
 
-## 🏨 HOTEL
-
-| Booking ID | Hotel | Neighborhood | Check-In | Check-Out | Nights | Cost |
-|---|---|---|---|---|---|---|
-| bk_hotel_MIA_004_20260313 | Cubanito Hostel & Inn | Little Havana | Mar 13, 2026 | Mar 16, 2026 | 3 | $267.00 |
-
-> ⚠️ **Note:** Hotel is located in Little Havana (~5 miles from South Beach). It is a budget-friendly 2-star property with WiFi, shared lounge, and local breakfast included. Does not fully satisfy the "beachfront hotel" preference, but was the best available within budget.
-
----
-
-## 🎯 ACTIVITIES
-
-| Booking ID | Activity | Date | Time | Duration | Cost |
+| Booking ID | Name | Check-In | Check-Out | Nights | Cost |
 |---|---|---|---|---|---|
-| bk_act_MIA_001_20260314 | South Beach Guided Water Sports Package | Mar 14, 2026 | 10:00 AM | 3 hours | $65.00 |
+| bk_hotel_MIA_004_20260313 | Cubanito Hostel & Inn | 2026-03-13 | 2026-03-16 | 3 | $267.00 |
 
-> Includes paddleboarding, kayaking, and swimming at South Beach. Equipment rental and safety instruction included. ✅ Matches beach, swimming & outdoor interests.
+## 3. Activities
 
----
+| Booking ID | Name | Type | Date | Time | Cost |
+|---|---|---|---|---|---|
+| bk_act_MIA_007_20260314t1000 | South Pointe Beach Swim & Lounge Package | beach activity | 2026-03-14 | 10:00 | $42.00 |
+| bk_act_MIA_001_20260314t1300 | South Beach Guided Water Sports Package | beach activity | 2026-03-14 | 13:00 | $65.00 |
 
-## 🍽️ RESTAURANTS
+## 4. Restaurants
 
-| Booking ID | Restaurant | Date | Cost |
-|---|---|---|---|
-| — | *None booked* | — | $0.00 |
+| Booking ID | Name | Date | Time | Cost |
+|---|---|---|---|---|
+| bk_rest_005_20260315 | Sandy Shores Seafood Shack | 2026-03-15 | 19:00 | $18.00 |
 
-> ⚠️ **Note:** $130 of remaining budget could support a seafood restaurant booking. A search was not completed before planning was finalized. Consider exploring Joe's Stone Crab or Garcia's Seafood Grille independently upon arrival.
+## 5. Budget Summary
 
----
-
-## 📅 DAY-BY-DAY SCHEDULE
-
-### Day 1 — Friday, March 13 (Arrival Day)
-| Time | Event |
-|---|---|
-| 07:00 | ✈️ Depart Boston (HE507) |
-| 11:30 | 🛬 Arrive Miami |
-| 13:00 | 🏨 Check in: Cubanito Hostel & Inn *(arrival + 90 min buffer)* |
-| 13:00+ | 🌊 Explore Little Havana / relax |
-
-### Day 2 — Saturday, March 14 (Full Day)
-| Time | Event |
-|---|---|
-| 10:00–13:00 | 🏄 South Beach Guided Water Sports Package *(paddleboarding, kayaking, swimming)* |
-| 13:00+ | 🌴 Free time — beach relaxation, explore South Beach |
-| Evening | 🍽️ Dinner (unbooked — explore local seafood options) |
-
-### Day 3 — Sunday, March 15 (Full Free Day)
-| Time | Event |
-|---|---|
-| All day | 🌊 Free day — beach, relaxation, explore Miami |
-| Evening | 🍽️ Dinner (unbooked — explore local seafood options) |
-
-### Day 4 — Monday, March 16 (Departure Day)
-| Time | Event |
-|---|---|
-| Before 14:00 | 🏨 Hotel check-out *(must depart by 14:00 to make 120 min pre-flight buffer)* |
-| 16:00 | ✈️ Depart Miami (CA605) |
-| 21:00 | 🛬 Arrive Boston |
-
----
-
-## ✅ REQUIREMENT STATUS
-
-| Requirement | Status | Booking ID |
+| Category | Item | Cost |
 |---|---|---|
-| Outbound Flight | ✅ SATISFIED | bk_flight_BOS_MIA_001_20260313 |
-| Return Flight | ✅ SATISFIED | bk_flight_MIA_BOS_001_20260316 |
-| Hotel (3 nights) | ✅ SATISFIED | bk_hotel_MIA_004_20260313 |
+| Flights | 2 booking(s) | $338.00 |
+| Hotel | 1 booking(s) | $267.00 |
+| Activities | 2 booking(s) | $107.00 |
+| Restaurants | 1 booking(s) | $18.00 |
+|  | **GRAND TOTAL** | **$730.00** |
+|  | **Active Budget Cap** | **$800.00** |
+|  | **Remaining Budget** | **$70.00** |
 
----
+## 6. Requirement Status
 
-## 🔄 REPLANNING AUDIT TRAIL
+| Requirement | Status |
+|---|---|
+| outbound_flight | SATISFIED (matched 1 / required 1) |
+| return_flight | SATISFIED (matched 1 / required 1) |
+| hotel_3_nights | SATISFIED (matched 3 / required 3) |
 
-| Turn | Action | Booking ID | Notes |
-|---|---|---|---|
-| Turn 2 | BOOKED outbound flight | bk_flight_BOS_MIA_001_20260313 | No replanning needed |
-| Turn 3 | BOOKED return flight | bk_flight_MIA_BOS_001_20260316 | No replanning needed |
-| Turn 7 | BOOKED hotel | bk_hotel_MIA_004_20260313 | No replanning needed |
-| Turn 9 | BOOKED activity | bk_act_MIA_001_20260314 | Added to satisfy beach/swimming soft preferences |
+## 7. Success Criteria Status
 
-> **No cancellations were made during this planning session.**
+| Criterion | Status |
+|---|---|
+| total_cost_max | SATISFIED (actual $730.00 / max $800.00) |
+| timing_feasible | SATISFIED (actual True / expected True) |
+| beach_activities_min | SATISFIED (actual 2 / expected at least 2) |
+
+## 8. Replanning Audit Trail
+
+| Turn | Action | Result |
+|---|---|---|
+| 2 | book book_flight | confirmed bk_flight_BOS_MIA_001_20260313 |
+| 3 | book book_flight | confirmed bk_flight_MIA_BOS_001_20260316 |
+| 5 | book book_hotel | confirmed bk_hotel_MIA_004_20260313 |
+| 7 | book book_activity | confirmed bk_act_MIA_007_20260314t1000 |
+| 8 | book book_activity | confirmed bk_act_MIA_001_20260314t1300 |
+| 10 | book book_restaurant | confirmed bk_rest_005_20260315 |
