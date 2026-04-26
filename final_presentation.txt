@@ -1,0 +1,48 @@
+Assignment 8: Final Presentation
+Dates: April 28, April 30, and May 5, 2026 (Weeks 14-15) Length: 10 minutes + 2 minutes Q&A Format: Slides submitted to Canvas before class
+Overview
+Present your project to the class, covering both your benchmark design and your agent implementation. You have limited time, so focus on the most important and interesting aspects of your work.
+Presentation Structure
+Organize your 10 minutes as follows:
+1. Introduction & Motivation (~1.5 minutes)
+Problem: What problem are you addressing?
+Why it matters: Why is this important for AI agents research?
+Your approach: Brief overview of your solution (benchmark + agent)
+Key contributions: What are the main takeaways from your work?
+2. Benchmark Design (~2 minutes)
+Domain and scope: What domain does your benchmark cover?
+Task overview: High-level overview of your tasks
+Task examples: Show 2-3 concrete example tasks
+What makes them challenging?
+How are they evaluated?
+Key design decisions: What makes your benchmark unique or valuable?
+3. Agent Design (~2 minutes)
+Architecture: High-level diagram of your agent
+Key components: What are the main pieces?
+Technical approach: What techniques or algorithms are central?
+Design rationale: Why did you make the choices you made?
+4. Results (~3 minutes)
+Main findings: What are the key results?
+Performance comparison: How does your agent compare to baselines?
+Success examples: Show 1-2 examples where your agent excels
+Failure examples: Show 1-2 examples where your agent struggles
+Insights: What did you learn? What patterns emerged?
+5. Conclusion (~1.5 minutes)
+Summary: Recap your benchmark and agent
+Key takeaways: What should the audience remember?
+Limitations: Briefly acknowledge main limitations
+Future work: What’s next?
+Broader impact: What does your work mean for agents research?
+Grading Rubric (25 points)
+Content (10pt):
+Clear problem and motivation (3pt)
+Good coverage of benchmark and agent (4pt)
+Insightful results and analysis (3pt)
+Delivery (10pt):
+Clear and engaging presentation (4pt)
+Good pacing and timing (3pt)
+Effective use of visuals (3pt)
+Q&A (2pt):
+Thoughtful answers to questions
+Participation (3pt):
+Attended all presentation sessions
