@@ -1,6 +1,2 @@
 anthropic
-langchain
-pydantic
 pytest
-python-dotenv
-streamlit
