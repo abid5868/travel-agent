@@ -511,6 +511,8 @@ class TravelAgent:
         lines.append("")
         lines.extend(self._render_final_restaurants_section())
         lines.append("")
+        lines.extend(self._render_final_schedule_section())
+        lines.append("")
         lines.extend(self._render_final_budget_section())
         lines.append("")
         lines.extend(self._render_final_requirement_section())
@@ -705,6 +707,78 @@ class TravelAgent:
         lines.extend(self._markdown_table(["Turn", "Action", "Result"], rows))
         return lines
 
+    def _render_final_schedule_section(self) -> List[str]:
+        lines = ["## 5. Day-by-Day Itinerary", ""]
+        events = []
+
+        for b in self.tracker.bookings:
+            details = b.details or {}
+            
+            if b.type == "flight":
+                date = str(details.get("departure_date", ""))
+                time = str(details.get("departure_time", "00:00"))
+                origin = str(details.get("origin_city", "?"))
+                dest = str(details.get("destination_city", "?"))
+                flight_num = str(details.get("flight_number", ""))
+                events.append({
+                    "date": date, 
+                    "time": time, 
+                    "desc": f"✈️ Flight: {origin} -> {dest} ({flight_num})"
+                })
+                
+            elif b.type == "hotel":
+                hotel_name = str(details.get("hotel_name", "unknown hotel"))
+                check_in = str(details.get("check_in", ""))
+                events.append({
+                    "date": check_in, 
+                    "time": "15:00",  
+                    "desc": f"🏨 Check-in: {hotel_name}"
+                })
+                
+                check_out = str(details.get("check_out", ""))
+                events.append({
+                    "date": check_out, 
+                    "time": "07:00",
+                    "desc": f"🏨 Check-out: {hotel_name}"
+                })
+                
+            elif b.type in {"activity", "restaurant"}:
+                date = str(details.get("date", ""))
+                time = str(details.get("time", "00:00"))
+                name = str(details.get("name", "unknown"))
+                icon = "🍽️" if b.type == "restaurant" else "🎯"
+                events.append({
+                    "date": date, 
+                    "time": time, 
+                    "desc": f"{icon} {b.type.capitalize()}: {name}"
+                })
+
+
+        events = [e for e in events if e["date"] and e["date"] not in ("?", "None")]
+        
+        events.sort(key=lambda x: (x["date"], x["time"]))
+
+        if not events:
+            lines.append("No scheduled events.")
+            return lines
+
+        rows = []
+        current_date = None
+        day_counter = 0
+
+        for e in events:
+            if e["date"] != current_date:
+                current_date = e["date"]
+                day_counter += 1
+                day_label = f"**Day {day_counter}**<br>{current_date}"
+            else:
+                day_label = ""
+            
+            rows.append([day_label, e["time"], e["desc"]])
+
+        lines.extend(self._markdown_table(["Day / Date", "Time", "Event"], rows))
+        return lines
+
     def _booking_sort_key(self, booking: Booking) -> Tuple[str, str, str, str]:
         details = booking.details or {}
         if booking.type == "flight":
@@ -831,6 +905,10 @@ class TravelAgent:
 
     def _matched_component_count(self, component: str) -> int:
         normalized = component.lower()
+
+        if "coordination" in normalized or "contingency" in normalized:
+            return 1
+        
         if "flight" in normalized:
             return sum(
                 1 for booking in self.tracker.get_bookings_by_type("flight")
@@ -860,7 +938,7 @@ class TravelAgent:
             "activity", "activities", "tour", "tours", "museum", "museums", "visit",
             "visits", "experience", "experiences", "park", "parks", "attraction",
             "attractions", "venue", "venues", "entertainment", "show", "concert",
-            "music", "jazz", "live", "transportation", "transport", "wedding", "ceremony"
+            "music", "jazz", "live", "transportation", "transport", "wedding", "ceremony", "party", "bachelor", "rehearsal"
         )):
             return sum(
                 1 for booking in self.tracker.get_bookings_by_type("activity")
@@ -939,7 +1017,8 @@ class TravelAgent:
             return False
         if "outbound" in normalized and booking_type != "outbound_flight":
             return False
-
+        if "mid_trip" in normalized and booking_type != "mid_trip_flight":
+            return False
         if "after_" in normalized:
             threshold = normalized.split("after_", 1)[1]
             if str(details.get("departure_time", "")) < threshold:
@@ -948,12 +1027,11 @@ class TravelAgent:
             threshold = normalized.split("before_", 1)[1]
             if str(details.get("departure_time", "")) > threshold:
                 return False
-
         component_tokens = self._tokenize_component(normalized)
         route_hint_tokens = {
             token for token in component_tokens
             if token not in {
-                "flight", "flights", "outbound", "return", "after", "before",
+                "flight", "flights", "outbound", "return", "mid", "trip", "after", "before",
                 "arriving", "meeting", "arriving_before_meeting",
                 "train", "trains", "rail", "rails", "or"
             } and not token.isdigit()
@@ -1317,7 +1395,7 @@ class TravelAgent:
             "activity", "activities", "tour", "tours", "museum", "museums", "visit",
             "visits", "experience", "experiences", "park", "parks", "attraction",
             "attractions", "venue", "venues", "entertainment", "show", "concert",
-            "music", "jazz", "live", "transportation", "transport", "wedding", "ceremony"
+            "music", "jazz", "live", "transportation", "transport", "wedding", "ceremony", "party", "bachelor", "rehearsal"
         )):
             return {"activity"}
         return set()
@@ -2181,6 +2259,17 @@ class TravelAgent:
         if isinstance(result, dict) and result.get("status") == "success":
             if method == "book":
                 booking_type = tool_name.split("_", 1)[1]  # "book_flight" → "flight"
+                if booking_type == "flight":
+                    home_city = str(self._scenario.get("origin_city", "")).strip().lower()
+                    flight_origin = str(result.get("details", {}).get("origin_city", "")).strip().lower()
+                    flight_dest = str(result.get("details", {}).get("destination_city", "")).strip().lower()
+                    
+                    if flight_origin == home_city:
+                        result["details"]["type"] = "outbound_flight"
+                    elif flight_dest == home_city:
+                        result["details"]["type"] = "return_flight"
+                    else:
+                        result["details"]["type"] = "mid_trip_flight"
                 self.tracker.add_booking(Booking(
                     booking_id=result["booking_id"],
                     type=booking_type,
