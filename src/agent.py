@@ -281,8 +281,8 @@ class TravelAgent:
         party_size_after: Optional[int],
     ) -> bool:
         event_type = event.get("event_type")
-        if event_type == "accommodation_unavailable":
-            return booking.type == "hotel"
+        if event_type in {"accommodation_unavailable", "route_closure", "road_closure"}:
+            return booking.type == "hotel" or booking.type == "activity"
         if event_type in {"schedule_swap_required", "venue_closed"}:
             return booking.type == "activity"
         if event_type == "party_size_increase":
@@ -876,7 +876,7 @@ class TravelAgent:
                 categories.append("required flights")
         if any(any(word in component.lower() for word in ("hotel", "hotels", "accommodation", "accommodations", "lodge", "lodges")) and not self._component_satisfied(component) for component in self._required_components):
             categories.append("required lodging")
-        if any(any(word in component.lower() for word in ("activity", "activities", "tour", "tours", "museum", "museums", "visit", "visits", "experience", "experiences", "park", "parks", "attraction", "attractions", "venue", "venues", "entertainment", "show", "concert", "music", "jazz", "live")) and not self._component_satisfied(component) for component in self._required_components):
+        if any(any(word in component.lower() for word in ("activity", "activities", "tour", "tours", "museum", "museums", "visit", "visits", "experience", "experiences", "park", "parks", "attraction", "attractions", "venue", "venues", "entertainment", "show", "concert", "music", "jazz", "live", "rental", "suv", "car")) and not self._component_satisfied(component) for component in self._required_components):
             categories.append("required activities")
         if any(any(word in component.lower() for word in ("restaurant", "restaurants", "dining", "meal", "meals", "brunch", "dinner")) and not self._component_satisfied(component) for component in self._required_components):
             categories.append("required restaurants")
@@ -938,7 +938,7 @@ class TravelAgent:
             "activity", "activities", "tour", "tours", "museum", "museums", "visit",
             "visits", "experience", "experiences", "park", "parks", "attraction",
             "attractions", "venue", "venues", "entertainment", "show", "concert",
-            "music", "jazz", "live", "transportation", "transport", "wedding", "ceremony", "party", "bachelor", "rehearsal"
+            "music", "jazz", "live", "transportation", "transport", "wedding", "ceremony", "party", "bachelor", "rehearsal", "permit", "entry", "rental", "suv", "car"
         )):
             return sum(
                 1 for booking in self.tracker.get_bookings_by_type("activity")
@@ -1054,6 +1054,24 @@ class TravelAgent:
             return False
         if any(word in normalized for word in ("accessible", "wheelchair")) and not self._detail_or_tag_match(details, "wheelchair_accessible"):
             return False
+        
+        req_tokens = self._tokenize_component(normalized)
+        
+        generic_words = {
+            "hotel", "hotels", "lodge", "lodges", "accommodation", "accommodations",
+            "resort", "resorts", "inn", "motel", "cabin", "night", "nights", "min", "max",
+            "room", "rooms", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
+        }
+        
+        location_hints = {t for t in req_tokens if t not in generic_words and not t.isdigit()}
+        
+        if location_hints:
+            city = str(details.get("city", details.get("hotel_city", ""))).lower()
+            hotel_name = str(details.get("hotel_name", details.get("name", ""))).lower()
+            hotel_tokens = self._tokenize_component(city) | self._tokenize_component(hotel_name)
+            
+            if not location_hints.intersection(hotel_tokens):
+                return False
         return True
 
     def _experience_booking_matches(self, component: str, booking: Booking) -> bool:
@@ -1395,7 +1413,8 @@ class TravelAgent:
             "activity", "activities", "tour", "tours", "museum", "museums", "visit",
             "visits", "experience", "experiences", "park", "parks", "attraction",
             "attractions", "venue", "venues", "entertainment", "show", "concert",
-            "music", "jazz", "live", "transportation", "transport", "wedding", "ceremony", "party", "bachelor", "rehearsal"
+            "music", "jazz", "live", "transportation", "transport", "wedding", "ceremony", "party", "bachelor", "rehearsal",
+            "permit", "entry", "rental", "suv", "car"
         )):
             return {"activity"}
         return set()
@@ -1447,31 +1466,29 @@ class TravelAgent:
         if not requirements:
             return "- None provided."
         return "\n".join(f"- {item}" for item in requirements)
-
     def _event_resolved(self, event_state: Dict[str, Any]) -> bool:
         event_type = event_state.get("event_type", "")
-        if event_type == "trip_cut_short":
-            return self._trip_cut_short_resolved(event_state)
-        if event_type == "budget_reduced":
-            return self._budget_reduction_resolved(event_state)
-        if event_type == "schedule_swap_required":
-            return self._schedule_swap_resolved(event_state)
-        if event_type == "party_size_increase":
-            return self._party_size_increase_resolved(event_state)
-        if event_type == "venue_closed":
-            return self._venue_closed_resolved(event_state)
+        if event_type == "trip_cut_short": return self._trip_cut_short_resolved(event_state)
+        if event_type == "budget_reduced": return self._budget_reduction_resolved(event_state)
+        if event_type == "schedule_swap_required": return self._schedule_swap_resolved(event_state)
+        if event_type == "party_size_increase": return self._party_size_increase_resolved(event_state)
+        if event_type == "venue_closed": return self._venue_closed_resolved(event_state)
 
         for component in event_state.get("affected_components", []):
+            
+            booking_types = self._component_to_booking_types(component)
+            if not booking_types:
+                continue
             active_matches = [
-                booking
-                for booking in self.tracker.bookings
+                booking for booking in self.tracker.bookings
                 if self._booking_matches_event_component(booking, component, event_state)
             ]
             if self._event_component_requires_replacement(component, event_state):
                 if not active_matches:
                     return False
-            elif active_matches:
-                return False
+            else:
+                if active_matches:
+                    return False                   
         return True
 
     def _dependent_bookings_reviewed(self, event_state: Dict[str, Any]) -> bool:
@@ -1866,6 +1883,20 @@ class TravelAgent:
                 return False
         return True
 
+    def _accommodation_overbooked_resolved(self, event_state: Dict[str, Any]) -> bool:
+        affected_ids = set(event_state.get("affected_booking_ids", []))
+        
+        current_active_ids = {b.booking_id for b in self.tracker.bookings}
+        
+        if any(bad_id in current_active_ids for bad_id in affected_ids):
+            return False
+    
+        hotels = self.tracker.get_bookings_by_type("hotel")
+        if not hotels:
+            return False
+            
+        return True
+
     def _timing_feasible(self) -> bool:
         origin = str(self._scenario.get("origin_city", "")).lower()
         destinations = [str(city).lower() for city in self._scenario.get("destination_cities", [])]
@@ -1939,6 +1970,10 @@ class TravelAgent:
     def _booking_time_window(self, booking: Booking) -> Optional[Tuple[datetime, datetime]]:
         details = booking.details or {}
         if booking.type == "activity":
+            full_data = details.get("full_data", {}) if isinstance(details.get("full_data"), dict) else {}
+            activity_type = str(full_data.get("type", details.get("type", ""))).lower()
+            if "transportation" in activity_type or "rental" in activity_type:
+                return None
             booking_date = self._parse_date(str(details.get("date", "")))
             booking_time = self._parse_time(str(details.get("time", "")))
             duration_hours = ((details.get("full_data") or {}).get("duration_hours") if isinstance(details.get("full_data"), dict) else None) or 2
@@ -2155,6 +2190,10 @@ class TravelAgent:
     ) -> Optional[Tuple[datetime, datetime]]:
         if tool_name == "book_activity":
             activity = self._lookup_activity(processed_params.get("activity_id"))
+            if activity:
+                activity_type = str(activity.get("type", "")).lower()
+                if "transportation" in activity_type or "rental" in activity_type:
+                    return None
             booking_date = self._parse_date(str(processed_params.get("date", "")))
             booking_time = self._parse_time(str(processed_params.get("time", "")))
             if activity is None or booking_date is None or booking_time is None:
@@ -2407,7 +2446,7 @@ class TravelAgent:
             "is_wheelchair_accessible", "tags", "neighborhood", "cuisine_type",
             "type", "category", "average_cost_per_person"
         }
-        for item in items[:5]:
+        for item in items[:20]:
             trimmed.append({k: v for k, v in item.items() if k in keep})
         return trimmed
 

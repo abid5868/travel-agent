@@ -36,14 +36,13 @@
   "dynamic_events": [
     {
       "event_id": "event_1",
-      "trigger_turn": 5,
+      "trigger_turn": 15,
       "event_type": "accommodation_overbooked",
       "description": "The hotel contacts you urgently: they double-booked your accessible room and must relocate your entire group. New hotel has ONE accessible room (fits 3 people) but you need 6 people accommodated total. Option 1: Book new hotel accessible room + non-accessible rooms elsewhere in wedding block (may be across town). Option 2: Split the group across two nearby hotels (one accessible, one standard). Option 3: Use available Airbnb's and hotels (may not all be wheelchair accessible for pickup/dropoff). You have 2 hours to decide.",
       "affected_components": [
         "hotel_rooms_friday_saturday_sunday",
         "ground_transportation_between_hotels",
         "accessibility_verification_all_venues",
-        "restaurant_reservations_near_hotels",
         "elderly_family_member_mobility_plans"
       ],
       "resolution_requirements": [

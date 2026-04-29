@@ -2197,8 +2197,30 @@
       "advance_booking_days": 0,
       "location": {"address": "100 Lake Tahoe Blvd, South Lake Tahoe, CA 96150", "neighborhood": "South Lake Tahoe"},
       "tags": ["ground_transportation", "van_rental", "group_travel", "wedding_shuttle"]
+    },
+    {
+      "activity_id": "act_LAS_transport_002",
+      "name": "Desert Explorer Mid-Size SUV Rental",
+      "city": "Las Vegas",
+      "state": "NV",
+      "country": "USA",
+      "type": "transportation",
+      "category": ["transportation", "vehicle_rental", "road_trip"],
+      "description": "Reliable mid-size SUV rental picked up at LAS airport. Perfect for a Southwest national park road trip. Features AWD, ample trunk space for luggage and hiking gear, and unlimited mileage.",
+      "duration_hours": 240.0, 
+      "price_per_person": 350, 
+      "wheelchair_accessible": false,
+      "family_friendly": true,
+      "indoor": false,
+      "min_group": 1,
+      "max_group": 5,
+      "operating_hours": {"open": "06:00", "close": "23:59"},
+      "days_available": ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"],
+      "booking_required": true,
+      "advance_booking_days": 1,
+      "location": {"address": "7135 Gilespie St, Las Vegas, NV 89119", "neighborhood": "McCarran Airport Rent-A-Car Center"},
+      "tags": ["transportation", "suv_rental", "car_rental", "road_trip", "las_vegas"]
     }
-
   ],
   "metadata": {
     "total_activities": 98,

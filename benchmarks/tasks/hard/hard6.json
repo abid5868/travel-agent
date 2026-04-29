@@ -53,12 +53,15 @@
     }
   ],
   "required_components": [
-    "flight_nyc_to_lv",
+    "flight_nyc_to_las_vegas",
     "zion_lodge_2_nights",
     "bryce_lodge_2_nights",
     "moab_hotel_4_nights",
+    "las_vegas_hotel_1_night",
     "arches_timed_entry_permit",
-    "restaurants_min_8"
+    "restaurants_min_8",
+    "flight_las_vegas_to_nyc",
+    "suv_rental"
   ],
   "success_criteria": {
     "total_cost_max": 4800,
