@@ -2,8 +2,8 @@
 main.py - Minimal CLI Interface for Dynamic Travel Replanning Agent
 
 Usage:
-    python main.py --task benchmarks/tasks/easy/task_001.json
-    python main.py --task benchmarks/tasks/easy/task_001.json --verbose
+    python main.py --task benchmarks/tasks/easy/easy1.json
+    python main.py --task benchmarks/tasks/easy/easy1.json --verbose
 """
 
 import json

@@ -1,0 +1,16 @@
+{
+  "task_id": "task_010",
+  "task_file": "benchmarks/tasks/medium/medium5.json",
+  "title": "Orlando Theme Park Weekend with Outbound Flight Cancellation",
+  "difficulty": "medium",
+  "success": true,
+  "metadata": {
+    "total_tokens": 32998,
+    "api_calls": 16,
+    "tool_calls": 14,
+    "start_time": 1775867491.929117,
+    "end_time": 1775867672.666111,
+    "time_elapsed": 180.74,
+    "wall_time_seconds": 180.74
+  }
+}

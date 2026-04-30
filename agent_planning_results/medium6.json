@@ -1,0 +1,16 @@
+{
+  "task_id": "task_011",
+  "task_file": "benchmarks/tasks/medium/medium6.json",
+  "title": "New Orleans Jazz Weekend with Sudden Budget Reduction",
+  "difficulty": "medium",
+  "success": false,
+  "metadata": {
+    "total_tokens": 12524,
+    "api_calls": 20,
+    "tool_calls": 19,
+    "start_time": 1776989327.571656,
+    "end_time": 1776989500.382305,
+    "time_elapsed": 172.81,
+    "wall_time_seconds": 172.81
+  }
+}

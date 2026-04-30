@@ -113,6 +113,32 @@ class RestaurantSearchTool:
             
             if wheelchair_accessible is True and r['is_wheelchair_accessible'] != True:
                 continue
+            
+            # fix for strictly filtering by special needs
+            if special_needs:
+                rest_dietary_keywords = set()
+                for opt in r.get('dietary_options', []):
+                    rest_dietary_keywords.update(self.helper(opt))
+                
+                is_safe = True
+                for need in special_needs:
+                    need_lower = need.lower()
+                    
+                    
+                    if "wheelchair" in need_lower or "mobility" in need_lower:
+                        if r.get('is_wheelchair_accessible') != True:
+                            is_safe = False
+                            break  
+                        continue
+                        
+        
+                    need_keywords = self.helper(need)
+                    if not need_keywords.intersection(rest_dietary_keywords):
+                        is_safe = False
+                        break  
+    
+                if not is_safe:
+                    continue
 
             if day_of_week:
                 day_key = day_of_week.capitalize()
@@ -130,8 +156,8 @@ class RestaurantSearchTool:
                         if start_time < open_time and start_time > close_time:
                             continue
 
+            match_score = 0
             if user_interests:
-
                 keywords = set()
                 for m_type in r['meal_type']:
                     keywords.update(self.helper(m_type))
@@ -139,15 +165,13 @@ class RestaurantSearchTool:
                     keywords.update(self.helper(dietary_option))
                 for tag in r['tags']:
                     keywords.update(self.helper(tag))
-                
-                if not user_interests.intersection(keywords):
-                    continue
+                match_score = len(user_interests.intersection(keywords))
 
-            candidates.append(r)
+            candidates.append((match_score, r))
         
-        candidates.sort(key=lambda x: x['average_cost_per_person'])        
+        candidates.sort(key=lambda item: (-item[0], item[1]['average_cost_per_person']))
 
-        return candidates[:10]
+        return [restaurant for _, restaurant in candidates[:10]]
     
     @staticmethod
     def helper(word: str) -> set:

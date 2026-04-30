@@ -1,0 +1,16 @@
+{
+  "task_id": "task_018",
+  "task_file": "benchmarks/tasks/hard/hard3.json",
+  "title": "Accessible Group Wedding Weekend with Hotel Double-Booking Cascade",
+  "difficulty": "hard",
+  "success": true,
+  "metadata": {
+    "total_tokens": 25400,
+    "api_calls": 23,
+    "tool_calls": 23,
+    "start_time": 1777415451.9738638,
+    "end_time": 1777415630.511368,
+    "time_elapsed": 178.54,
+    "wall_time_seconds": 178.54
+  }
+}

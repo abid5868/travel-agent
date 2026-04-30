@@ -2059,13 +2059,13 @@
                 "dinner"
             ],
             "opening_hours": {
-                "Monday": "10:30-22:00",
-                "Tuesday": "10:30-22:00",
-                "Wednesday": "10:30-22:00",
-                "Thursday": "10:30-22:00",
-                "Friday": "10:30-23:00",
-                "Saturday": "10:30-23:00",
-                "Sunday": "10:30-22:00"
+                "Monday": "06:30-22:00",
+                "Tuesday": "06:30-22:00",
+                "Wednesday": "06:30-22:00",
+                "Thursday": "06:30-22:00",
+                "Friday": "06:30-23:00",
+                "Saturday": "06:30-23:00",
+                "Sunday": "06:30-22:00"
             },
             "is_wheelchair_accessible": true,
             "dietary_options": [
@@ -4030,7 +4030,7 @@
                 "longitude": -122.6810
             },
             "price_level": "$$$$",
-            "average_cost_per_person": 110,
+            "average_cost_per_person": 40,
             "max_group_size": 20,
             "meal_type": [
                 "dinner"
@@ -5863,6 +5863,367 @@
                 "wildlife",
                 "halfway_stop",
                 "adventure_friendly"
+            ]
+        },
+        {
+            "restaurant_id": "rest_168",
+            "name": "Le Déjeuner Royal",
+            "city": "Paris",
+            "state": "IDF",
+            "country": "France",
+            "coordinates": {
+                "latitude": 48.8600,
+                "longitude": 2.3300
+            },
+            "price_level": "$$$$",
+            "average_cost_per_person": 160,
+            "max_group_size": 4,
+            "meal_type": [
+                "lunch"
+            ],
+            "opening_hours": {
+                "Monday": "11:30-15:00",
+                "Tuesday": "11:30-15:00",
+                "Wednesday": "11:30-15:00",
+                "Thursday": "11:30-15:00",
+                "Friday": "11:30-15:00",
+                "Saturday": "11:30-15:00",
+                "Sunday": "11:30-15:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "vegetarian",
+                "gluten_free"
+            ],
+            "tags": [
+                "fine_dining",
+                "romantic_experiences",
+                "historical_sites"
+            ]
+        },
+        {
+            "restaurant_id": "rest_169",
+            "name": "Catalonia Grand Bodega & Tasting",
+            "city": "Barcelona",
+            "state": "Catalonia",
+            "country": "Spain",
+            "coordinates": {
+                "latitude": 41.3855,
+                "longitude": 2.1730
+            },
+            "price_level": "$$$$",
+            "average_cost_per_person": 140,
+            "max_group_size": 8,
+            "meal_type": [
+                "lunch",
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "13:00-23:00",
+                "Tuesday": "13:00-23:00",
+                "Wednesday": "13:00-23:00",
+                "Thursday": "13:00-23:00",
+                "Friday": "13:00-23:30",
+                "Saturday": "13:00-23:30",
+                "Sunday": "13:00-22:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "vegetarian"
+            ],
+            "tags": [
+                "fine_dining",
+                "guided_wine_tastings",
+                "romantic_experiences"
+            ]
+        },
+        {
+            "restaurant_id": "rest_170",
+            "name": "Marina Bay Michelin Seafood",
+            "city": "Barcelona",
+            "state": "Catalonia",
+            "country": "Spain",
+            "coordinates": {
+                "latitude": 41.3800,
+                "longitude": 2.1900
+            },
+            "price_level": "$$$$",
+            "average_cost_per_person": 180,
+            "max_group_size": 6,
+            "meal_type": [
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "19:00-23:30",
+                "Tuesday": "19:00-23:30",
+                "Wednesday": "19:00-23:30",
+                "Thursday": "19:00-23:30",
+                "Friday": "19:00-00:00",
+                "Saturday": "19:00-00:00",
+                "Sunday": "19:00-23:30"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "seafood",
+                "gluten_free"
+            ],
+            "tags": [
+                "fine_dining",
+                "romantic_experiences",
+                "beach_adjacent",
+                "sunset_viewpoints"
+            ]
+        },
+        {
+            "restaurant_id": "rest_171",
+            "name": "Ristorante Laguna Vista",
+            "city": "Venice",
+            "state": "Veneto",
+            "country": "Italy",
+            "coordinates": {
+                "latitude": 45.4320,
+                "longitude": 12.3380
+            },
+            "price_level": "$$$",
+            "average_cost_per_person": 110,
+            "max_group_size": 6,
+            "meal_type": [
+                "lunch"
+            ],
+            "opening_hours": {
+                "Monday": "11:30-15:30",
+                "Tuesday": "11:30-15:30",
+                "Wednesday": "11:30-15:30",
+                "Thursday": "11:30-15:30",
+                "Friday": "11:30-15:30",
+                "Saturday": "11:30-15:30",
+                "Sunday": "11:30-15:30"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "seafood"
+            ],
+            "tags": [
+                "fine_dining",
+                "canal_side",
+                "romantic_experiences"
+            ]
+        },
+        {
+            "restaurant_id": "rest_172",
+            "name": "Sunrise GF Bakery & Cafe",
+            "city": "Chicago",
+            "state": "IL",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 41.8810,
+                "longitude": -87.6250
+            },
+            "price_level": "$",
+            "average_cost_per_person": 14,
+            "max_group_size": 12,
+            "meal_type": [
+                "breakfast",
+                "lunch"
+            ],
+            "opening_hours": {
+                "Monday": "07:00-15:00",
+                "Tuesday": "07:00-15:00",
+                "Wednesday": "07:00-15:00",
+                "Thursday": "07:00-15:00",
+                "Friday": "07:00-15:00",
+                "Saturday": "07:00-16:00",
+                "Sunday": "07:00-16:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "gluten_free",
+                "vegetarian"
+            ],
+            "tags": [
+                "quick_bite",
+                "casual",
+                "walkable"
+            ]
+        },
+        {
+            "restaurant_id": "rest_173",
+            "name": "The Early Bird Diner Loop",
+            "city": "Chicago",
+            "state": "IL",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 41.8835,
+                "longitude": -87.6320
+            },
+            "price_level": "$",
+            "average_cost_per_person": 16,
+            "max_group_size": 8,
+            "meal_type": [
+                "breakfast",
+                "lunch"
+            ],
+            "opening_hours": {
+                "Monday": "06:30-14:00",
+                "Tuesday": "06:30-14:00",
+                "Wednesday": "06:30-14:00",
+                "Thursday": "06:30-14:00",
+                "Friday": "06:30-14:00",
+                "Saturday": "06:30-14:30",
+                "Sunday": "06:30-14:30"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "gluten_free"
+            ],
+            "tags": [
+                "local_food",
+                "budget_friendly"
+            ]
+        },
+        {
+            "restaurant_id": "rest_174",
+            "name": "Lakeshore Elegance",
+            "city": "Chicago",
+            "state": "IL",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 41.8960,
+                "longitude": -87.6180
+            },
+            "price_level": "$$$",
+            "average_cost_per_person": 105,
+            "max_group_size": 6,
+            "meal_type": [
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "Closed",
+                "Tuesday": "17:30-22:30",
+                "Wednesday": "17:30-22:30",
+                "Thursday": "17:30-22:30",
+                "Friday": "17:00-23:00",
+                "Saturday": "17:00-23:00",
+                "Sunday": "17:00-22:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "gluten_free",
+                "vegan"
+            ],
+            "tags": [
+                "fine_dining",
+                "romantic_atmosphere",
+                "lake_view"
+            ]
+        },
+        {
+            "restaurant_id": "rest_175",
+            "name": "Midnight GF Tacos & Tapas",
+            "city": "Chicago",
+            "state": "IL",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 41.8890,
+                "longitude": -87.6250
+            },
+            "price_level": "$",
+            "average_cost_per_person": 20,
+            "max_group_size": 10,
+            "meal_type": [
+                "dinner",
+                "late_night"
+            ],
+            "opening_hours": {
+                "Monday": "18:00-02:00",
+                "Tuesday": "18:00-02:00",
+                "Wednesday": "18:00-02:00",
+                "Thursday": "18:00-02:00",
+                "Friday": "18:00-02:00",
+                "Saturday": "18:00-02:00",
+                "Sunday": "18:00-00:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "gluten_free",
+                "vegan_friendly"
+            ],
+            "tags": [
+                "casual",
+                "late_night",
+                "local_food_scene"
+            ]
+        },
+        {
+            "restaurant_id": "rest_175",
+            "name": "Tahoe Sunset Budget BBQ",
+            "city": "Lake Tahoe",
+            "state": "NV",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 39.0912,
+                "longitude": -119.9400
+            },
+            "price_level": "$$",
+            "average_cost_per_person": 35,
+            "max_group_size": 40,
+            "meal_type": [
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "Closed",
+                "Tuesday": "Closed",
+                "Wednesday": "17:00-21:00",
+                "Thursday": "17:00-21:00",
+                "Friday": "17:00-22:00",
+                "Saturday": "17:00-22:00",
+                "Sunday": "17:00-21:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "vegetarian"
+            ],
+            "tags": [
+                "rehearsal_dinner",
+                "budget_friendly",
+                "lakeside_hotels",
+                "casual_dining"
+            ]
+        },
+        {
+            "restaurant_id": "rest_176",
+            "name": "Vegas Strip Steakhouse",
+            "city": "Las Vegas",
+            "state": "NV",
+            "country": "USA",
+            "coordinates": {
+                "latitude": 36.1147,
+                "longitude": -115.1728
+            },
+            "price_level": "$$$",
+            "average_cost_per_person": 85,
+            "max_group_size": 25,
+            "meal_type": [
+                "dinner"
+            ],
+            "opening_hours": {
+                "Monday": "18:00-23:00",
+                "Tuesday": "18:00-23:00",
+                "Wednesday": "18:00-23:00",
+                "Thursday": "18:00-00:00",
+                "Friday": "18:00-01:00",
+                "Saturday": "18:00-01:00",
+                "Sunday": "18:00-23:00"
+            },
+            "is_wheelchair_accessible": true,
+            "dietary_options": [
+                "gluten_free"
+            ],
+            "tags": [
+                "bachelor_party",
+                "nightlife",
+                "upscale_lodging",
+                "steakhouse"
             ]
         }
     ]

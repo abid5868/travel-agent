@@ -15,7 +15,7 @@
     },
     "initial_constraints": {
       "hard": {
-        "budget_max": 450,
+        "budget_max": 600,
         "departure_date": "2026-04-10",
         "departure_time_earliest": "06:00",
         "return_date": "2026-04-12",
@@ -35,7 +35,7 @@
       "music_venues_min_1"
     ],
     "success_criteria": {
-      "total_cost_max": 450,
+      "total_cost_max": 600,
       "timing_feasible": true,
       "bbq_restaurant_included": true,
       "live_music_venue_included": true

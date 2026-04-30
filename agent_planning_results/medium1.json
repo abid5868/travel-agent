@@ -1,0 +1,16 @@
+{
+  "task_id": "task_006",
+  "task_file": "benchmarks/tasks/medium/medium1.json",
+  "title": "Accessible Family Beach Vacation with Hotel Issue",
+  "difficulty": "medium",
+  "success": true,
+  "metadata": {
+    "total_tokens": 28205,
+    "api_calls": 20,
+    "tool_calls": 19,
+    "start_time": 1775600203.5040529,
+    "end_time": 1775600371.6946602,
+    "time_elapsed": 168.19,
+    "wall_time_seconds": 168.19
+  }
+}

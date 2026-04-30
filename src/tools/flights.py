@@ -172,13 +172,22 @@ class FlightSearchTool:
 
         # validate the origin city and destination city
         if outbound:
-            if (origin_city.lower() != selected_flight['from_city'].lower() or 
-                destination_city.lower() != selected_flight['to_city'].lower()):
-                return {"status": "error", "message": f"Outbound flight origin city or destination city does not match."}
+            if (
+                origin_city.lower() != selected_flight['from_city'].lower() or
+                destination_city.lower() != selected_flight['to_city'].lower()
+            ):
+                return {"status": "error", "message": "Outbound flight origin city or destination city does not match."}
         else:
-            if (origin_city.lower() != selected_flight['to_city'].lower() or 
-                destination_city.lower() != selected_flight['from_city'].lower()):
-                return {"status": "error", "message": f"Return flight origin city or destination city does not match."}
+            matches_actual_route = (
+                origin_city.lower() == selected_flight['from_city'].lower() and
+                destination_city.lower() == selected_flight['to_city'].lower()
+            )
+            matches_trip_pair = (
+                origin_city.lower() == selected_flight['to_city'].lower() and
+                destination_city.lower() == selected_flight['from_city'].lower()
+            )
+            if not (matches_actual_route or matches_trip_pair):
+                return {"status": "error", "message": "Return flight origin city or destination city does not match."}
 
         
         # validate date format & availability
@@ -217,10 +226,10 @@ class FlightSearchTool:
             "cost": total_cost,
             "details": {
                 "flight_id": flight_id,
-                "type": "Outbound_flight" if outbound else "Return_flight",
+                "type": "outbound_flight" if outbound else "return_flight",
                 "flight_number": selected_flight['flight_number'],
-                "origin_city": origin_city,
-                "destination_city": destination_city,
+                "origin_city": selected_flight['from_city'],
+                "destination_city": selected_flight['to_city'],
                 "departure_date": departure_date,
                 "departure_time": selected_flight['departure_time'],
                 "arrival_time": selected_flight['arrival_time'],

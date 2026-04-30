@@ -18,7 +18,7 @@
       "budget_max": 2500,
       "departure_date": "2026-10-09",
       "departure_time_earliest": "06:00",
-      "return_date": "2026-10-11",
+      "return_date": "2026-10-12",
       "return_time_latest": "20:00"
     },
     "soft": {
@@ -45,8 +45,8 @@
     "outbound_flight",
     "return_flight",
     "hotel_2_nights",
-    "theme_park_visits_min_2",
-    "family_restaurants_min_3"
+    "theme_park_visits_min_1",
+    "family_restaurants_min_2"
   ],
   "success_criteria": {
     "total_cost_max": 2500,

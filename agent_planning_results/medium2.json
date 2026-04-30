@@ -1,0 +1,16 @@
+{
+  "task_id": "task_007",
+  "task_file": "benchmarks/tasks/medium/medium2.json",
+  "title": "Vegan Culinary & Arts Weekend in Seattle with Show Cancellation",
+  "difficulty": "medium",
+  "success": true,
+  "metadata": {
+    "total_tokens": 26849,
+    "api_calls": 24,
+    "tool_calls": 20,
+    "start_time": 1775792761.838072,
+    "end_time": 1775792989.832407,
+    "time_elapsed": 227.99,
+    "wall_time_seconds": 228.0
+  }
+}

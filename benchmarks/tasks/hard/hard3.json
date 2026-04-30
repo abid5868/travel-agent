@@ -15,7 +15,7 @@
   },
   "initial_constraints": {
     "hard": {
-      "budget_max": 3500,
+      "budget_max": 5500,
       "departure_date": "2026-09-10",
       "departure_time_earliest": "",
       "return_date": "2026-09-13",
@@ -36,14 +36,13 @@
   "dynamic_events": [
     {
       "event_id": "event_1",
-      "trigger_turn": 5,
+      "trigger_turn": 15,
       "event_type": "accommodation_overbooked",
       "description": "The hotel contacts you urgently: they double-booked your accessible room and must relocate your entire group. New hotel has ONE accessible room (fits 3 people) but you need 6 people accommodated total. Option 1: Book new hotel accessible room + non-accessible rooms elsewhere in wedding block (may be across town). Option 2: Split the group across two nearby hotels (one accessible, one standard). Option 3: Use available Airbnb's and hotels (may not all be wheelchair accessible for pickup/dropoff). You have 2 hours to decide.",
       "affected_components": [
         "hotel_rooms_friday_saturday_sunday",
         "ground_transportation_between_hotels",
         "accessibility_verification_all_venues",
-        "restaurant_reservations_near_hotels",
         "elderly_family_member_mobility_plans"
       ],
       "resolution_requirements": [
@@ -52,24 +51,23 @@
         "Verify all mandatory event venues are accessible from new hotel(s)",
         "Verify all restaurant reservations near new hotel location(s) or adjust if locations change significantly",
         "Ensure elderly family member accessibility accommodations are preserved (bathroom accessibility, room location, etc.)",
-        "Keep total accommodation cost increase within budget (max 3500 total for trip)",
+        "Keep total accommodation cost increase within budget (max 5500 total for trip)",
         "Preserve rental car or rideshare arrangements"
       ]
     }
   ],
   "required_components": [
-    "transportation_to_portland",
-    "accommodation_friday_night",
-    "accommodation_saturday_night",
-    "accommodation_sunday_night",
-    "rehearsal_dinner_venue_accessible",
-    "wedding_ceremony_venue_accessible",
-    "family_brunch_venue_accessible",
+    "flights_outbound",
+    "flights_return",
+    "accommodation_3_nights",
+    "rehearsal_dinner",
+    "wedding_ceremony",
+    "family_brunch",
     "ground_transportation_all_accessible",
     "accessible_restaurants_min_3"
   ],
   "success_criteria": {
-    "total_cost_max": 3500,
+    "total_cost_max": 5500,
     "timing_feasible": true,
     "all_mandatory_events_accessible": true,
     "all_accommodation_wheelchair_accessible": true,

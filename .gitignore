@@ -208,3 +208,5 @@ __marimo__/
 
 #claude 
 .claude/
+
+.DS_Store

@@ -1,0 +1,16 @@
+{
+  "task_id": "task_013",
+  "task_file": "benchmarks/tasks/medium/medium8.json",
+  "title": "Miami Weekend with Major Schedule Swap",
+  "difficulty": "medium",
+  "success": true,
+  "metadata": {
+    "total_tokens": 32198,
+    "api_calls": 20,
+    "tool_calls": 19,
+    "start_time": 1776723838.243378,
+    "end_time": 1776724060.095881,
+    "time_elapsed": 221.85,
+    "wall_time_seconds": 221.86
+  }
+}

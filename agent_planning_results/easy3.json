@@ -1,0 +1,16 @@
+{
+  "task_id": "task_003",
+  "task_file": "benchmarks/tasks/easy/easy3.json",
+  "title": "Budget City Exploration in Austin",
+  "difficulty": "easy",
+  "success": true,
+  "metadata": {
+    "total_tokens": 24634,
+    "api_calls": 14,
+    "tool_calls": 13,
+    "start_time": 1776005480.635573,
+    "end_time": 1776005645.05626,
+    "time_elapsed": 164.42,
+    "wall_time_seconds": 164.42
+  }
+}

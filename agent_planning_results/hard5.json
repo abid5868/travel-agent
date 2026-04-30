@@ -1,0 +1,16 @@
+{
+  "task_id": "task_020",
+  "task_file": "benchmarks/tasks/hard/hard5.json",
+  "title": "Multi-City Wedding Weekend with Flight Cancellations and Hotel Rebooking Crisis",
+  "difficulty": "hard",
+  "success": true,
+  "metadata": {
+    "total_tokens": 38821,
+    "api_calls": 33,
+    "tool_calls": 33,
+    "start_time": 1777323604.1452138,
+    "end_time": 1777323927.3448892,
+    "time_elapsed": 323.2,
+    "wall_time_seconds": 323.2
+  }
+}

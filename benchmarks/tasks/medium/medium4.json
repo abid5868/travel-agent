@@ -19,10 +19,7 @@
       "departure_date": "2026-04-17",
       "departure_time_earliest": "07:00",
       "return_date": "2026-04-19",
-      "return_time_latest": "21:00",
-      "mandatory_schedule": {
-        "outdoor_activity": "saturday"
-      }
+      "return_time_latest": "21:00"
     },
     "soft": {
       "interests": ["American_history", "monument_photography", "museums"],

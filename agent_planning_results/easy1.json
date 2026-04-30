@@ -1,0 +1,16 @@
+{
+  "task_id": "task_001",
+  "task_file": "benchmarks/tasks/easy/easy1.json",
+  "title": "Weekend trip from Detroit to Chicago",
+  "difficulty": "easy",
+  "success": true,
+  "metadata": {
+    "total_tokens": 22822,
+    "api_calls": 10,
+    "tool_calls": 9,
+    "start_time": 1775956527.176573,
+    "end_time": 1775956646.199306,
+    "time_elapsed": 119.02,
+    "wall_time_seconds": 119.02
+  }
+}
