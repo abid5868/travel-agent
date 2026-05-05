@@ -72,9 +72,6 @@ travel-agent/
 ├── baseline_results/         # Baseline outputs: <taskname>.md
 │
 ├── baseline.py               # Zero-shot single-call baseline with mock data context
-├── make_ppt.py               # Generates final_presentation.pptx
-└── scripts/
-    └── generate_mock_data.py # Mock data generation script
 ```
 
 ---
@@ -93,7 +90,7 @@ source venv/bin/activate      # Windows: venv\Scripts\activate
 ### 2. Install dependencies
 
 ```bash
-pip install anthropic pytest python-pptx
+pip install anthropic pytest
 ```
 
 ### 3. Set your API key
@@ -383,18 +380,4 @@ All tools query local JSON files. Data covers **24 cities**:
 | `activities.json` | 98 | type, duration_hours, price_per_person, wheelchair_accessible, permit_required |
 | `restaurants.json` | ~175 | price_level, avg_cost_per_person, meal_type, is_wheelchair_accessible |
 
-To regenerate mock data:
-
-```bash
-python3 scripts/generate_mock_data.py
-```
-
 ---
-
-## Generating the Presentation
-
-```bash
-pip install python-pptx
-python3 make_ppt.py
-# → final_presentation.pptx  (11 slides)
-```
